@@ -1,0 +1,32 @@
+{
+  "name": "ridea",
+  "version": "1.0.0",
+  "description": "Ride sharing app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "frontend-install": "npm install --prefix fronend  ",
+    "start": "node server.js",
+    "server": "nodemon server.js --ignore frontend",
+    "frontend": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run frontend\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhuwanadhikari/Ridea.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bhuwanadhikari/Ridea/issues"
+  },
+  "homepage": "https://github.com/bhuwanadhikari/Ridea#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^4.1.0",
+    "create-react-app": "^3.0.1",
+    "express": "^4.17.1",
+    "mongoose": "^5.5.12"
+  }
+}

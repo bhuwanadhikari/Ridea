@@ -1,0 +1,28 @@
+.BigInput {
+    padding: 0 2px 0 5px;
+    width: 60%;
+    height: 40px;
+    color: #25523B;
+    border: 1px solid #5AAB61;
+    border-radius: 5px 0 0 5px;
+    font-size: 1em;
+}
+.MediumInput{
+    padding: 0 2px 0 5px;
+    width: 60%;
+    height: 40px;
+    color: #25523B;
+    border: 1px solid var(--dark-theme);
+    border-radius: 20px;
+    font-size: 1em;
+}
+
+
+
+.SmallInput{
+    flex: 2;
+    margin-left: 40px;
+    margin-right: 5px;
+    border: 0;
+    border-bottom: 1px solid silver;
+}

@@ -2,8 +2,7 @@ import React,{Component} from 'react';
 import NavBar from './components/NavBar/NavBar';
 import SideDrawer from './components/SideDrawer/SideDrawer';
 import Backdrop from './components/Backdrop/Backdrop';
-import { lookupService } from 'dns';
-
+// import mapbackground from './img/mapbackground.png'
 class App extends Component{
   state={
     sideDrawerOpens:false
@@ -12,23 +11,23 @@ class App extends Component{
     this.setState((prevState)=>({ sideDrawerOpens:!prevState.sideDrawerOpens}))
 
   }
+  onBackdropClickHandler=()=>{
+    this.setState({sideDrawerOpens:false})
+}
   render(){
     let sidedrawer;
     let backdrop;
     if(this.state.sideDrawerOpens){
       sidedrawer=<SideDrawer/>;
-      backdrop=  <Backdrop/>;
+      backdrop=  <Backdrop clicked={this.onBackdropClickHandler} />;
     }
   return (
     <div  style={{height:'100%'}}className="App">
       <NavBar clicked={this.drawerToggleClickHandler}/>
       {sidedrawer}
       {backdrop}
-      <div style={{marginTop:'12vh'}}>
-      <p>this is paragraph content</p>
+      <div className='bodyWrapper'></div>
       </div>
-     
-    </div>
   );
 }
 }

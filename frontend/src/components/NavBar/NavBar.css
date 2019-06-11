@@ -1,55 +1,92 @@
 .Toolbar{
     position: fixed;
     width: 100%;
-    background: rgb(73,79,82);
+    background: transparent;
     height:10vh;
     top: 0;
     left: 0;
+    display: flex;
 
 }
-.Toolbar-Navigation{
+.ToolbarNavigation{
     display: flex;
+    align-content: space-around;
     align-items: center;
     height: 100%;
-    padding: 0 1rem;
+    width: 100%;
 }
-.Toolbar-Logo{
-    font-size: 2rem;
-    color: white;
+.HamBurgerWrapper{
+    flex:1;
+    margin: auto;
+    justify-content: space-around;
 }
-.Toolbar-Logo h1{
-    font-size: 1.5rem;
-    margin-left:2rem;
+.SearchWrapper{
+    flex:3;
+    margin: 0 auto;
+}
+.ChatIconWrapper{
+    display: flex;
+    flex:1;
+    margin: auto;
+    align-content: center;
 }
 .Spacer{
-    flex:1;
+    flex: 0.5  ;
 }
-.Toolbar-Navigation-links ul{
-    list-style: none;
-    display: flex;
-    margin:0;
-    padding: 0;
+.ImageEnclosure {
+    width:50px;
+    height: 50px;
+    border-radius: 50px;
+    background-color: var(--medium-dark);
+    align-content: center;
+    z-index: -100;
 }
-.Toolbar-Navigation-links li{
-   margin :10px;
-    color: white;
+.ChatIconWrapper >.ImageEnclosure > .AuthMessageIcon{
+    height: 50px;
+    margin: auto;
+    position: relative;
+    left: -25px;
+    z-index: 100;
 }
-.Toolbar-Navigation-links li:active,
-.Toolbar-Navigation-links li:hover{
-    color: skyblue;
+
+/*For DESKTOPS ONLY*/
+@media only screen and (min-width: 800px) {
+    .ToolbarNavigation{
+        display: inline-flex;
+        align-content: space-between ;
+        }
+    .HamBurgerWrapper{
+        flex:1;
+    }
+    .SearchWrapper{
+        flex:1;
+    }
+    .Spacer{
+        flex:5;
+    }
+    .ChatIconWrapper{
+        flex:1;
+    }
     
 }
-/* nav{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    min-height: 10vh;
-    color: white;
+
+/*For TABS ONLY*/
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .ToolbarNavigation{
+        display: inline-flex;
+        align-content: space-between ;
+        }
+    .HamBurgerWrapper{
+        flex:1;
     }
-    .Nav-links{
-    width:50%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    list-style: none; 
-    } */
+    .SearchWrapper{
+        flex:1;
+    }
+    .Spacer{
+        flex:2;
+    }
+    .ChatIconWrapper{
+        flex:1;
+    }
+    
+}

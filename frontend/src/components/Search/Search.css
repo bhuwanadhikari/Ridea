@@ -1,0 +1,83 @@
+
+
+.SearchForm  {
+    margin: 5px auto;
+    width: 65vw;
+    height: 40px;
+    outline: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    border: 1px solid var(--medium-dark);
+    border-radius:40px;
+}
+
+.SearchForm  > .textbox {
+    height: 40px;
+    width:calc( 65vw - 35px);
+    line-height: 30px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #212121;
+    border: 0;
+    float: left;
+    border-radius:40px;
+}
+
+.SearchForm  > .textbox:focus {
+    outline: 0;
+    background-color: #FFF;
+}
+
+.SearchForm  > .SearchButton {
+    outline: 0;
+    background: none;
+    background-color: var(--medium-dark);
+    float: left;
+    height: 40px;
+    width: 35px;
+    text-align: center;
+    line-height: 35px;
+    border: 1px;
+    color: #FFF;
+    font: normal normal normal 20px/1 FontAwesome;
+    font-size: 16px;
+    text-rendering: auto;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    transition: background-color .4s ease;
+    border-radius: 0 40px 40px 0;
+}
+
+.SearchButton img {
+    width: 22px;
+    height: 22px;
+    padding: 5px 0 0 1px;
+    box-sizing: border-box;
+}
+
+.SearchForm  > .SearchButton:hover {
+    background-color: rgba(0, 150, 136, 0.8);
+}
+
+
+
+
+/*For DESKTOPS ONLY*/
+@media only screen and (min-width: 800px) {
+    .SearchForm{
+        width: 35vw;
+    }
+
+    .SearchForm  > .textbox {
+        width: calc( 35vw - 35px );
+    }
+}
+
+/*For TABS ONLY*/
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .SearchForm {
+        width: 60vw;
+    }
+    .SearchForm  > .textbox {
+        width: calc( 60vw - 35px );
+    }
+}

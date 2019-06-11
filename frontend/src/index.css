@@ -11,3 +11,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+:root {
+  --main-bg-color: coral; 
+  --dark-theme: #022140; 
+  --medium-dark:#0078D6;
+  --neutral-theme:#2d5f5D;
+  --light-theme:#494868;
+  --lighter-theme:#5085A5;
+  --lightest-theme:#f7f9fb ;
+}
+/* #265077 : Medium dark
+  #022140 : Dark theme
+  #494868 :
+  #1e4258 :
+  #2d5f5D :
+  #f7f9fb : lightest
+  #8fc1e3 : light theme
+  #5085A5 : */

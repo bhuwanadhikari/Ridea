@@ -1,0 +1,26 @@
+.SideDrawer{
+    height: 100%;
+    background: white;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top:0;
+    width: 70%;
+    left:0;
+    max-width: 400px;
+    z-index: 200;
+}
+.SideDrawer ul{
+    height: 100%;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.SideDrawer li{
+    margin: 1rem ;
+    font-size: 1.2rem;
+}
+.SideDrawer li:hover,
+.SideDrawer li:active{
+    color: skyblue;
+}

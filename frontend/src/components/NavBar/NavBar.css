@@ -1,0 +1,55 @@
+.Toolbar{
+    position: fixed;
+    width: 100%;
+    background: rgb(73,79,82);
+    height:10vh;
+    top: 0;
+    left: 0;
+
+}
+.Toolbar-Navigation{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 1rem;
+}
+.Toolbar-Logo{
+    font-size: 2rem;
+    color: white;
+}
+.Toolbar-Logo h1{
+    font-size: 1.5rem;
+    margin-left:2rem;
+}
+.Spacer{
+    flex:1;
+}
+.Toolbar-Navigation-links ul{
+    list-style: none;
+    display: flex;
+    margin:0;
+    padding: 0;
+}
+.Toolbar-Navigation-links li{
+   margin :10px;
+    color: white;
+}
+.Toolbar-Navigation-links li:active,
+.Toolbar-Navigation-links li:hover{
+    color: skyblue;
+    
+}
+/* nav{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 10vh;
+    color: white;
+    }
+    .Nav-links{
+    width:50%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none; 
+    } */

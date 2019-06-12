@@ -18,7 +18,7 @@
     width: 25px;
     height: 1.5px;
     border: 1px;
-    background-color: gray;
+    background-color: var(--medium-dark);
 }
 /*For DESKTOPS ONLY*/
 @media only screen and (min-width: 800px) {

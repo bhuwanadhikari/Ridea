@@ -20,7 +20,7 @@
     color: #212121;
     border: 0;
     float: left;
-    border-radius:40px;
+    border-radius:40px 0 0 40px;
 }
 
 .SearchForm  > .textbox:focus {

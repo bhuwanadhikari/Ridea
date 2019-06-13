@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Home from './containers/Home';
-import Landing from './containers/Landing';
+import Landing from './containers/Landing/Landing';
+
 
 
 
@@ -19,12 +20,13 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <Switch>
+        
           <div style={{ height: '100%' }} className="App">
+          <Switch>
             <Route exact path = "/home" component = {Home} />
             <Route exact path = "/" component = {Landing} />
-          </div>
         </Switch>
+        </div>
       </Router>
     );
   }

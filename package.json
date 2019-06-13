@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "frontend-install": "npm install --prefix fronend  ",
+    "frontend-install": "npm install --prefix frontend  ",
     "start": "node server.js",
     "server": "nodemon server.js --ignore frontend",
     "frontend": "npm start --prefix frontend",
@@ -30,6 +30,8 @@
     "express": "^4.17.1",
     "mongoose": "^5.5.12",
     "passport": "^0.4.0",
+    "passport-google-oauth": "^2.0.0",
+    "passport-google-oauth2": "^0.2.0",
     "passport-jwt": "^4.0.0",
     "validator": "^11.0.0"
   }

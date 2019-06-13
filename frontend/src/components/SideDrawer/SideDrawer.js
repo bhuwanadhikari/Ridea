@@ -4,7 +4,7 @@ import './SideDrawer.css';
 const SideDrawer=(props)=> {
     return (
         
-            <nav className='SideDrawer'>
+            <nav className='SideDrawer' style={props.Style}>
                 <ul>
                         <li>chat</li>
                         <li>home</li>

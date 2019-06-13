@@ -1,0 +1,48 @@
+.Toolbar{
+    position: fixed;
+    width: 100%;
+    background: transparent;
+    height:10vh;
+    top: 0;
+    left: 0;
+    display: flex;
+
+}
+.ToolbarNavigation{
+    display: flex;
+    align-content: space-around;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+.BackButtonWrapper{
+    flex:0;
+    margin:0 5px;
+    justify-content: space-around;
+}
+.header{
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    margin: 0 5px;
+    align-content: center;
+}
+/* .Spacer{
+    flex: 0.5  ;
+} */
+
+/*For DESKTOPS ONLY*/
+@media only screen and (min-width: 800px) {
+    .ToolbarNavigation{
+        display: inline-flex;
+        align-content: space-between ;
+        }
+}
+
+/*For TABS ONLY*/
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .ToolbarNavigation{
+        display: inline-flex;
+        align-content: space-between ;
+        }
+}

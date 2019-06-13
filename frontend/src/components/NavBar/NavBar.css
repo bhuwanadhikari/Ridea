@@ -1,0 +1,94 @@
+.Toolbar{
+    position: fixed;
+    width: 100%;
+    background: transparent;
+    height:10vh;
+    top: 0;
+    left: 0;
+    display: flex;
+
+}
+.ToolbarNavigation{
+    display: flex;
+    align-content: space-around;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+.HamBurgerWrapper{
+    flex:0;
+    margin:0 5px;
+    justify-content: space-around;
+}
+.SearchWrapper{
+    flex:3;
+    margin: 0 auto;
+}
+.ChatIconWrapper{
+    cursor: pointer;
+    display: flex;
+    flex: 0;
+    margin: 0 5px;
+    align-content: center;
+}
+.Spacer{
+    flex: 0.5  ;
+}
+.ImageEnclosure {
+    width:50px;
+    height: 50px;
+    border-radius: 50px;
+    background-color: var(--medium-dark);
+    align-content: center;
+    z-index: -100;
+    margin-right: 5px;
+}
+.ChatIconWrapper >.ImageEnclosure > .AuthMessageIcon{
+    cursor: pointer;
+    height: 50px;
+    margin: auto;
+    position: relative;
+    left: -25px;
+    z-index: 100;
+}
+
+/*For DESKTOPS ONLY*/
+@media only screen and (min-width: 800px) {
+    .ToolbarNavigation{
+        display: inline-flex;
+        align-content: space-between ;
+        }
+    .HamBurgerWrapper{
+        flex:0;
+    }
+    .SearchWrapper{
+        flex:1;
+    }
+    .Spacer{
+        flex:5;
+    }
+    .ChatIconWrapper{
+        flex:0;
+    }    
+}
+
+/*For TABS ONLY*/
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .ToolbarNavigation{
+        display: inline-flex;
+        align-content: space-between ;
+        }
+    .HamBurgerWrapper{
+        flex:0;
+    }
+    .SearchWrapper{
+        flex:1;
+    }
+    .Spacer{
+        flex:2;
+    }
+    .ChatIconWrapper{
+        flex:0;
+        margin-right:5px;
+    }
+}

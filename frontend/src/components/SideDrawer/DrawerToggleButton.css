@@ -1,0 +1,50 @@
+.ToggleButton{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 25px;
+    width: 25px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    box-sizing: border-box;
+    margin: auto;
+}
+.ToggleButton :focus{
+    border:none;
+}
+.ToggleButtonLine{
+    width: 25px;
+    height: 1.5px;
+    border: 1px;
+    background-color: var(--medium-dark);
+}
+/*For DESKTOPS ONLY*/
+@media only screen and (min-width: 800px) {
+    .ToggleButton{
+        height: 30px;
+        width: 30px;
+    }
+    .ToggleButtonLine{
+        height: 1.5px;
+        width: 30px;
+
+    }
+
+    
+}
+
+/*For TABS ONLY*/
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .ToggleButton{
+        height: 30px;
+        width: 30px;
+    }
+    .ToggleButtonLine{
+        height: 1.5px;
+        width: 30px;
+
+    }
+   
+}

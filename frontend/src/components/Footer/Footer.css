@@ -1,0 +1,105 @@
+.Footer{
+    position: fixed;
+    width: 100%;
+    background: transparent;
+    height:10vh;
+    bottom: 0;
+    left: 0;
+    display: flex;
+
+}
+.FooterNavigation{
+    display: flex;
+    align-content: space-around;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    display: flex;
+
+}
+.AddRouteButtonWrapper{
+    flex:1;
+    margin: 0 5px ;
+    height:40px;
+    border-radius:50px;
+    display: flex;
+    align-content: space-between;
+    align-items: center;
+}
+.AddRouteIcon{
+    cursor: pointer;
+    width:30px;
+    height:30px;
+    position: relative;
+    top: 5px;
+    left: 5px;
+
+}
+.Spacer{
+    flex: 5  ;
+}
+.LocateButtonWrapper{
+    flex:0;
+    margin: 0 5px;
+    height:40px;
+    width:40px;
+    border-radius:50px;
+    right:0;
+}
+.ButtonEnclosure{
+    height:40px;
+    width:40px;
+    border-radius:70px;
+    background-color: white;
+    box-shadow: 2px 2px 6px silver;
+}
+.LocateIcon{
+    cursor: pointer;
+    width:30px;
+    height:30px;
+     position: relative;
+    top: 5px;
+    left: 5px;
+}
+
+/*For DESKTOPS ONLY*/
+@media only screen and (min-width: 800px) {
+    .FooterNavigation{
+        display: inline-flex;
+        align-content: space-between ;
+        }
+        .AddRouteButtonWrapper{
+            flex: 1;
+        }
+    .Spacer{
+        flex:5;
+    }
+    .LocateButtonWrapper{
+        flex: 0;
+    }
+}
+
+/*For TABS ONLY*/
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .ToolbarNavigation{
+        display: inline-flex;
+        align-content: space-between ;
+        }
+    .HamBurgerWrapper{
+        flex:1;
+    }
+    .SearchWrapper{
+        flex:1;
+    }
+    .Spacer{
+        flex:2;
+    }
+    .ChatIconWrapper{
+        margin:0;
+    }
+    .ImageEnclosure{
+        margin:0;
+    }
+}

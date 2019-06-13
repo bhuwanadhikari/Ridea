@@ -1,0 +1,26 @@
+
+.SmallButton{
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    background-color: #62BD69;
+    padding: 4px;
+    
+}
+.BigButton{
+    height: 42px;
+    width: 12%;
+    display: inline;
+    font-size: 1.1em;
+    border-radius: 0 5px 5px 0;
+    position: relative;
+    background-color: #5AAB61;
+    top: 1px;
+    box-sizing: border-box;
+}
+
+button {
+    color: white;
+    border: hidden;
+    cursor: pointer;
+}

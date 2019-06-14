@@ -1,0 +1,125 @@
+
+
+
+
+
+.Btn{
+    margin: 20px auto 20px auto;
+}
+
+
+.Btn {
+    color:var(--medium-dark);
+    background:var(--btnBg);
+    border: 2px solid var(--dark-theme);
+    position:relative;
+    display:block;
+    padding:1em 20vw;
+    transition:all 0.3s ease-in-out;
+    text-align:center;
+    font-family:comfortaa, sans-serif;
+    font-weight:bold
+}
+
+.Btn:before {
+    top:-6px;
+    left:-6px;
+    border-width:2px 0 0 2px;
+    z-index:5;
+}
+.Btn:after {
+    bottom:-6px;
+    right:-6px;
+    border-width:0 2px 2px 0;
+}
+.Btn:hover:before, .Btn:hover:after {
+    width:calc(100% + 12px);
+    height:calc(100% + 12px);
+    border-color: var(--medium-dark);
+}
+.Btn:hover {
+    color:var(--medium-dark);
+    background-color:var(--medium-dark);
+    border-color:var(--dark-theme);
+    cursor: pointer;
+}
+
+
+
+
+
+.Success {
+    color:var(--medium-dark);
+    background:var(--btnBg);
+    border: 2px solid var(--medium-dark);
+}
+
+.Success:before, .Success:after {
+    border-color:var(--medium-dark);
+}
+.Success:hover:before, .Success:hover:after {
+    border-color: var(--medium-dark);
+}
+.Success:hover {
+    color:white;
+    background-color:var(--medium-dark);
+    border-color:var(--medium-dark);
+}
+
+
+
+
+.Warning {
+    color:var(--warning);
+    background:var(--btnBg);
+    border: 2px solid var(--warning);
+
+}
+
+.Warning:before, .Warning:after {
+    border-color:var(--warning);
+}
+.Warning:hover:before, .Warning:hover:after {
+    border-color: var(--warning);
+}
+.Warning:hover {
+    color:white;
+    background-color:var(--warning);
+    border-color:var(--warning);
+}
+
+
+
+
+/*For DESKTOPS*/
+@media only screen and (min-width: 800px) {
+    .Btn{
+        padding:1em 10vw;
+    }
+}
+
+/*For TABS*/
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .Btn{
+    padding:1em 15vw;
+    }
+}
+
+
+
+.InlineBtn {
+    display: inline;
+    padding: 0.8em 5%;
+    margin: 0 1em;
+}
+
+.InlineBtn::before, .InlineBtn::after {
+    border: 0;
+}
+
+
+.Smaller {
+    height: 2em;
+    font-size: 0.7em;
+    line-height:1px;
+}

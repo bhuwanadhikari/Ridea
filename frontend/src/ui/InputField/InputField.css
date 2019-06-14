@@ -1,0 +1,68 @@
+
+.InputField{
+    display: block;
+    width: 90%;
+    margin : 10px auto;
+    height: 30px;
+    border: 1px solid var(--medium-dark);
+    border-radius: 3px;
+    color: #3D2B1F;
+    font-family: 'Muli', sans-serif;
+    padding: 4px;
+    font-size: 13px;
+    
+}
+
+
+
+.TextArea {
+    height: 90px;
+
+}
+
+.InputField:focus{
+    background-color: var(--lightest-theme);
+    box-shadow: 0 0 2px var(--dark-theme);
+}
+
+.errorFeedback {
+    position: relative;
+    top: -7px;
+    margin: auto;
+    width: 75vw;
+    text-align: center;
+    font-size: 9.5px;
+    font-family: Comfortaa, sans-serif;
+    box-sizing: border-box;
+    color: var(--danger);
+
+}
+
+
+
+
+
+
+/*For DESKTOPS*/
+@media only screen and (min-width: 800px) {
+
+    .InputField{
+        width: 25vw;;
+    }
+
+    .errorFeedback {
+        width: 100%;
+    }
+}
+
+/*For TABS*/
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+
+    .InputField{
+        width: 60vw;;
+    }
+
+    .errorFeedback {
+         width: 100%;
+     }
+}

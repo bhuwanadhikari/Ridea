@@ -1,0 +1,34 @@
+.Modal {
+    position: fixed;
+    height: auto;
+    z-index: 35;
+    background-color: white;
+    width: 90%;
+    border-radius: 5px;
+    box-shadow: 0 0 25px var(--medium-dark);
+    padding: 20px 0;
+    left: 5%;
+    transition: all 0.55s ease-out;
+}
+
+
+/*For DESKTOPS ONLY --60VW  */
+@media only screen and (min-width: 800px) {
+    .Modal{
+        width: 40vw;
+        left: 30vw;
+    }
+
+
+}
+
+/*For TABS ONLY -- 75VW  */
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .Modal{
+        width: 70vw;
+        left: 15vw;
+    }
+
+
+}
+

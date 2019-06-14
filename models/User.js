@@ -7,18 +7,23 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
-
     email: {
         type: String, 
         required: true,
     },
-    // password: {
-    //     type: String, 
-    //     required: true,
-    // },
-    username: String,
-    googleId: String,
-    thumbnail: String
+
+    password: {
+        type: String, 
+    },
+    username: {
+        type: String, 
+    },
+    googleId: {
+        type: String, 
+    },
+    thumbnail: {
+        type: String, 
+    },
 
 }, {timestamps: true});
 

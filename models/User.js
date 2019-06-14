@@ -6,16 +6,24 @@ const UserSchema = new Schema({
     name: {
         type: String,
         required: true,
-    },
+    },  
     email: {
         type: String, 
         required: true,
     },
     password: {
         type: String, 
-        required: true,
-    }
+    },
+    username: {
+        type: String, 
+    },
+    googleId: {
+        type: String, 
+    },
+    thumbnail: {
+        type: String, 
+    },
 
 }, {timestamps: true});
 
-module.export = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

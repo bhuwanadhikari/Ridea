@@ -3,17 +3,7 @@ import React, { Component } from 'react';
 import Footer from '../components/Footer/Footer';
 import NavBar from '../components/NavBar/NavBar';
 import SideDrawer from '../components/SideDrawer/SideDrawer';
-import Backdrop from '../components/Backdrop/Backdrop';
 
-import Modal from '../ui/Modal/Modal';
-
-const styles = {
-  // transition: 'all 3s ease-in'
-  'transition': 'width 2s ease-in',
-  'transition-delay': '2s',
-  'transitionn-timeout': '2s'
-  // '--webkit-transition': 'width 2s'SideDrawerBackdrop
-}
 class App extends Component {
   constructor(props) {
     super(props)

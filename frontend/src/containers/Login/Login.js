@@ -4,7 +4,6 @@ import Modal from '../../ui/Modal/Modal';
 import InputField from '../../ui/InputField/InputField';
 
 import './Login.css';
-import {NavLink} from 'react-router-dom';
 
 
 class Login extends Component{
@@ -31,7 +30,7 @@ class Login extends Component{
          email: this.state.email,
          password: this.state.password
       };
-      console.log('userData')
+      console.log('userData', userData)
    };
 
    
@@ -67,7 +66,7 @@ class Login extends Component{
             <Button cls = "Success" clicked={this.onLoginHandler} >Log In</Button>
 
             <div className="InfoBar">
-               <a href= '#'>Sign Up! If you are new to Ridea</a>
+               <a href= '/'>Sign Up! If you are new to Ridea</a>
             </div>
          </div>
       )

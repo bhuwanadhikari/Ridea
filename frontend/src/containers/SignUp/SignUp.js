@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
 
 
 import Button from '../../ui/Button/Button';
@@ -45,7 +43,7 @@ class SignUp extends Component {
          faculty: this.state.faculty,
       };
 
-      console.log("User has been registered")
+      console.log("User has been registered", newUser)
 
    };
 

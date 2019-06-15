@@ -1,24 +1,27 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+		"Droid Sans", "Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 :root {
-  --main-bg-color: coral; 
-  --dark-theme: #022140; 
-  --medium-dark:#0078D6;
-  --neutral-theme:#2d5f5D;
-  --light-theme:#494868;
-  --lighter-theme:#5085A5;
-  --lightest-theme:#f7f9fb ;
+	--main-bg-color: coral;
+	--dark-theme: #022140;
+	--medium-dark: #0078d6;
+	--neutral-theme: #2d5f5d;
+	--light-theme: #494868;
+	--lighter-theme: #5085a5;
+	--lightest-theme: #f7f9fb;
+
+	--danger: red;
+	--buttonBackground: rgba(255, 255, 255, 0.5);
+
+  --warningBg: gray;
 }
 /* #265077 : Medium dark
   #022140 : Dark theme

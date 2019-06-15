@@ -9,7 +9,7 @@ class Chat extends Component {
            
             <div className="ChatPageContainer">
              <div className="ChatToolbarContainer"> <ChatToolBar/></div>  
-             <div className="ChatThumbnailContainer"><ChatThumbnail/></div>X     
+             <div className="ChatThumbnailContainer"></div>  
             </div>
         )
     }

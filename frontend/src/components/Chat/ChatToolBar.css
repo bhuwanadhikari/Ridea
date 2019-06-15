@@ -1,19 +1,17 @@
 .Toolbar{
     position: fixed;
     width: 100%;
-    background: white;
+    /* background: #cccccc; */
     height:10vh;
     top: 0;
     left: 0;
     display: flex;
-    border-bottom: solid 1px var(--medium-dark);
+    box-shadow: 1px 1px 6px var(--lighter-theme);
     align-content: center;
     align-content: space-around;
 }
 .ToolbarNavigation{
     display: flex;
-    align-content: space-around;
-    align-content: center;
     height: 100%;
     width: 100%;
 }
@@ -21,48 +19,20 @@
     flex:0;
     margin:0 5px;
 }
-.header{
-    flex: 2;
+.Header{
+    align-items: left;
+    flex: 1;
     margin: 0 5px;
 }
-.spacer{
-    flex: 1;
-} 
 
-/*For DESKTOPS ONLY*/
+
+/* For DESKTOPS ONLY*/
 @media only screen and (min-width: 800px) {
-    .BackButtonWrapper{
-        flex:0;
-        margin:0 5px;
-    }
-    .header{
-        flex: 2;
-    }
-    .spacer{
-        flex: 2;
-    } 
-    .spacer2{
-        flex: 2;
-    } 
-    
     
 }
 
 /*For TABS ONLY*/
 @media only screen and (min-width: 450px) and (max-width: 800px) {
-    .BackButtonWrapper{
-        flex:0;
-        margin:0 5px;
-    }
-    .header{
-        flex: 2;
-    }
-    .spacer{
-        flex: 1;
-    } 
-    .spacer2{
-        flex: 1;
-    } 
     
    
-}
+} 

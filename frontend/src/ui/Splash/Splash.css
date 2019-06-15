@@ -1,0 +1,98 @@
+
+
+.Splash {
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(0deg, rgba(252,176,69,1) 0%, rgba(253,29,29,1) 22%, rgba(218,37,72,1) 64%, rgba(131,58,180,1) 100%) rgb(252,176,69);
+}
+
+.NameOfApp {
+    color: white;
+    position: absolute;;
+    bottom: 0;
+    left: calc(50% - 45px);
+    font-family: Comfortaa, sans-serif;
+
+}
+
+.Splash img {
+    position: absolute;;
+    top: 33%;
+    left: calc(50% - 17.5vw);
+    width: 35vw;
+    margin: auto 0;
+    object-fit: contain;
+}
+
+@media only screen and (min-width: 450px) {
+    .Splash img {
+        position: absolute;;
+        top: 15%;
+        left: calc(50% - 7.5vw);
+        width: 15vw;
+    }
+}
+
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .Splash img {
+        position: absolute;
+        top: 20%;
+        left: calc(50% - 12.5vw);
+        width: 25vw;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.loading {
+    position: absolute;
+    top: 65%;
+    left: calc(50% - 18px);
+}
+.loading-bar {
+    display: inline-block;
+    margin: 3px;
+    width: 5px;
+    height: 20px;
+    border-radius: 4px;
+    animation: loading 1s ease-in-out infinite;
+}
+.loading-bar:nth-child(1) {
+    background-color: var(--lightTheme);
+    animation-delay: 0s;
+}
+.loading-bar:nth-child(2) {
+    background-color: var(--lightTheme);
+    animation-delay: 0.09s;
+}
+.loading-bar:nth-child(3) {
+    background-color: var(--lightTheme);
+    animation-delay: .18s;
+}
+.loading-bar:nth-child(4) {
+    background-color: var(--lightTheme);
+    animation-delay: .27s;
+}
+
+@keyframes loading {
+    0% {
+        transform: scale(1.2);
+    }
+    20% {
+        transform: scale(1, 2);
+    }
+    40% {
+        transform: scale(0.8);
+    }
+}

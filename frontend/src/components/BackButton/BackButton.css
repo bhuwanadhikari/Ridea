@@ -15,24 +15,13 @@
 } 
 /*For DESKTOPS ONLY*/
 @media only screen and (min-width: 800px) {
-    .BackButton{
-        height:40px;
-        width:40px;
-    }
-    .BackButton img{
-        height: 40px;
-        width: 40px;
-    }
-    .ArrowBack{
-        height:40px;
-        width: 40px;
-    }
+    
     
 }
 
 /*For TABS ONLY*/
-@media only screen and (min-width: 450px) and (max-width: 800px) {
-    .BackButton{
+@media only screen and (min-width: 450px) {
+    /* .BackButton{
         height:30px;
         width:30px;
     }
@@ -43,6 +32,6 @@
     .ArrowBack{
         height:30px;
         width: 30px;
-    }
+    } */
     
 }

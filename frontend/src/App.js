@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Home from './containers/Home';
-import Landing from './containers/Landing';
+import Home from './containers/Home/Home';
+import Landing from './containers/Landing/Landing';
 import Chat from './components/Chat/Chat';
 
 

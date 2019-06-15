@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Home from './containers/Home';
 import Landing from './containers/Landing';
+import Chat from './components/Chat/Chat';
 
 
 
@@ -23,6 +24,7 @@ class App extends Component {
           <div style={{ height: '100%' }} className="App">
             <Route exact path = "/home" component = {Home} />
             <Route exact path = "/" component = {Landing} />
+            <Route exact path = "/chat" component = {Chat} />
           </div>
         </Switch>
       </Router>

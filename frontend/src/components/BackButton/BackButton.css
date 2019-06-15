@@ -1,8 +1,48 @@
 .BackButton{
     cursor: pointer;
-    height: 50px;
-    width:70px;
+    height: 20px;
+    width:20px;
+    margin-left: 5px;
 }
-/* .arrowBack{
+.BackButton img{
+    height: 20px;
+    width: 20px;
+   }
+ .ArrowBack{
+     height: 20px;
+     width: 20px;
     
-} */
+} 
+/*For DESKTOPS ONLY*/
+@media only screen and (min-width: 800px) {
+    .BackButton{
+        height:40px;
+        width:40px;
+    }
+    .BackButton img{
+        height: 40px;
+        width: 40px;
+    }
+    .ArrowBack{
+        height:40px;
+        width: 40px;
+    }
+    
+}
+
+/*For TABS ONLY*/
+@media only screen and (min-width: 450px) and (max-width: 800px) {
+    .BackButton{
+        height:30px;
+        width:30px;
+    }
+    .BackButton img{
+        height: 30px;
+        width: 30px;
+    }
+    .ArrowBack{
+        height:30px;
+        width: 30px;
+    }
+    
+}

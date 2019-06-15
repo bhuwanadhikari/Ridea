@@ -1,12 +1,13 @@
 import React from 'react'
 import ArrowBack from '../../img/ArrowBack.svg';
+import './BackButton.css'
 
 function BackButton(props) {
     return (
-        <button className="BackButton">
-            <img calssName="ArrowBack"src={ArrowBack}></img>
+        <div className="BackButton">
+            <img calssName="ArrowBack"src={ArrowBack} alt="back button of ridea"></img>
 
-        </button>
+        </div>
     )
 }
 

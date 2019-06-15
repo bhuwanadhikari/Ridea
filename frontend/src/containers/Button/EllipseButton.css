@@ -1,0 +1,24 @@
+.EllipseContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 25px;
+    width: 25px;
+    background: transparent;
+    border: 1px solid;
+    cursor: pointer;
+    padding: 0;
+    box-sizing: border-box;
+    margin: auto;
+}
+.Dot{
+    width: 3px;
+    height: 3px;
+    border: 1px;
+    border-radius: 3px;
+    background-color: black;
+    z-index: 100;
+}
+.EllipseContainer-vertical{
+    flex-direction: column;
+}

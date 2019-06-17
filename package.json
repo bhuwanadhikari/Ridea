@@ -28,6 +28,8 @@
     "concurrently": "^4.1.0",
     "create-react-app": "^3.0.1",
     "express": "^4.17.1",
+    "gravatar": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.5.12",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0",

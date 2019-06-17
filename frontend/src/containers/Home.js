@@ -1,10 +1,13 @@
 
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
+import queryString from 'query-string';
+
 import Footer from '../components/Footer/Footer';
 import NavBar from '../components/NavBar/NavBar';
 import SideDrawer from '../components/SideDrawer/SideDrawer';
 
-class App extends Component {
+class Home extends Component {
   constructor(props) {
     super(props)
 
@@ -18,6 +21,16 @@ class App extends Component {
   }
   onBackdropClickHandler = () => {
     this.setState({ showDrawer: false })
+  }
+
+  
+  componentDidMount(){
+    var query = queryString.parse(this.props.location.search);
+    console.log(query);
+    if (query.token) {
+      window.localStorage.setItem("jwt", query.token);
+      console.log("This is query string", query.token);
+   }
   }
 
 
@@ -46,4 +59,4 @@ class App extends Component {
 }
 
 
-export default App;
+export default withRouter(Home);

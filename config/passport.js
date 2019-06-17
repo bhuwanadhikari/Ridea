@@ -1,6 +1,6 @@
-/* const JwtStrategy = require('passport-jwt').Strategy;
+const passport = require('passport');
+const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const mongoose = require('mongoose');
 const keys = require('./keys');
 
 const User = require('../models/User');
@@ -25,15 +25,12 @@ module.exports = passport => {
       })
    )
 };
- */
 
 
 
 
-const passport = require('passport');
+
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const keys = require('./keys');
-const User = require('../models/User');
 
 passport.serializeUser((user, done) => {
    done(null, user.id);
@@ -54,7 +51,7 @@ passport.use(
    }, (accessToken, refreshToken, profile, done) => {
       // check if user already exists in our own db
 
-      console.log(profile.emails[0].value);
+      console.log("token",accessToken);
       User.findOne({ googleId: profile.id })
          .then((currentUser) => {
             if (currentUser) {

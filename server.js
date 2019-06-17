@@ -2,16 +2,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const passportSetup = require('./config/passport');
+
+const auth = require('./api/auth');
 
 
 const app = express();
 
-//database
-const db = require('./config/keys').mongoURI;
 
 
 //connection to database
+const db = require('./config/keys').mongoURI;
 mongoose
     .connect(db, { useNewUrlParser: true })
     .then(() => console.log("Connected to the mongoose"))
@@ -22,11 +22,13 @@ mongoose
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Passport config
+require('./config/passport')(passport);
+
 //Configuration for passport
-/* require('./config/passport')(passport); */
 
 //body parser middleware
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
@@ -36,41 +38,11 @@ app.get('/', (req, res, next) => {
 });
 
 
-
-
-// auth with google+
-app.get('/auth/google', passport.authenticate('google', {
-    scope: ['profile', 'email']
-}));
-
-// callback route for google to redirect to
-// hand control to passport to use code to grab profile info
-app.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
-    // res.send(req.user);
-
-    res.redirect("http://localhost:3000/home");
-});
-
-// create home route
-app.get('/', (req, res) => {
-    res.send("hell oworld");
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
+// //Setting up of routes
+app.use('/auth', auth);
 
 
 
 app.listen(5000, () => {
-	console.log("App working in port 5000");
+    console.log("App working in port 5000");
 });

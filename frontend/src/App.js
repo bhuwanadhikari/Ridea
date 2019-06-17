@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 
-import Home from './containers/Home';
+import Home from './containers/Home/Home';
 import Landing from './containers/Landing/Landing';
-
+import Chat from './components/Chat/Chat';
 
 
 
@@ -22,13 +22,13 @@ class App extends Component {
   render() {
     return (
       <Router>
-        
+        <Switch>
           <div style={{ height: '100%' }} className="App">
-          <Switch>
             <Route exact path = "/home" component = {Home} />
             <Route exact path = "/" component = {Landing} />
+            <Route exact path = "/chat" component = {Chat} />
+          </div>
         </Switch>
-        </div>
       </Router>
     );
   }

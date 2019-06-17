@@ -28,8 +28,15 @@
     cursor: pointer;
     display: flex;
     flex: 0;
+    widows: 50px;
+    height: 50px;
     margin: 0 5px;
     align-content: center;
+    border-radius: 50px;
+}
+.ChatIconWrapper:active{
+    border:none;
+    style:none;
 }
 .Spacer{
     flex: 0.5  ;

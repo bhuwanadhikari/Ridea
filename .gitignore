@@ -1,4 +1,5 @@
 /node_modules
 package-lock.json
-/config/keys_development.js
+config/keys_development.js
 /.idea
+frontend/config/keys_development.js

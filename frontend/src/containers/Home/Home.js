@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Footer from '../../components/Footer/Footer';
 import NavBar from '../../components/NavBar/NavBar';
 import SideDrawer from '../../components/SideDrawer/SideDrawer';
+import Maps from '../Maps/Maps';
 
 
 class App extends Component {
@@ -29,7 +30,7 @@ class App extends Component {
 
         
         <div className='BodyWrapper'>
-          
+          <Maps />
         </div>
         <SideDrawer
           show={this.state.showDrawer}

@@ -1,0 +1,18 @@
+.MapWrapper {
+
+}
+
+.gm-svpc {
+    display: none;
+}
+
+.gmnoprint, .gm-control-active, .gm-style-pbc, gm-style {
+    display: none;
+}
+
+.MapMarker {
+    position: fixed;
+    top: 400px;
+    left: 300px;
+    z-index: 3000;
+}

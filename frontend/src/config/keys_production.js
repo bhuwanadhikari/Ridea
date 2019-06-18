@@ -1,4 +1,5 @@
-export const keys = {
+export default {
     googleAPIKey: process.env.googleAPIKey,
+    parser: "babel-eslint",
  };
  

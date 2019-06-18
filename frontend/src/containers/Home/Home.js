@@ -1,9 +1,12 @@
-
+/* eslint-disable no-undef */
 import React, { Component } from 'react';
 import Footer from '../../components/Footer/Footer';
 import NavBar from '../../components/NavBar/NavBar';
 import SideDrawer from '../../components/SideDrawer/SideDrawer';
 import Maps from '../Maps/Maps';
+import keys from '../../config/keys';
+
+import './Home.css'
 
 
 class App extends Component {
@@ -25,12 +28,19 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="Home">
         <NavBar clicked={this.drawerToggleClickHandler} />
 
-        
+
         <div className='BodyWrapper'>
-          <Maps />
+          <Maps
+            isMarkerShown = {false}
+            googleMapURL= {`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.googleAPIKey}`}
+            loadingElement={<div style={{ height: `100vw` }} />}
+            containerElement={<div style={{ height: `100vh` }} />}
+            mapElement={<div style={{ height: `100%` }} />}
+            direction= {true}
+          />
         </div>
         <SideDrawer
           show={this.state.showDrawer}

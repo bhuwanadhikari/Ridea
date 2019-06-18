@@ -6,6 +6,7 @@
     top: 0;
     left: 0;
     display: flex;
+    z-index: 300;
 
 }
 .ToolbarNavigation{
@@ -36,7 +37,6 @@
 }
 .ChatIconWrapper:active{
     border:none;
-    style:none;
 }
 .Spacer{
     flex: 0.5  ;

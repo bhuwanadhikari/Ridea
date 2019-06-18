@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import EllipseButton from '../../containers/Button/EllipseButton';
+import './ChatThumbnail.css';
 
 class ChatThumbnail extends Component {
     render() {
         return (
-            <div className="ChatThumbnailContainer">
-                <div className="ProfilePictureWrapper"></div>
+            <div className="Container">
+                <div className="ProfilePictureWrapper"><div className="PictureEnclosure"></div></div>
                 <div className="RecentMessegeWrapper">Recent Messege</div>
                 <div className="MoreButtonWrapper"><EllipseButton/></div>
                 

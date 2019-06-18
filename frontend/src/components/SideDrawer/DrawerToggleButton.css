@@ -9,7 +9,7 @@
     cursor: pointer;
     padding: 0;
     box-sizing: border-box;
-    margin: auto;
+    margin-left: 5px;
 }
 .ToggleButton :focus{
     border:none;

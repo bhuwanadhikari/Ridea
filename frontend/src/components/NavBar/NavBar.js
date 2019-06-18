@@ -13,7 +13,7 @@ class NavBar extends Component {
                     <div className='HamBurgerWrapper'><DrawerToggleButton clicked={this.props.clicked}/></div>
                     <div className='SearchWrapper'><Search/></div>
                     <div className='Spacer'></div>
-                    <Link to='/Chat'>
+                    <Link to='/chat'>
                     <div className='ChatIconWrapper'><div className='ImageEnclosure'><img className='AuthMessageIcon' src={message} alt='Message icon of ridea'></img></div></div>
                     </Link>
                 </nav>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './Maps.css';
-import keys from '../../config/keys_development';
 const { compose, withProps, lifecycle } = require("recompose");
 
 
@@ -13,7 +12,7 @@ const {
     GoogleMap,
     DirectionsRenderer,
     Marker
-} = require("react-google-maps");
+} = require('react-google-maps');
 
 
 class Maps extends Component {

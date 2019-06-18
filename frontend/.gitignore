@@ -5,7 +5,7 @@
 /.pnp
 .pnp.js
 /src/config/keys_development.js
-
+package.lock.json
 # testing
 /coverage
 

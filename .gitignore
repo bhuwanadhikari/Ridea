@@ -2,4 +2,3 @@
 package-lock.json
 config/keys_development.js
 /.idea
-frontend/config/keys_development.js

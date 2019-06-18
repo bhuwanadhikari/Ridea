@@ -71,36 +71,34 @@
         display: inline-flex;
         align-content: space-between ;
         }
-        .AddRouteButtonWrapper{
+    .AddRouteButtonWrapper{
             flex: 1;
+            margin-left:200px;
         }
     .Spacer{
         flex:5;
     }
     .LocateButtonWrapper{
         flex: 0;
+        margin-right: 200px;
     }
 }
 
 /*For TABS ONLY*/
 @media only screen and (min-width: 450px) and (max-width: 800px) {
-    .ToolbarNavigation{
+    .FooterNavigation{
         display: inline-flex;
         align-content: space-between ;
         }
-    .HamBurgerWrapper{
-        flex:1;
-    }
-    .SearchWrapper{
-        flex:1;
-    }
+    .AddRouteButtonWrapper{
+            flex: 1;
+            margin-left:100px;
+        }
     .Spacer{
-        flex:2;
+        flex:5;
     }
-    .ChatIconWrapper{
-        margin:0;
-    }
-    .ImageEnclosure{
-        margin:0;
+    .LocateButtonWrapper{
+        flex: 0;
+        margin-right: 100px;
     }
 }

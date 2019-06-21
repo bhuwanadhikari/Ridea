@@ -12,7 +12,15 @@
 
 .MapMarker {
     position: fixed;
-    top: 400px;
-    left: 300px;
+    top: 50%;
+    left: 50%;
     z-index: 3000;
+    background-color: 'red';
+}
+
+.MapMarkerImage {
+    height: 84px;
+    position: relative;
+    top: -84px;
+    left: -42px;
 }

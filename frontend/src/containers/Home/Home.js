@@ -15,15 +15,43 @@ class App extends Component {
 
     this.state = {
       showDrawer: false,
+      currentLocation: {
+        lat: 28.211784,
+        lng: 84.987447
+      }
     }
   }
 
   drawerToggleClickHandler = () => {
     this.setState({ showDrawer: !this.state.showModal });
   }
+
+
   onBackdropClickHandler = () => {
     this.setState({ showDrawer: false })
   }
+
+  componentDidMount() {
+
+    if (navigator.geolocation) {
+
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          this.setState(prevState => ({
+            currentLocation: {
+              ...prevState.currentLocation,
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            }
+          }));
+
+        }
+      );
+    } else {
+      console.log("cannot be updated");
+    }
+  }
+
 
 
   render() {
@@ -34,12 +62,13 @@ class App extends Component {
 
         <div className='BodyWrapper'>
           <Maps
-            isMarkerShown = {false}
-            googleMapURL= {`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.googleAPIKey}`}
+            isMarkerShown={false}
+            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.googleAPIKey}`}
             loadingElement={<div style={{ height: `100vw` }} />}
             containerElement={<div style={{ height: `100vh` }} />}
             mapElement={<div style={{ height: `100%` }} />}
-            direction= {true}
+            direction={true}
+            currentLocation={this.state.currentLocation}
           />
         </div>
         <SideDrawer

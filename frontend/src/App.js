@@ -17,17 +17,19 @@ class App extends Component {
     }
   }
 
-  
+
 
 
   render() {
     return (
       <Router>
-          <div style={{ height: '100%' }} className="App">
-            <Route exact path = "/home" component = {Home} />
-            <Route exact path = "/" component = {Landing} />
-            <Route exact path = "/chat" component = {Chat} />
-          </div>
+        <div style={{ height: '100%' }} className="App">
+          <Switch>
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/" component={Home} />
+            <Route exact path="/chat" component={Chat} />
+          </Switch>
+        </div>
       </Router>
     );
   }

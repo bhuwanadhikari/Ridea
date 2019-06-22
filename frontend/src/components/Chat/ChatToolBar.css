@@ -1,7 +1,7 @@
-.Toolbar{
+.ChatToolbar{
     position: fixed;
     width: 100%;
-    /* background: #cccccc; */
+    background: transparent; 
     height:10vh;
     top: 0;
     left: 0;
@@ -9,6 +9,7 @@
     box-shadow: 1px 1px 6px var(--lighter-theme);
     align-content: center;
     align-content: space-around;
+    z-index: 100;
 }
 .ToolbarNavigation{
     display: flex;

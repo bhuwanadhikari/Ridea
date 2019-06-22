@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import Pindrop from './Pindrop/Pindrop';
 import './Maps.css';
 const { compose, withProps, lifecycle } = require("recompose");
 
@@ -10,16 +11,54 @@ const {
     withScriptjs,
     withGoogleMap,
     GoogleMap,
-    DirectionsRenderer,
-    Marker
-} = require("react-google-maps");
+    // DirectionsRenderer,
+    Marker,
+} = require('react-google-maps');
 
 
 class Maps extends Component {
 
-    state = {
-        directions: null
+    constructor(props) {
+        super(props);
+        this.state = {
+            dynamicCenter: {
+                lat: this.props.currentLocation.lat,
+                lng: this.props.currentLocation.lng
+            },
+            pickupPoint: {
+                lat: 28.21190400000000,
+                lng: 83.98790700000000
+            },
+            isPickupPointSet: false,
+            dropPoint: {
+                lat: 28.21190400000000,
+                lng: 83.98790700000000
+            },
+            isDropPointSet: false,
+            arePointsReady: false,
+            defaultZoom: 12,
+            directions: null,
+
+        }
     }
+
+    static getDerivedStateFromProps(nextProps, state) {
+        if (!nextProps.isCurrentLocationSet) {
+            return { dynamicCenter: { ...nextProps.currentLocation } };
+        } else if (nextProps.isCurrentLocationSet) {
+            return { dynamicCenter: { ...state.dynamicCenter } };
+        } else return null;
+    }
+
+
+
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.currentLocation !== this.props.currentLocation) {
+            this.setState({ defaultZoom: 16 })
+        }
+    }
+
     componentDidMount() {
         const DirectionsService = new window.google.maps.DirectionsService();
 
@@ -29,7 +68,6 @@ class Maps extends Component {
             travelMode: window.google.maps.TravelMode.DRIVING,
         }, (result, status) => {
 
-            console.log(result);
             if (status === window.google.maps.DirectionsStatus.OK) {
                 this.setState({
                     directions: result,
@@ -41,73 +79,102 @@ class Maps extends Component {
     }
 
 
+
+    onMarkerClickHandler = () => {
+
+        const currentMark = this.state.dynamicCenter;
+        const { isPickupPointSet, isDropPointSet } = this.state;
+
+        if (!isPickupPointSet && !isDropPointSet) {
+            this.setState({
+                ...this.state,
+                pickupPoint: { ...this.state.pickupPoint, ...currentMark },
+                isPickupPointSet: true,
+                defaultZoom: 14,
+                dynamicCenter: { lat: this.state.dynamicCenter.lat - 0.010, lng: this.state.dynamicCenter.lng + 0.0150 }
+            });
+        } else if (isPickupPointSet && !isDropPointSet) {
+            this.setState({
+                dropPoint: { ...this.state.dropPoint, ...currentMark },
+                isDropPointSet: true,
+                dynamicCenter: { lat: this.state.dynamicCenter.lat + 0.0050, lng: this.state.dynamicCenter.lng - 0.00750 },
+                defaultZoom: 13,
+                arePointsReady: true
+            });
+        } else {
+            console.log("Both points has been set");
+        }
+    }
+
+    onPickupPointClickHandler = () => {
+        console.log("pickup point clicked");
+    }
+    onDropPointClickHandler = () => {
+        console.log("droppoint point clicked");
+    }
+    onCenterChangedHandler = () => {
+        let center = this.mapRef.getCenter();
+        let latitude = center.lat();
+        let longitude = center.lng();
+        this.setState({ dynamicCenter: { lat: latitude, lng: longitude }, testCenter: latitude });
+        // console.log("Update center", this.state.dynamicCenter.lat, this.state.dynamicCenter.lng, "testCenter", this.state.testCenter);
+    }
+
+
+
+
+
+
+
     render() {
+        console.log("This is the pickup point", this.state.pickupPoint);
+        console.log("This is the drop Point", this.state.dropPoint);
+
         let iconMarker = new window.google.maps.MarkerImage(
-            "https://www.shareicon.net/data/128x128/2016/06/16/594607_pin_32x32.png",
+            "https://cdn4.iconfinder.com/data/icons/iconsimple-places/512/pin_1-512.png",
             null, /* size is determined at runtime */
             null, /* origin is 0,0 */
             null, /* anchor is bottom center of the scaled image */
-            new window.google.maps.Size(32, 32)
+            new window.google.maps.Size(42, 42)
         );
+
         return (
             <GoogleMap
-                defaultZoom={7}
-                defaultCenter={new window.google.maps.LatLng(28.211784, 83.987447)}
-            >
-                {this.state.directions && <DirectionsRenderer directions={this.state.directions} />}
+                ref={(m) => this.mapRef = m}
+                zoom={this.state.defaultZoom}
 
-                <Marker
-                    icon={iconMarker}
-                    position={{ lat: 28.211784, lng: 83.987447 }}
-                >
-                </Marker>
+                center={{ lat: this.state.dynamicCenter.lat, lng: this.state.dynamicCenter.lng }}
+                onCenterChanged={this.onCenterChangedHandler}
+            >
+                {/*this.state.directions && <DirectionsRenderer directions={this.state.directions} />*/}
+                {(<div className="MapMarker" onClick={this.onMarkerClickHandler}>
+                    <img
+                        className="MapMarkerImage"
+                        src="https://lh3.googleusercontent.com/PYfOSWIKrftQS-GvIWRt5_QaqI6T3bS9p-KWkUNLFd1R6dCe1_kYmwcx53wr7qYNyRw"
+                        alt="Map marker of Ridea app, taxi and ride sharing app Nepal and Pokhara"
+                    />
+                </div>)}
+                {this.state.isPickupPointSet ? (
+                    <Marker
+                        icon={iconMarker}
+                        onClick={this.onPickupPointClickHandler}
+                        position={{ lat: this.state.pickupPoint.lat, lng: this.state.pickupPoint.lng }}
+                    >
+                    </Marker>
+                ) : null}
+                {this.state.isDropPointSet ? (
+                    <Marker
+                        icon={iconMarker}
+                        onClick={this.onPickupPointClickHandler}
+                        position={{ lat: this.state.dropPoint.lat, lng: this.state.dropPoint.lng }}
+                    >
+                    </Marker>
+                ) : null}
+
             </GoogleMap >
         )
     }
 }
 
 
-
-
-
-
-
-// const Maps = compose(
-//     withProps({
-//         googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.googleAPIKey}`,
-//         loadingElement: <div style={{ height: `100%` }} />,
-//         containerElement: <div style={{ height: `100vh` }} />,
-//         mapElement: <div style={{ height: `100%` }} />,
-//     }),
-//     withScriptjs,
-//     withGoogleMap,
-//     lifecycle({
-//         componentDidMount() {
-//             const DirectionsService = new window.google.maps.DirectionsService();
-
-//             DirectionsService.route({
-//                 origin: new window.google.maps.LatLng(41.8507300, -87.6512600),
-//                 destination: new window.google.maps.LatLng(41.8525800, -87.6514100),
-//                 travelMode: window.google.maps.TravelMode.DRIVING,
-//             }, (result, status) => {
-
-//                 console.log(result);
-//                 if (status === window.google.maps.DirectionsStatus.OK) {
-//                     this.setState({
-//                         directions: result,
-//                     });
-//                 } else {
-//                     console.error(`error fetching directions ${result}`);
-//                 }
-//             });
-//         }
-//     })
-// )(props =>
-//     <GoogleMap
-//         defaultZoom={7}
-//         defaultCenter={new window.google.maps.LatLng(41.8507300, -87.6512600)}
-//     >
-//         {props.directions && <DirectionsRenderer directions={props.directions} />}
-//     </GoogleMap>
-// );
 export default withScriptjs(withGoogleMap(Maps))

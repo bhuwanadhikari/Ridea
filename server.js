@@ -4,10 +4,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const auth = require('./api/auth');
-
-
 const app = express();
-
 
 
 //connection to database
@@ -30,12 +27,6 @@ require('./config/passport')(passport);
 //body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-
-
-app.get('/', (req, res, next) => {
-    res.send('Hello World!');
-});
 
 
 // //Setting up of routes

@@ -16,9 +16,10 @@ class App extends Component {
     this.state = {
       showDrawer: false,
       currentLocation: {
-        lat: 28.211784,
-        lng: 84.987447
-      }
+        lat: 28.238284883392780,
+        lng: 83.99134304265554
+      },
+      isCurrentLocationSet: false
     }
   }
 
@@ -32,7 +33,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-
     if (navigator.geolocation) {
 
       navigator.geolocation.getCurrentPosition(
@@ -44,6 +44,7 @@ class App extends Component {
               lng: position.coords.longitude
             }
           }));
+          this.setState({ isCurrentLocationSet: true });
 
         }
       );
@@ -69,6 +70,7 @@ class App extends Component {
             mapElement={<div style={{ height: `100%` }} />}
             direction={true}
             currentLocation={this.state.currentLocation}
+            isCurrentLocationSet={this.state.isCurrentLocationSet}
           />
         </div>
         <SideDrawer

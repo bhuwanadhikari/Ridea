@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     googleAPIKey: process.env.googleAPIKey,
  };
  

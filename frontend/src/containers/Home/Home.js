@@ -64,7 +64,7 @@ class App extends Component {
         <div className='BodyWrapper'>
           <Maps
             isMarkerShown={false}
-            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.googleAPIKey}`}
+            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.googleAPIKey}`}
             loadingElement={<div style={{ height: `100vw` }} />}
             containerElement={<div style={{ height: `100vh` }} />}
             mapElement={<div style={{ height: `100%` }} />}

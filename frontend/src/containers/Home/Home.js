@@ -72,7 +72,7 @@ class App extends Component {
             currentLocation={this.state.currentLocation}
             isCurrentLocationSet={this.state.isCurrentLocationSet}
           />
-        </div>
+        </div>            
         <SideDrawer
           show={this.state.showDrawer}
           drawerClosed={() => {
@@ -80,7 +80,7 @@ class App extends Component {
           }}
         />
 
-        <Footer />
+        <Footer /> 
       </div>
     );
   }

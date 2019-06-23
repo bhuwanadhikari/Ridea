@@ -1,3 +1,3 @@
 module.exports = {
-    googleAPIKey: process.env.GOOGLE_API_KEY,
+    googleAPIKey: 'AIzaSyApnx83gVkqCIaHqJ4t4j9Zf2nIVQG-u98',
 };

@@ -24,7 +24,20 @@ router.get('/google', passport.authenticate('google', {
 // hand control to passport to use code to grab profile info
 router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
     var token = req.user.token;
-    res.redirect("http://localhost:3000/home?token=" + token);
+    payload = {
+        id: req.user.id,
+        name: req.user.name,
+        email: req.user.email
+    };
+    console.log(payload);
+
+    jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
+        if (!err) {
+            res.json({ success: true, token: 'Bearer ' + token });
+        } else {
+            res.json({ success: false });
+        }
+    });
 });
 
 
@@ -36,6 +49,7 @@ router.post('/register', (req, res) => {
     const { errors, isValid } = validateRegisterInput(req.body);
     //check validation
     if (!isValid) {
+        console.log("INvalid ");
         return res.status(400).json(errors);
     }
 
@@ -64,7 +78,18 @@ router.post('/register', (req, res) => {
 
                     newUser
                         .save()
-                        .then(user => res.json(user))
+                        .then(user => {
+                            console.log(user);
+                            payload = { id: user.id, name: user.name, email: user.email };
+                            console.log(payload);
+                            jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
+                                if (!err) {
+                                    res.status(201) .json({ success: true, token: 'Bearer ' + token });
+                                } else {
+                                    res.status(401).json({ success: false });
+                                }
+                            });
+                        })
                         .catch(err => console.log(err));
                 });
             });
@@ -99,7 +124,11 @@ router.post('/login', (req, res) => {
                 payload = { id: user.id, name: user.name, email: user.email };
 
                 jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
-                    res.json({ success: true, token: 'Bearer ' + token });
+                    if (!err) {
+                        res.json({ success: true, token: 'Bearer ' + token });
+                    } else {
+                        res.json({ success: false });
+                    }
                 });
             } else {
                 errors.password = 'Password Incorrect';
@@ -117,7 +146,7 @@ router.get('/testauth', passport.authenticate('google'), (req, res) => {
 });
 
 
-router.get('/helly', passport.authenticate('jwt'),  (req, res) => {
+router.get('/helly', passport.authenticate('jwt'), (req, res) => {
     res.json({ msg: "this is public page" });
 });
 

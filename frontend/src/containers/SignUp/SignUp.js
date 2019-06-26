@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 
 
 import Button from '../../ui/Button/Button';
 import InputField from '../../ui/InputField/InputField';
 import Modal from '../../ui/Modal/Modal';
 import Auxi from '../../hoc/Auxi';
+import setAuthToken from '../../utils/setAuthToken';
+import store from '../../redux/store/store';
 import './SignUp.css';
 import Login from '../Login/Login';
 
@@ -40,10 +44,20 @@ class SignUp extends Component {
          email: this.state.email,
          password: this.state.password,
          password2: this.state.password2,
-         faculty: this.state.faculty,
       };
-
-      console.log("User has been registered", newUser)
+      axios
+         .post('/auth/register', newUser)
+         .then(res => {
+            console.log("user has been registered", res.data);
+            localStorage.setItem('jwtToken', res.data.token);
+            setAuthToken(res.data.token);
+            const decoded = jwtDecode(res.data.token);
+            console.log("Decoded output of the data", decoded);
+            store.dispatch({ type: 'SET_USER', payload: decoded });
+         })
+         .catch(err => {
+            this.setState({ errors: err.response.data })
+         });
 
    };
 
@@ -102,7 +116,7 @@ class SignUp extends Component {
 
                <Button cls="Success" clicked={this.onClickHandler} >Sign Up</Button>
                <div className="InfoBar">
-                  <div onClick={this.onLoginClickHandler} className="Info" >Already Registered? Sign In</div>
+                  <div onClick={this.onLoginClickHandler} className="Info" >Already regesitered? signi In</div>
                </div>
 
             </div>
@@ -112,7 +126,7 @@ class SignUp extends Component {
                }}
                fromTop='27%'
             >
-               <Login />
+               <Login showModal={this.state.showModal} />
             </Modal>
          </Auxi>
       )

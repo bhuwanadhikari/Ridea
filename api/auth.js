@@ -24,16 +24,27 @@ router.get('/google', passport.authenticate('google', {
 // hand control to passport to use code to grab profile info
 router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
     var token = req.user.token;
+    const avatar = gravatar.url(req.body.email, {
+        s: '200',
+        r: 'pg',
+        d: 'mm'
+    });
     payload = {
         id: req.user.id,
         name: req.user.name,
-        email: req.user.email
+        email: req.user.email,
+        avatar
     };
     console.log(payload);
 
     jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
         if (!err) {
-            res.json({ success: true, token: 'Bearer ' + token });
+            // res.json({ success: true, token: 'Bearer ' + token });
+            if (process.env.NODE_ENV === 'production') {
+                res.redirect(`/home?success=true&token=Bearer ${token}`);
+            } else {
+                return res.redirect(`http://localhost:3000?success=true&token=Bearer ${token}`);
+            }
         } else {
             res.json({ success: false });
         }
@@ -84,7 +95,7 @@ router.post('/register', (req, res) => {
                             console.log(payload);
                             jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
                                 if (!err) {
-                                    res.status(201) .json({ success: true, token: 'Bearer ' + token });
+                                    res.status(201).json({ success: true, token: 'Bearer ' + token });
                                 } else {
                                     res.status(401).json({ success: false });
                                 }

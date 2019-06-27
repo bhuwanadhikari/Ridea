@@ -38,7 +38,6 @@ class Login extends Component {
       axios
          .post('/auth/login', userData)
          .then(res => {
-            console.log(res.data);
             localStorage.setItem('jwtToken', res.data.token);
             setAuthToken(res.data.token);
             const decoded = jwtDecode(res.data.token);
@@ -47,7 +46,6 @@ class Login extends Component {
             if(store.getState().auth.isAuthenticated){
                this.props.history.push('/home');
             }
-            console.log(store.getState().auth);
          })
          .catch(err => {
             this.setState({ errors: err.response.data });

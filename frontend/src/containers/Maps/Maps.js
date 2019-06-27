@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import Auxi from '../../hoc/Auxi';
+import RideData from './RideData/RideData';
+import Modal from '../../ui/Modal/Modal';
+
 // import Pindrop from './Pindrop/Pindrop';
 import './Maps.css';
 import axios from 'axios';
@@ -36,10 +40,16 @@ class Maps extends Component {
                 lng: null
             },
             isDropPointSet: false,
-            arePointsReady: false,
+            areRideDataReady: false,
+
+            rideData: {},
+
             defaultZoom: 12,
+
             directions: null,
-            isDirectionFetched: false
+            isDirectionFetched: false,
+
+            progress: null
 
         }
     }
@@ -59,6 +69,12 @@ class Maps extends Component {
         if (prevProps.currentLocation !== this.props.currentLocation) {
             this.setState({ defaultZoom: 16 })
         }
+
+        if (this.state.progress === 'dropPointIsSet') {
+            //open modal for seats
+            //open modal for time
+        }
+
         if (this.state.arePointsReady && !this.state.isDirectionFetched) {
             const { pickupPoint, dropPoint } = this.state;
 
@@ -87,14 +103,19 @@ class Maps extends Component {
                 }
             });
         }
+
+        if (this.state.progress === 'dropPointIsSet') {
+
+        }
+
     }
 
     componentDidMount() {
         axios
             .get('/directions/get')
             .then(allDirections => {
-                console.log("all directions cata are as follows", allDirections.data);
-                this.setState({directions: allDirections.data[2].directionData});
+                // console.log("all directions cata are as follows", allDirections.data);
+                this.setState({ directions: allDirections.data[2].directionData });
                 console.log("Direction in the state", this.state.directions);
             })
             .catch(err => console.log(err));
@@ -107,41 +128,41 @@ class Maps extends Component {
     onMarkerClickHandler = () => {
 
         const currentMark = this.state.dynamicCenter;
-        const { isPickupPointSet, isDropPointSet } = this.state;
+        const { progress, isDropPointSet } = this.state;
 
-        if (!isPickupPointSet && !isDropPointSet) {
+        if (progress === null) {
             this.setState({
                 ...this.state,
                 pickupPoint: { ...this.state.pickupPoint, ...currentMark },
-                isPickupPointSet: true,
+                progress: 'pickupPointIsSet',
                 defaultZoom: 14,
                 dynamicCenter: { lat: this.state.dynamicCenter.lat - 0.010, lng: this.state.dynamicCenter.lng + 0.0150 }
             });
-        } else if (isPickupPointSet && !isDropPointSet) {
+        } else if (progress === 'pickupPointIsSet') {
             this.setState({
                 dropPoint: { ...this.state.dropPoint, ...currentMark },
-                isDropPointSet: true,
+                progress: 'dropPointIsSet',
                 dynamicCenter: { lat: this.state.dynamicCenter.lat + 0.0050, lng: this.state.dynamicCenter.lng - 0.00750 },
                 defaultZoom: 13,
                 arePointsReady: true
             });
         } else {
-            console.log("Both points has been set");
+            console.log("Both points have been set");
         }
     }
 
-    onPickupPointClickHandler = () => {
-        console.log("pickup point clicked");
-    }
-    onDropPointClickHandler = () => {
-        console.log("droppoint point clicked");
-    }
     onCenterChangedHandler = () => {
         let center = this.mapRef.getCenter();
         let latitude = center.lat();
         let longitude = center.lng();
         this.setState({ dynamicCenter: { lat: latitude, lng: longitude }, testCenter: latitude });
         // console.log("Update center", this.state.dynamicCenter.lat, this.state.dynamicCenter.lng, "testCenter", this.state.testCenter);
+    }
+
+    getRideDataHandler = (rideData) => {
+        console.log('get ride data handler has been set');
+        this.setState((state, props) => { return { rideData } });
+
     }
 
 
@@ -151,8 +172,8 @@ class Maps extends Component {
 
 
     render() {
-        console.log("This is the pickup point", this.state.pickupPoint);
-        console.log("This is the drop Point", this.state.dropPoint);
+        // console.log("This is the pickup point", this.state.pickupPoint);
+        // console.log("This is the drop Point", this.state.dropPoint);
 
 
 
@@ -165,45 +186,59 @@ class Maps extends Component {
         );
 
         return (
-            <GoogleMap
-                ref={(m) => this.mapRef = m}
-                zoom={this.state.defaultZoom}
+            <Auxi>
+                <GoogleMap
+                    ref={(m) => this.mapRef = m}
+                    zoom={this.state.defaultZoom}
 
-                center={{ lat: this.state.dynamicCenter.lat, lng: this.state.dynamicCenter.lng }}
-                onCenterChanged={this.onCenterChangedHandler}
-            >
-                {true && <DirectionsRenderer directions={this.state.directions} />}
+                    center={{ lat: this.state.dynamicCenter.lat, lng: this.state.dynamicCenter.lng }}
+                    onCenterChanged={this.onCenterChangedHandler}
+                >
+                    {true && <DirectionsRenderer directions={this.state.directions} />}
 
 
-                {!this.state.arePointsReady
-                    ? (<div className="MapMarker" onClick={this.onMarkerClickHandler}>
-                        <img
-                            className="MapMarkerImage"
-                            src="https://lh3.googleusercontent.com/PYfOSWIKrftQS-GvIWRt5_QaqI6T3bS9p-KWkUNLFd1R6dCe1_kYmwcx53wr7qYNyRw"
-                            alt="Map marker of Ridea app, taxi and ride sharing app Nepal and Pokhara"
-                        />
-                    </div>)
-                    : null}
+                    {!this.state.arePointsReady
+                        ? (<div className="MapMarker" onClick={this.onMarkerClickHandler}>
+                            <img
+                                className="MapMarkerImage"
+                                src="https://lh3.googleusercontent.com/PYfOSWIKrftQS-GvIWRt5_QaqI6T3bS9p-KWkUNLFd1R6dCe1_kYmwcx53wr7qYNyRw"
+                                alt="Map marker of Ridea app, taxi and ride sharing app Nepal and Pokhara"
+                            />
+                        </div>)
+                        : null}
 
-                }
+                    }
                 {this.state.isPickupPointSet
-                    ? (<Marker
-                        icon={iconMarker}
-                        onClick={this.onPickupPointClickHandler}
-                        position={{ lat: this.state.pickupPoint.lat, lng: this.state.pickupPoint.lng }}
-                    >
-                    </Marker>)
-                    : null}
-                {this.state.isDropPointSet ? (
-                    <Marker
-                        icon={iconMarker}
-                        onClick={this.onPickupPointClickHandler}
-                        position={{ lat: this.state.dropPoint.lat, lng: this.state.dropPoint.lng }}
-                    >
-                    </Marker>
-                ) : null}
+                        ? (<Marker
+                            icon={iconMarker}
+                            onClick={this.onPickupPointClickHandler}
+                            position={{ lat: this.state.pickupPoint.lat, lng: this.state.pickupPoint.lng }}
+                        >
+                        </Marker>)
+                        : null}
+                    {this.state.isDropPointSet ? (
+                        <Marker
+                            icon={iconMarker}
+                            onClick={this.onPickupPointClickHandler}
+                            position={{ lat: this.state.dropPoint.lat, lng: this.state.dropPoint.lng }}
+                        >
+                        </Marker>
+                    ) : null}
 
-            </GoogleMap >
+                </GoogleMap >
+
+
+                <Modal
+                    show={/* this.state.progress === 'dropPointIsSet' */ true} modalClosed={() => {
+                        this.setState({ progress: 'null' });
+                    }}
+                    fromTop='27%'
+                >
+                    <RideData getRideData={this.getRideDataHandler} />
+                </Modal>
+
+
+            </Auxi>
         )
     }
 }

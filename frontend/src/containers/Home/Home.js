@@ -1,10 +1,12 @@
 /* eslint-disable no-undef */
 import React, { Component } from 'react';
+
 import Footer from '../../components/Footer/Footer';
 import NavBar from '../../components/NavBar/NavBar';
 import SideDrawer from '../../components/SideDrawer/SideDrawer';
 import Maps from '../Maps/Maps';
-import keys from '../../config/keys';
+
+
 
 import './Home.css'
 
@@ -34,7 +36,6 @@ class App extends Component {
 
   componentDidMount() {
     if (navigator.geolocation) {
-
       navigator.geolocation.getCurrentPosition(
         position => {
           this.setState(prevState => ({
@@ -73,7 +74,7 @@ class App extends Component {
             currentLocation={this.state.currentLocation}
             isCurrentLocationSet={this.state.isCurrentLocationSet}
           />
-        </div>            
+        </div>
         <SideDrawer
           show={this.state.showDrawer}
           drawerClosed={() => {
@@ -81,7 +82,7 @@ class App extends Component {
           }}
         />
 
-        <Footer /> 
+        <Footer />
       </div>
     );
   }

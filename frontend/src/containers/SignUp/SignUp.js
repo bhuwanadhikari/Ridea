@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import {withRouter } from 'react-router-dom';
 
 
 import Button from '../../ui/Button/Button';
@@ -48,12 +49,14 @@ class SignUp extends Component {
       axios
          .post('/auth/register', newUser)
          .then(res => {
-            console.log("user has been registered", res.data);
             localStorage.setItem('jwtToken', res.data.token);
             setAuthToken(res.data.token);
             const decoded = jwtDecode(res.data.token);
             console.log("Decoded output of the data", decoded);
             store.dispatch({ type: 'SET_USER', payload: decoded });
+            if(store.getState().auth.isAuthenticated){
+               this.props.history.push('/home');
+            }
          })
          .catch(err => {
             this.setState({ errors: err.response.data })
@@ -136,4 +139,4 @@ class SignUp extends Component {
 
 
 
-export default SignUp;
+export default withRouter(SignUp);

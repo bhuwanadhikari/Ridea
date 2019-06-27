@@ -5,10 +5,8 @@ import jwt_decode from 'jwt-decode';
 
 import setAuthToken from './utils/setAuthToken';
 
-import Home from './containers/Home/Home';
-import Landing from './containers/Landing/Landing';
-import Chat from './components/Chat/Chat';
 import store from './redux/store/store';
+import BaseRoutes from './routes/baseRoutes';
 
 import './App.css';
 
@@ -27,26 +25,14 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-
-    }
-  }
-
-
-
-
+ 
   render() {
     return (
       <Provider store = {store}>
         <Router>
           <div style={{ height: '100%' }} className="App">
             <Switch>
-              <Route exact path="/home" component={Home} />
-              <Route exact path="/" component={Landing} />
-              <Route exact path="/chat" component={Chat} />
+              <BaseRoutes/>
             </Switch>
           </div>
         </Router>

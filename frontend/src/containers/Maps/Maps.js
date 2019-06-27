@@ -48,6 +48,7 @@ class Maps extends Component {
 
             directions: null,
             isDirectionFetched: false,
+            rideData: {},
 
             progress: null
 
@@ -160,9 +161,8 @@ class Maps extends Component {
     }
 
     getRideDataHandler = (rideData) => {
-        console.log('get ride data handler has been set');
-        this.setState((state, props) => { return { rideData } });
-
+        console.log('get ride data handler has been set', rideData);
+        this.setState({rideData, progress: 'rideDataIsReady'});
     }
 
 
@@ -229,7 +229,7 @@ class Maps extends Component {
 
 
                 <Modal
-                    show={/* this.state.progress === 'dropPointIsSet' */ true} modalClosed={() => {
+                    show={ this.state.progress === 'dropPointIsSet'} modalClosed={() => {
                         this.setState({ progress: 'null' });
                     }}
                     fromTop='27%'

@@ -5,51 +5,64 @@ import Button from '../../../ui/Button/Button';
 import './RideData.css'
 
 
-const newRideData = {};
+let rideData = {};
 class RideData extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             seatsCount: 1,
-            pickupTime: "test",
+            pickupTime: new Date().getTime()+10*60*1000,
+            waitFor: 20,
             errors: {}
         }
     }
 
     onChangeHandler = (e) => {
-        newRideData[e.target.name] = e.target.value;
+        if (e.target.name !== 'shift') {
+            rideData[e.target.name] = parseInt(e.target.value, 10);
+        }
+        rideData[e.target.name] = e.target.value;
+
     }
 
     onSubmitHandler = () => {
-        console.log("Submit button clicked");
-        if (Object.keys(newRideData).length < 6) {
+        if (Object.keys(rideData).length < 6) {
             alert("Input all of the fields");
         } else {
             //convert all of the date to date
-            // if(newRideData.shift)
-            console.log(newRideData);
+            if (rideData.shift === 'PM') {
+                rideData.hour = parseInt(rideData.hour, 10)
+
+                rideData.hour = rideData.hour + 12;
+
+            }
+
+            if (rideData.shift === 'AM' && rideData.hour === 12) {
+                rideData.hour = 0;
+            }
+
+
             const pickupTime = new Date(
                 new Date().getFullYear(),
                 new Date().getMonth(),
                 new Date().getDate(),
-                newRideData.hour,
-                newRideData.minute,
+                rideData.hour,
+                rideData.minute,
                 0,
                 0
             );
-            console.log(pickupTime.toISOString());
             this.setState({
-                seatsCount: newRideData.seatsCount,
-                pickupTime,
-                
+                seatsCount: rideData.seatsCount,
+                pickupTime: pickupTime.getTime(),
+                waitfor: rideData.waitFor
             });
+            rideData = {};
+            this.props.getRideData(this.state);
         }
     }
 
     render() {
-
-        console.log(new Date().getMonth());
         let hourOptions = []
         for (let i = 1; i <= 12; i++) {
             hourOptions.push(<option key={i} value={i}>{i}</option>);
@@ -88,7 +101,7 @@ class RideData extends Component {
                     Date: <select
                         name='day'
                         onChange={this.onChangeHandler}
-                        type="text"
+                        type="number"
                         className="DaySelector"
                     >
                         <option value="" hidden>Date</option>

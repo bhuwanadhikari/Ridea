@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Auxi from '../../hoc/Auxi';
 import RideData from './RideData/RideData';
 import Modal from '../../ui/Modal/Modal';
+import DialogBottom from '../../ui/DialogBottom/DialogBottom';
 
 // import Pindrop from './Pindrop/Pindrop';
 import './Maps.css';
@@ -48,9 +49,13 @@ class Maps extends Component {
 
             directions: null,
             isDirectionFetched: false,
-            rideData: {},
 
-            progress: null
+            progress: null,
+            matchedRoutes: {
+                fetched: [1, 2, 3, 4],
+                selected: [],
+                key: 0
+            }
 
         }
     }
@@ -65,18 +70,19 @@ class Maps extends Component {
 
 
 
-
+    //All the Update things
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.currentLocation !== this.props.currentLocation) {
             this.setState({ defaultZoom: 16 })
         }
 
-        if (this.state.progress === 'dropPointIsSet') {
-            //open modal for seats
-            //open modal for time
+        if (this.state.progress === 'rideDataIsReady') {
+            console.log("Both points have been set");
         }
 
-        if (this.state.arePointsReady && !this.state.isDirectionFetched) {
+
+        //Fetch the Route after ride data is ready
+        if (this.state.progress === 'rideDataIsReady') {
             const { pickupPoint, dropPoint } = this.state;
 
             const DirectionsService = new window.google.maps.DirectionsService();
@@ -96,7 +102,10 @@ class Maps extends Component {
                     });
                     console.log("Direction has be updated", this.state.directions);
                     axios
-                        .post('/directions/add', { directionData: result })
+                        .post('/directions/add', {
+                            directionData: result,
+                            rideData: this.state.rideData
+                        })
                         .then(res => console.log(res.data))
                         .catch(err => console.log(err));
                 } else {
@@ -125,7 +134,7 @@ class Maps extends Component {
     }
 
 
-
+    // Fire Events when marker is clicked
     onMarkerClickHandler = () => {
 
         const currentMark = this.state.dynamicCenter;
@@ -160,13 +169,63 @@ class Maps extends Component {
         // console.log("Update center", this.state.dynamicCenter.lat, this.state.dynamicCenter.lng, "testCenter", this.state.testCenter);
     }
 
+    //get ride data from rideData child component
     getRideDataHandler = (rideData) => {
         console.log('get ride data handler has been set', rideData);
-        this.setState({rideData, progress: 'rideDataIsReady'});
+        this.setState({ rideData, progress: 'rideDataIsReady' });
     }
 
+    //continue to get matching routes
+    onContinueHandler = () => {
+        //fetch matching route
+        //store it in a array
+        if (this.state.matchedRoutes.fetched.length > 0) {
+            this.setState({ progress: 'continuing' });
+        } else {
+            this.setState({ progress: 'noMatchedRoute' });
+        }
+
+        //loop dialogBottom as the number of elements
 
 
+    }
+
+    onCancelAllHandler = () => {
+        this.setState({ progress: null });
+    }
+
+    onYesHandler = () => {
+        //display matched route
+        if (this.state.matchedRoutes.fetched.length - 1 >= this.state.matchedRoutes.key) {
+            let selectedRoutes = this.state.matchedRoutes.selected;
+            selectedRoutes.push(this.state.matchedRoutes.fetched[this.state.matchedRoutes.key]);
+            this.setState({
+                matchedRoutes: {
+                    ...this.state.matchedRoutes,
+                    selected: selectedRoutes,
+                    key: this.state.matchedRoutes.key + 1
+                }
+            });
+        } else {
+            if (this.state.matchedRoutes.selected.length > 0) {
+                this.setState({
+                    progress: 'aboutToComplete'
+            });
+            } else {
+                
+            }
+        }
+
+    }
+
+    onNoHandler = () => {
+        this.setState({
+            matchedRoutes: {
+                ...this.state.matchedRoutes,
+                key: this.state.matchedRoutes.key + 1
+            }
+        });
+    }
 
 
 
@@ -175,7 +234,16 @@ class Maps extends Component {
         // console.log("This is the pickup point", this.state.pickupPoint);
         // console.log("This is the drop Point", this.state.dropPoint);
 
-
+        let dialogMessage, content;
+        if (this.state.progress === 'continuing') {
+            dialogMessage = 'Wanna share with this route?';
+            content = (
+                <Auxi>
+                    <button onClick={this.onYesHandler}>Yes</button>
+                    <button onClick={this.onNoHandler}>No</button>
+                </Auxi>
+            );
+        }
 
         let iconMarker = new window.google.maps.MarkerImage(
             "https://cdn4.iconfinder.com/data/icons/iconsimple-places/512/pin_1-512.png",
@@ -227,9 +295,9 @@ class Maps extends Component {
 
                 </GoogleMap >
 
-
+                {/*----------- Modal to collect Ride data -----------*/}
                 <Modal
-                    show={ this.state.progress === 'dropPointIsSet'} modalClosed={() => {
+                    show={this.state.progress === 'dropPointIsSet'} modalClosed={() => {
                         this.setState({ progress: 'null' });
                     }}
                     fromTop='27%'
@@ -238,10 +306,34 @@ class Maps extends Component {
                 </Modal>
 
 
-            </Auxi>
+                {/*----------- Dialog at the bottom of screen -----------*/}
+                <DialogBottom
+                    show={
+                        (this.state.progress === 'pickupPointIsSet'
+                            || this.state.progress === 'continuing')}
+                >
+                    {this.state.progress === 'pickupPointIsSet'
+                        ? "YOur routee has been fethetched"
+                        : dialogMessage
+                    }
+                    {this.state.progress === 'pickupPointIsSet'
+                        ? (
+                            <Auxi>
+                                <button onClick={this.onContinueHandler}>Continue</button>
+                                <button onClick={this.onCancelAllHandler}>Cancel</button>
+                            </Auxi>
+                        )
+                        : content}
+
+                </DialogBottom>
+
+
+            </Auxi >
         )
     }
 }
 
-
 export default withScriptjs(withGoogleMap(Maps))
+
+
+// {/*-----------  -----------*/}

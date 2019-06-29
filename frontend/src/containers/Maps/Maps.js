@@ -54,7 +54,7 @@ class Maps extends Component {
             matchedRoutes: {
                 fetched: [1, 2, 3, 4],
                 selected: [],
-                key: 0
+                counter: 1
             }
 
         }
@@ -92,13 +92,14 @@ class Maps extends Component {
                 destination: new window.google.maps.LatLng(dropPoint.lat, dropPoint.lng),
                 travelMode: window.google.maps.TravelMode.DRIVING,
             }, (result, status) => {
-
+                console.log("Money has been consumed------------------------------------------------------------------");
                 if (status === window.google.maps.DirectionsStatus.OK) {
                     this.setState({
                         directions: result,
                         isDirectionFetched: true,
                         isPickupPointSet: false,
-                        isDropPointSet: false
+                        isDropPointSet: false,
+                        progress: 'directionIsFetched'
                     });
                     console.log("Direction has be updated", this.state.directions);
                     axios
@@ -144,7 +145,7 @@ class Maps extends Component {
             this.setState({
                 ...this.state,
                 pickupPoint: { ...this.state.pickupPoint, ...currentMark },
-                progress: 'pickupPointIsSet',
+                progress: 'directionIsFetched',
                 defaultZoom: 14,
                 dynamicCenter: { lat: this.state.dynamicCenter.lat - 0.010, lng: this.state.dynamicCenter.lng + 0.0150 }
             });
@@ -182,7 +183,9 @@ class Maps extends Component {
         if (this.state.matchedRoutes.fetched.length > 0) {
             this.setState({ progress: 'continuing' });
         } else {
-            this.setState({ progress: 'noMatchedRoute' });
+            this.setState({ progress: 'noContinuing' });
+            //nos show modal: register as independent route?
+
         }
 
         //loop dialogBottom as the number of elements
@@ -196,35 +199,69 @@ class Maps extends Component {
 
     onYesHandler = () => {
         //display matched route
-        if (this.state.matchedRoutes.fetched.length - 1 >= this.state.matchedRoutes.key) {
+        if (this.state.matchedRoutes.counter <= this.state.matchedRoutes.fetched.length) {
+            console.log("inside the loop statement-----------------------")
             let selectedRoutes = this.state.matchedRoutes.selected;
-            selectedRoutes.push(this.state.matchedRoutes.fetched[this.state.matchedRoutes.key]);
+            selectedRoutes.push(this.state.matchedRoutes.fetched[this.state.matchedRoutes.counter - 1]);
             this.setState({
                 matchedRoutes: {
                     ...this.state.matchedRoutes,
                     selected: selectedRoutes,
-                    key: this.state.matchedRoutes.key + 1
+                    counter: this.state.matchedRoutes.counter + 1
+                }
+            }, () => {
+                console.log("after the async", this.state.matchedRoutes.counter);
+                let condition = this.state.matchedRoutes.counter > this.state.matchedRoutes.fetched.length
+                console.log("after the async", this.state.matchedRoutes.counter);
+                if (this.state.matchedRoutes.selected.length > 0 && condition) {
+                    this.setState({
+                        progress: 'aboutToComplete'
+                        //show modal to go back or done?
+                    });
+                } else if (this.state.matchedRoutes.selected.length < 1 && condition) {
+                    this.setState({
+                        progress: 'noSelectedRoutes',
+                        //show modal to go back or done?
+                    });
                 }
             });
+            console.log("just after setstate", this.state.matchedRoutes.counter);
+
         } else {
-            if (this.state.matchedRoutes.selected.length > 0) {
-                this.setState({
-                    progress: 'aboutToComplete'
-            });
-            } else {
-                
-            }
+            //Check if user selected atleast one 
+
         }
 
     }
 
     onNoHandler = () => {
-        this.setState({
-            matchedRoutes: {
-                ...this.state.matchedRoutes,
-                key: this.state.matchedRoutes.key + 1
-            }
-        });
+        if (this.state.matchedRoutes.counter <= this.state.matchedRoutes.fetched.length) {
+            console.log("inside the loop statement-----------------------")
+
+            this.setState({
+                matchedRoutes: {
+                    ...this.state.matchedRoutes,
+                    counter: this.state.matchedRoutes.counter + 1
+                }
+            }, () => {
+                let condition = this.state.matchedRoutes.counter > this.state.matchedRoutes.fetched.length
+                console.log("after the async", this.state.matchedRoutes.counter);
+                if (this.state.matchedRoutes.selected.length > 0 && condition) {
+                    this.setState({
+                        progress: 'almostComplete'
+                        //show modal to go back or done?
+                    });
+                } else if (this.state.matchedRoutes.selected.length < 1 && condition) {
+                    this.setState({
+                        progress: 'noSelectedRoutes',
+                        //show modal to go back or done?
+                    });
+                }
+            });
+        } else {
+
+        }
+
     }
 
 
@@ -233,7 +270,8 @@ class Maps extends Component {
     render() {
         // console.log("This is the pickup point", this.state.pickupPoint);
         // console.log("This is the drop Point", this.state.dropPoint);
-
+        console.log("Progress in the app is: ", this.state.progress);
+        console.log("Condition of selected routes:", this.state.matchedRoutes);
         let dialogMessage, content;
         if (this.state.progress === 'continuing') {
             dialogMessage = 'Wanna share with this route?';
@@ -306,17 +344,43 @@ class Maps extends Component {
                 </Modal>
 
 
+
+                {/*----------- Modal to show No matching routes found -----------*/}
+                <Modal
+                    show={this.state.progress === 'dropPointIsSet'} modalClosed={() => {
+                        this.setState({ progress: 'null' });
+                    }}
+                    fromTop='27%'
+                >
+                    No matching routes are found, cancel done
+                </Modal>
+
+
+
+                {/*----------- Modal to complete the matching and all    -----------*/}
+                <Modal
+                    show={this.state.progress === 'almostComplete'} modalClosed={() => {
+                        this.setState({ progress: 'null' });
+                    }}
+                    fromTop='27%'
+                >
+                    Go back, done, cancel
+                </Modal>
+
+
+
+
                 {/*----------- Dialog at the bottom of screen -----------*/}
                 <DialogBottom
                     show={
-                        (this.state.progress === 'pickupPointIsSet'
+                        (this.state.progress === 'directionIsFetched'
                             || this.state.progress === 'continuing')}
                 >
-                    {this.state.progress === 'pickupPointIsSet'
+                    {this.state.progress === 'directionIsFetched'
                         ? "YOur routee has been fethetched"
                         : dialogMessage
                     }
-                    {this.state.progress === 'pickupPointIsSet'
+                    {this.state.progress === 'directionIsFetched'
                         ? (
                             <Auxi>
                                 <button onClick={this.onContinueHandler}>Continue</button>

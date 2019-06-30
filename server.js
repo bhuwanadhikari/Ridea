@@ -28,13 +28,14 @@ require('./config/passport')(passport);
 //Configuration for passport
 
 //body parser middleware
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 // //Setting up of routes
 app.use('/auth', auth);
-app.use('/directions', directions);
+app.use('/api/directions', directions);
 
 if (process.env.NODE_ENV === 'production') {
     //set static folder

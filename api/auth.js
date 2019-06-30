@@ -35,7 +35,7 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
         email: req.user.email,
         avatar
     };
-    console.log(payload);
+    console.log(payload, "This is the payload for fuck");
 
     jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
         if (!err) {

@@ -3,6 +3,7 @@ import Auxi from '../../hoc/Auxi';
 import RideData from './RideData/RideData';
 import Modal from '../../ui/Modal/Modal';
 import DialogBottom from '../../ui/DialogBottom/DialogBottom';
+import Spinner from '../../ui/Spinnner/Spinner';
 
 // import Pindrop from './Pindrop/Pindrop';
 import './Maps.css';
@@ -27,6 +28,10 @@ class Maps extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
+            defaultZoom: 12,
+            progress: null,
+
             dynamicCenter: {
                 lat: this.props.currentLocation.lat,
                 lng: this.props.currentLocation.lng
@@ -35,24 +40,16 @@ class Maps extends Component {
                 lat: null,
                 lng: null
             },
-            isPickupPointSet: false,
             dropPoint: {
                 lat: null,
                 lng: null
             },
-            isDropPointSet: false,
-            areRideDataReady: false,
 
             rideData: {},
-
-            defaultZoom: 12,
-
             directions: null,
-            isDirectionFetched: false,
-
-            progress: null,
+            directionsOnShow: null,
             matchedRoutes: {
-                fetched: [1, 2, 3, 4],
+                fetched: [],
                 selected: [],
                 counter: 1
             }
@@ -77,59 +74,61 @@ class Maps extends Component {
         }
 
         if (this.state.progress === 'rideDataIsReady') {
-            console.log("Both points have been set");
+            console.log("ride data is ready");
         }
-
 
         //Fetch the Route after ride data is ready
-        if (this.state.progress === 'rideDataIsReady') {
-            const { pickupPoint, dropPoint } = this.state;
 
-            const DirectionsService = new window.google.maps.DirectionsService();
 
-            DirectionsService.route({
-                origin: new window.google.maps.LatLng(pickupPoint.lat, pickupPoint.lng),
-                destination: new window.google.maps.LatLng(dropPoint.lat, dropPoint.lng),
-                travelMode: window.google.maps.TravelMode.DRIVING,
-            }, (result, status) => {
-                console.log("Money has been consumed------------------------------------------------------------------");
-                if (status === window.google.maps.DirectionsStatus.OK) {
-                    this.setState({
-                        directions: result,
-                        isDirectionFetched: true,
-                        isPickupPointSet: false,
-                        isDropPointSet: false,
-                        progress: 'directionIsFetched'
-                    });
-                    console.log("Direction has be updated", this.state.directions);
-                    axios
-                        .post('/directions/add', {
-                            directionData: result,
-                            rideData: this.state.rideData
-                        })
-                        .then(res => console.log(res.data))
-                        .catch(err => console.log(err));
-                } else {
-                    console.error(`error fetching directions ${result}`);
-                }
-            });
-        }
-
-        if (this.state.progress === 'dropPointIsSet') {
-
-        }
+        let shouldNewMatchBeFetched = this.state.matchedRoutes.counter !== prevState.matchedRoutes.counter;
+        shouldNewMatchBeFetched = shouldNewMatchBeFetched || this.state.matchedRoutes.counter === 1;
 
     }
 
+    getDirectionFunction = () => {
+        const { pickupPoint, dropPoint } = this.state;
+        const DirectionsService = new window.google.maps.DirectionsService();
+        this.setState({ loading: true });
+
+        DirectionsService.route({
+            origin: new window.google.maps.LatLng(pickupPoint.lat, pickupPoint.lng),
+            destination: new window.google.maps.LatLng(dropPoint.lat, dropPoint.lng),
+            travelMode: window.google.maps.TravelMode.DRIVING,
+        }, (result, status) => {
+            console.log("Money has been consumed------------------------------------------------------------------");
+            if (status === window.google.maps.DirectionsStatus.OK) {
+                this.setState({
+                    directions: result,
+                    progress: 'directionIsFetched',
+                    directionsOnShow: result,
+
+                }, () => {
+                    axios
+                        .post('/api/directions/matched-routes', {
+                            directionData: result,
+                            rideData: this.state.rideData,
+                            // selectedRoutes: this.state.matchedRoutes.selected,
+                        })
+                        .then(matchedRoutes => {
+                            console.log("Matching routes has been being fetched");
+                            this.setState({
+                                matchedRoutes: {
+                                    ...this.state.matchedRoutes,
+                                    fetched: matchedRoutes.data
+                                },
+                                loading: false
+                            });
+                        })
+                        .catch(err => console.log(err));
+                });
+
+            } else {
+                console.error(`error fetching directions ${result}`);
+            }
+        });
+    }
+
     componentDidMount() {
-        axios
-            .get('/directions/get')
-            .then(allDirections => {
-                // console.log("all directions cata are as follows", allDirections.data);
-                this.setState({ directions: allDirections.data[2].directionData });
-                console.log("Direction in the state", this.state.directions);
-            })
-            .catch(err => console.log(err));
 
 
     }
@@ -145,7 +144,7 @@ class Maps extends Component {
             this.setState({
                 ...this.state,
                 pickupPoint: { ...this.state.pickupPoint, ...currentMark },
-                progress: 'directionIsFetched',
+                progress: 'pickupPointIsSet',
                 defaultZoom: 14,
                 dynamicCenter: { lat: this.state.dynamicCenter.lat - 0.010, lng: this.state.dynamicCenter.lng + 0.0150 }
             });
@@ -155,7 +154,6 @@ class Maps extends Component {
                 progress: 'dropPointIsSet',
                 dynamicCenter: { lat: this.state.dynamicCenter.lat + 0.0050, lng: this.state.dynamicCenter.lng - 0.00750 },
                 defaultZoom: 13,
-                arePointsReady: true
             });
         } else {
             console.log("Both points have been set");
@@ -166,22 +164,43 @@ class Maps extends Component {
         let center = this.mapRef.getCenter();
         let latitude = center.lat();
         let longitude = center.lng();
-        this.setState({ dynamicCenter: { lat: latitude, lng: longitude }, testCenter: latitude });
+        this.setState({ dynamicCenter: { lat: latitude, lng: longitude } });
         // console.log("Update center", this.state.dynamicCenter.lat, this.state.dynamicCenter.lng, "testCenter", this.state.testCenter);
     }
 
+
+
     //get ride data from rideData child component
-    getRideDataHandler = (rideData) => {
+    getRideDataHandler = (rideData, getDirectionFunction) => {
         console.log('get ride data handler has been set', rideData);
-        this.setState({ rideData, progress: 'rideDataIsReady' });
+        this.setState({ rideData, progress: 'rideDataIsReady', isDirectionGoogled: false });
+        this.getDirectionFunction();
     }
 
     //continue to get matching routes
     onContinueHandler = () => {
-        //fetch matching route
-        //store it in a array
         if (this.state.matchedRoutes.fetched.length > 0) {
-            this.setState({ progress: 'continuing' });
+            this.setState({ progress: 'continuing' }, () => {
+                const routeId = this.state.matchedRoutes.fetched[this.state.matchedRoutes.counter];
+                if (!this.state.loading) {
+                    this.setState({ loading: true });
+                    axios
+                        .get(`/api/directions/route/${routeId}`)
+                        .then((route) => {
+                            if (route) {
+                                console.log("Route is called by id", route.data.directionData);
+                                this.setState({
+                                    directionsOnShow: route.data.directionData,
+                                    loading: false
+                                });
+                            } else {
+                                alert("Not direction data is found for the")
+                            }
+                        }).catch((err) => {
+                            alert('cannot ')
+                        });
+                }
+            });
         } else {
             this.setState({ progress: 'noContinuing' });
             //nos show modal: register as independent route?
@@ -194,11 +213,33 @@ class Maps extends Component {
     }
 
     onCancelAllHandler = () => {
-        this.setState({ progress: null });
+        this.setState({
+            pickupPoint: {
+                lat: null,
+                lng: null
+            },
+            dropPoint: {
+                lat: null,
+                lng: null
+            },
+            rideData: {},
+
+            defaultZoom: 12,
+
+            directions: null,
+            directionsOnShow: null,
+            progress: null,
+            matchedRoutes: {
+                fetched: [],
+                selected: [],
+                counter: 1
+            },
+        });
     }
 
     onYesHandler = () => {
         //display matched route
+
         if (this.state.matchedRoutes.counter <= this.state.matchedRoutes.fetched.length) {
             console.log("inside the loop statement-----------------------")
             let selectedRoutes = this.state.matchedRoutes.selected;
@@ -215,7 +256,7 @@ class Maps extends Component {
                 console.log("after the async", this.state.matchedRoutes.counter);
                 if (this.state.matchedRoutes.selected.length > 0 && condition) {
                     this.setState({
-                        progress: 'aboutToComplete'
+                        progress: 'almostComplete'
                         //show modal to go back or done?
                     });
                 } else if (this.state.matchedRoutes.selected.length < 1 && condition) {
@@ -248,12 +289,14 @@ class Maps extends Component {
                 console.log("after the async", this.state.matchedRoutes.counter);
                 if (this.state.matchedRoutes.selected.length > 0 && condition) {
                     this.setState({
-                        progress: 'almostComplete'
+                        progress: 'almostComplete',
+                        directionsOnShow: 'null'
                         //show modal to go back or done?
                     });
                 } else if (this.state.matchedRoutes.selected.length < 1 && condition) {
                     this.setState({
                         progress: 'noSelectedRoutes',
+                        directionsOnShow: null,
                         //show modal to go back or done?
                     });
                 }
@@ -264,14 +307,87 @@ class Maps extends Component {
 
     }
 
+    onCancelAllHandler = () => {
+        this.setState({
+            pickupPoint: {
+                lat: null,
+                lng: null
+            },
+            dropPoint: {
+                lat: null,
+                lng: null
+            },
+            rideData: {},
+
+            defaultZoom: 12,
+
+            directions: null,
+            directionsOnShow: null,
+            progress: null,
+            matchedRoutes: {
+                fetched: [],
+                selected: [],
+                counter: 1
+            }
+        });
+    }
+
+    //Handler for registering as new independent route
+    onDoneHandler = () => {
+        axios
+            .post('/api/directions/addition', {
+                directionData: this.state.directions,
+                rideData: this.state.rideData,
+                selectedRoutes: this.state.matchedRoutes.selected,
+            })
+            .then(addedRoute => {
+                console.log("Added route:", addedRoute);
+                this.setState({
+                    progress: 'completed',
+                    pickupPoint: {
+                        lat: null,
+                        lng: null
+                    },
+                    dropPoint: {
+                        lat: null,
+                        lng: null
+                    },
+                    rideData: {},
+
+                    defaultZoom: 12,
+
+                    directions: null,
+                    directionsOnShow: null,
+                    matchedRoutes: {
+                        fetched: [],
+                        selected: [],
+                        counter: 1
+                    }
+                });
+            })
+            .catch(err => console.log(err));
+    }
+
+
+    onChooseAgainHandler = () => {
+        this.setState({
+            progress: 'continuing',
+            matchedRoutes: {
+                ...this.state.matchedRoutes,
+                selected: [],
+                counter: 1
+            }
+        });
+    }
+
 
 
 
     render() {
         // console.log("This is the pickup point", this.state.pickupPoint);
         // console.log("This is the drop Point", this.state.dropPoint);
-        console.log("Progress in the app is: ", this.state.progress);
-        console.log("Condition of selected routes:", this.state.matchedRoutes);
+        console.log("State of the app: ", this.state);
+        // console.log("Condition of selected routes:", this.state.matchedRoutes);
         let dialogMessage, content;
         if (this.state.progress === 'continuing') {
             dialogMessage = 'Wanna share with this route?';
@@ -290,7 +406,9 @@ class Maps extends Component {
             null, /* anchor is bottom center of the scaled image */
             new window.google.maps.Size(42, 42)
         );
-
+        if (this.state.loading) {
+            return <Spinner />
+        }
         return (
             <Auxi>
                 <GoogleMap
@@ -300,21 +418,22 @@ class Maps extends Component {
                     center={{ lat: this.state.dynamicCenter.lat, lng: this.state.dynamicCenter.lng }}
                     onCenterChanged={this.onCenterChangedHandler}
                 >
-                    {true && <DirectionsRenderer directions={this.state.directions} />}
+                    {this.state.directionsOnShow && <DirectionsRenderer directions={this.state.directionsOnShow} />}
+
+                    {
+                        this.state.progress === null || this.state.progress === 'pickupPointIsSet'
+                            ? (<div className="MapMarker">
+                                <img
+                                    onClick={this.onMarkerClickHandler}
+                                    className="MapMarkerImage"
+                                    src="https://lh3.googleusercontent.com/PYfOSWIKrftQS-GvIWRt5_QaqI6T3bS9p-KWkUNLFd1R6dCe1_kYmwcx53wr7qYNyRw"
+                                    alt="Map marker of Ridea app, taxi and ride sharing app Nepal and Pokhara"
+                                />
+                            </div>)
+                            : null}
 
 
-                    {!this.state.arePointsReady
-                        ? (<div className="MapMarker" onClick={this.onMarkerClickHandler}>
-                            <img
-                                className="MapMarkerImage"
-                                src="https://lh3.googleusercontent.com/PYfOSWIKrftQS-GvIWRt5_QaqI6T3bS9p-KWkUNLFd1R6dCe1_kYmwcx53wr7qYNyRw"
-                                alt="Map marker of Ridea app, taxi and ride sharing app Nepal and Pokhara"
-                            />
-                        </div>)
-                        : null}
-
-                    }
-                {this.state.isPickupPointSet
+                    {this.state.progress === 'pickupPointIsSet'
                         ? (<Marker
                             icon={iconMarker}
                             onClick={this.onPickupPointClickHandler}
@@ -322,18 +441,18 @@ class Maps extends Component {
                         >
                         </Marker>)
                         : null}
-                    {this.state.isDropPointSet ? (
-                        <Marker
+                    {this.state.progress === 'pickupPointIsSet' || this.state.progress === 'dropPointIsSet'
+                        ? (<Marker
                             icon={iconMarker}
                             onClick={this.onPickupPointClickHandler}
                             position={{ lat: this.state.dropPoint.lat, lng: this.state.dropPoint.lng }}
                         >
-                        </Marker>
-                    ) : null}
+                        </Marker>)
+                        : null}
 
                 </GoogleMap >
 
-                {/*----------- Modal to collect Ride data -----------*/}
+                {/*----------- Modal to collect Ride data --------------------------------------------------------*/}
                 <Modal
                     show={this.state.progress === 'dropPointIsSet'} modalClosed={() => {
                         this.setState({ progress: 'null' });
@@ -345,26 +464,30 @@ class Maps extends Component {
 
 
 
-                {/*----------- Modal to show No matching routes found -----------*/}
+                {/*----------- Modal to show noContinuing ---------------------------------------------*/}
                 <Modal
-                    show={this.state.progress === 'dropPointIsSet'} modalClosed={() => {
+                    show={this.state.progress === 'noContinuing'} modalClosed={() => {
                         this.setState({ progress: 'null' });
                     }}
                     fromTop='27%'
                 >
-                    No matching routes are found, cancel done
+                    No any matching routes for the routes you entere
+                    <button onClick={this.onDoneHandler}>Done</button>
+                    <button onClick={this.onCancelAllHandler}>Cancel</button>
                 </Modal>
 
 
+                {/*----------- Modal to complete the matching and all    --------------------------------------*/}
 
-                {/*----------- Modal to complete the matching and all    -----------*/}
                 <Modal
-                    show={this.state.progress === 'almostComplete'} modalClosed={() => {
+                    show={this.state.progress === 'almostComplete' || this.state.progress === 'noSelectedRoutes'} modalClosed={() => {
                         this.setState({ progress: 'null' });
                     }}
                     fromTop='27%'
                 >
-                    Go back, done, cancel
+                    <button onClick={this.onChooseAgainHandler}>Choose routes again</button>
+                    <button onClick={this.onDoneHandler}>Done</button>
+                    <button onClick={this.onCancelAllHandler}>Cancel</button>
                 </Modal>
 
 
@@ -396,6 +519,8 @@ class Maps extends Component {
         )
     }
 }
+
+
 
 export default withScriptjs(withGoogleMap(Maps))
 

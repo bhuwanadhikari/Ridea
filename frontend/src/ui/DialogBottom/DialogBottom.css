@@ -6,6 +6,6 @@
     width: 100vw;
     box-shadow: 0 0 25px var(--dark-theme);
     padding: 20px 0;
-    transition: all 2.5s ease-out;
+    transition: all 1.5s ease-out;
     bottom: 0;
 }

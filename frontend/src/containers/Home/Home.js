@@ -37,6 +37,7 @@ class App extends Component {
 
   componentDidMount() {
     if (navigator.geolocation) {
+      console.log("inside the component did mount for the locating purpose");
       navigator.geolocation.getCurrentPosition(
         position => {
           this.setState(prevState => ({

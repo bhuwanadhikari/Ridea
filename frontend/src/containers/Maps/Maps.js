@@ -480,9 +480,9 @@ class Maps extends Component {
         }
 
         let iconMarker = new window.google.maps.MarkerImage(
-            "https://cdn4.iconfinder.com/data/icons/iconsimple-places/512/pin_1-512.png",
+            require('../../img/mapImg/point.png'),
             null, /* size is determined at runtime */
-            null, /* origin is 0,0 */
+            (20,20), /* origin is 0,0 */
             null, /* anchor is bottom center of the scaled image */
             new window.google.maps.Size(42, 42)
         );
@@ -506,7 +506,7 @@ class Maps extends Component {
                                 <img
                                     onClick={this.onMarkerClickHandler}
                                     className="MapMarkerImage"
-                                    src="https://lh3.googleusercontent.com/PYfOSWIKrftQS-GvIWRt5_QaqI6T3bS9p-KWkUNLFd1R6dCe1_kYmwcx53wr7qYNyRw"
+                                    src={require('../../img/mapImg/pindrop.png')}
                                     alt="Map marker of Ridea app, taxi and ride sharing app Nepal and Pokhara"
                                 />
                             </div>)

@@ -19,8 +19,8 @@
 }
 
 .MapMarkerImage {
-    height: 84px;
+    height: 64px;
     position: relative;
-    top: -84px;
-    left: -42px;
+    top: -64px;
+    left: -32px;
 }

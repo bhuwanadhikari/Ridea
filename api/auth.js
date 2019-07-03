@@ -42,7 +42,7 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
             console.log("Node environment now is:", process.env.NODE_ENV);
             // res.json({ success: true, token: 'Bearer ' + token });
             if (process.env.NODE_ENV === 'production') {
-                res.redirect(`http://ride-a.herokuapp.com/home?success=true&token=Bearer ${token}`);
+                res.redirect(`https://ride-a.herokuapp.com/home?success=true&token=Bearer ${token}`);
             } else {
                 return res.redirect(`http://localhost:3000?success=true&token=Bearer ${token}`);
             }

@@ -27,6 +27,7 @@ if (localStorage.jwtToken) {
 class App extends Component {
  
   render() {
+    console.log("The environment now is:", process.env.NODE_ENV);
     return (
       <Provider store = {store}>
         <Router>

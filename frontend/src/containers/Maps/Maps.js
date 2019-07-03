@@ -37,12 +37,12 @@ class Maps extends Component {
                 lng: this.props.currentLocation.lng
             },
             pickupPoint: {
-                lat: null,
-                lng: null
+                lat: 0,
+                lng: 0
             },
             dropPoint: {
-                lat: null,
-                lng: null
+                lat: 0,
+                lng: 0
             },
 
             rideData: {},
@@ -138,22 +138,22 @@ class Maps extends Component {
     onMarkerClickHandler = () => {
 
         const currentMark = this.state.dynamicCenter;
-        const { progress, isDropPointSet } = this.state;
+        const { progress } = this.state;
 
         if (progress === null) {
             this.setState({
-                ...this.state,
-                pickupPoint: { ...this.state.pickupPoint, ...currentMark },
+                pickupPoint: {...this.state.pickupPoint, lat: parseFloat(currentMark.lat), lng: parseFloat(currentMark.lng) },
                 progress: 'pickupPointIsSet',
-                defaultZoom: 14,
-                dynamicCenter: { lat: this.state.dynamicCenter.lat - 0.010, lng: this.state.dynamicCenter.lng + 0.0150 }
+                defaultZoom: 15,
+                dynamicCenter: { lat: parseFloat(this.state.dynamicCenter.lat) - 0.010, lng: parseFloat(this.state.dynamicCenter.lng) + 0.0150 }
             });
         } else if (progress === 'pickupPointIsSet') {
             this.setState({
-                dropPoint: { ...this.state.dropPoint, ...currentMark },
+
+                dropPoint: { lat: parseFloat(currentMark.lat), lng: parseFloat(currentMark.lng) },
                 progress: 'dropPointIsSet',
-                dynamicCenter: { lat: this.state.dynamicCenter.lat + 0.0050, lng: this.state.dynamicCenter.lng - 0.00750 },
-                defaultZoom: 13,
+                dynamicCenter: { lat: parseFloat(this.state.dynamicCenter.lat) + 0.0050, lng: parseFloat(this.state.dynamicCenter.lng) - 0.00750 },
+                defaultZoom: 14,
             });
         } else {
             console.log("Both points have been set");
@@ -181,14 +181,15 @@ class Maps extends Component {
     onContinueHandler = () => {
         if (this.state.matchedRoutes.fetched.length > 0) {
             this.setState({ progress: 'continuing' }, () => {
-                const routeId = this.state.matchedRoutes.fetched[this.state.matchedRoutes.counter];
+                const routeId = this.state.matchedRoutes.fetched[this.state.matchedRoutes.counter - 1];
                 if (!this.state.loading) {
                     this.setState({ loading: true });
                     axios
                         .get(`/api/directions/route/${routeId}`)
                         .then((route) => {
                             if (route) {
-                                console.log("Route is called by id", route.data.directionData);
+                                console.log("Route is called by id", routeId, "and data is", route.data.directionData);
+
                                 this.setState({
                                     directionsOnShow: route.data.directionData,
                                     loading: false
@@ -240,7 +241,34 @@ class Maps extends Component {
     onYesHandler = () => {
         //display matched route
 
+
+
         if (this.state.matchedRoutes.counter <= this.state.matchedRoutes.fetched.length) {
+
+
+            const routeId = this.state.matchedRoutes.fetched[this.state.matchedRoutes.counter];
+
+            if (!this.state.loading) {
+                this.setState({ loading: true });
+                axios
+                    .get(`/api/directions/route/${routeId}`)
+                    .then((route) => {
+                        if (route) {
+                            console.log("Route is called by id", routeId, "and data is", route.data.directionData);
+                            this.setState({
+                                directionsOnShow: route.data.directionData,
+                                loading: false
+                            });
+                        } else {
+                            alert("Not direction data is found for the")
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+            }
+
+
+
             console.log("inside the loop statement-----------------------")
             let selectedRoutes = this.state.matchedRoutes.selected;
             selectedRoutes.push(this.state.matchedRoutes.fetched[this.state.matchedRoutes.counter - 1]);
@@ -256,12 +284,14 @@ class Maps extends Component {
                 console.log("after the async", this.state.matchedRoutes.counter);
                 if (this.state.matchedRoutes.selected.length > 0 && condition) {
                     this.setState({
-                        progress: 'almostComplete'
+                        progress: 'almostComplete',
+                        loading: false,
                         //show modal to go back or done?
                     });
                 } else if (this.state.matchedRoutes.selected.length < 1 && condition) {
                     this.setState({
                         progress: 'noSelectedRoutes',
+                        loading: false
                         //show modal to go back or done?
                     });
                 }
@@ -277,6 +307,30 @@ class Maps extends Component {
 
     onNoHandler = () => {
         if (this.state.matchedRoutes.counter <= this.state.matchedRoutes.fetched.length) {
+
+
+            const routeId = this.state.matchedRoutes.fetched[this.state.matchedRoutes.counter];
+
+            if (!this.state.loading) {
+                this.setState({ loading: true });
+                axios
+                    .get(`/api/directions/route/${routeId}`)
+                    .then((route) => {
+                        if (route) {
+                            console.log("Route is called by id", routeId, "and data is", route.data.directionData);
+                            this.setState({
+                                directionsOnShow: route.data.directionData,
+                                loading: false
+                            });
+                        } else {
+                            alert("Not direction data is found for the")
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+            }
+
+
             console.log("inside the loop statement-----------------------")
 
             this.setState({
@@ -290,13 +344,15 @@ class Maps extends Component {
                 if (this.state.matchedRoutes.selected.length > 0 && condition) {
                     this.setState({
                         progress: 'almostComplete',
-                        directionsOnShow: 'null'
+                        directionsOnShow: 'null',
+                        loading: false
                         //show modal to go back or done?
                     });
                 } else if (this.state.matchedRoutes.selected.length < 1 && condition) {
                     this.setState({
                         progress: 'noSelectedRoutes',
                         directionsOnShow: null,
+                        loading: false,
                         //show modal to go back or done?
                     });
                 }
@@ -334,6 +390,7 @@ class Maps extends Component {
 
     //Handler for registering as new independent route
     onDoneHandler = () => {
+        this.setState({ loading: true })
         axios
             .post('/api/directions/addition', {
                 directionData: this.state.directions,
@@ -343,7 +400,8 @@ class Maps extends Component {
             .then(addedRoute => {
                 console.log("Added route:", addedRoute);
                 this.setState({
-                    progress: 'completed',
+                    progress: null,
+                    loading: false,
                     pickupPoint: {
                         lat: null,
                         lng: null
@@ -375,9 +433,31 @@ class Maps extends Component {
             matchedRoutes: {
                 ...this.state.matchedRoutes,
                 selected: [],
-                counter: 1
+                counter: 1,
+                loading: true,
             }
-        });
+        }, () => {
+            const routeId = this.state.matchedRoutes.fetched[0];
+
+            if (!this.state.loading) {
+                this.setState({ loading: true });
+                axios
+                    .get(`/api/directions/route/${routeId}`)
+                    .then((route) => {
+                        if (route) {
+                            console.log("Route is called by id", routeId, "and data is", route.data.directionData);
+                            this.setState({
+                                directionsOnShow: route.data.directionData,
+                                loading: false
+                            });
+                        } else {
+                            alert("Not direction data is found for the")
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+            };
+        })
     }
 
 
@@ -418,10 +498,10 @@ class Maps extends Component {
                     center={{ lat: this.state.dynamicCenter.lat, lng: this.state.dynamicCenter.lng }}
                     onCenterChanged={this.onCenterChangedHandler}
                 >
-                    {this.state.directionsOnShow && <DirectionsRenderer directions={this.state.directionsOnShow} />}
+                    {this.state.directionsOnShow? (<DirectionsRenderer directions={this.state.directionsOnShow} />):null}
 
                     {
-                        this.state.progress === null || this.state.progress === 'pickupPointIsSet'
+                        (this.state.progress === null) || (this.state.progress === 'pickupPointIsSet')
                             ? (<div className="MapMarker">
                                 <img
                                     onClick={this.onMarkerClickHandler}
@@ -454,9 +534,8 @@ class Maps extends Component {
 
                 {/*----------- Modal to collect Ride data --------------------------------------------------------*/}
                 <Modal
-                    show={this.state.progress === 'dropPointIsSet'} modalClosed={() => {
-                        this.setState({ progress: 'null' });
-                    }}
+                    show={this.state.progress === 'dropPointIsSet'} 
+                    modalClosed={this.onCancelAllHandler}
                     fromTop='27%'
                 >
                     <RideData getRideData={this.getRideDataHandler} />

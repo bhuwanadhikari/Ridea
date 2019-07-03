@@ -41,13 +41,9 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
         if (!err) {
             // res.json({ success: true, token: 'Bearer ' + token });
             if (process.env.NODE_ENV === 'production') {
-                res.redirect(`/home?success=true&token=Bearer ${token}`);
+                res.redirect(`http://ride-a.herokuapp.com/home?success=true&token=Bearer ${token}`);
             } else {
-                if (process.env.NODE_ENV === 'production') {
-                    return res.redirect(`https://ride-a.herokuapp.com/?success=true&token=Bearer ${token}`);
-                } else {
                 return res.redirect(`http://localhost:3000?success=true&token=Bearer ${token}`);
-                }
             }
         } else {
             res.json({ success: false });

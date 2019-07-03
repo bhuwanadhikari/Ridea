@@ -39,6 +39,7 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
 
     jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
         if (!err) {
+            console.log("Node environment now is:", process.env.NODE_ENV);
             // res.json({ success: true, token: 'Bearer ' + token });
             if (process.env.NODE_ENV === 'production') {
                 res.redirect(`http://ride-a.herokuapp.com/home?success=true&token=Bearer ${token}`);

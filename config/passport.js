@@ -8,7 +8,7 @@ const User = require('../models/User');
 
 const opts = {
    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-   secretOrKey: keys.secret
+   secretOrKey: keys.SECRET
 };
 
 module.exports = passport => {
@@ -45,8 +45,8 @@ passport.deserializeUser((id, done) => {
 passport.use(
    new GoogleStrategy({
       // options for google strategy
-      clientID: keys.clientID,
-      clientSecret: keys.clientSecret,
+      clientID: keys.CLIENT_ID,
+      clientSecret: keys.CLIENT_SECRET,
       callbackURL: '/auth/google/redirect'
    }, (accessToken, refreshToken, profile, done) => {
       // check if user already exists in our own db

@@ -39,7 +39,7 @@ router.get('/route/:routeId', passport.authenticate('jwt', { session: 'false' })
 
 });
 
-//Post-addition
+//Addition of new route
 router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
     console.log(req.body, " is the requested data");
     const newDirection = new Direction({

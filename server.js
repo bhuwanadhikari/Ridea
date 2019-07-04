@@ -7,11 +7,13 @@ const cors = require('cors');
 
 const auth = require('./api/auth');
 const directions = require('./api/directions');
+const push = require('./api/push');
+
 const app = express();
 app.use(cors());
 
 //connection to database
-const db = require('./config/keys').mongoURI;
+const db = require('./config/keys').MONGO_URI;
 mongoose
     .connect(db, { useNewUrlParser: true })
     .then(() => console.log("Connected to the mongoose"))
@@ -36,6 +38,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 // //Setting up of routes
 app.use('/auth', auth);
 app.use('/api/directions', directions);
+app.use('/api/push', push);
 
 if (process.env.NODE_ENV === 'production') {
     //set static folder

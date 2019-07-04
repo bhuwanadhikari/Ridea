@@ -37,6 +37,7 @@
     "passport-google-oauth2": "^0.2.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
-    "validator": "^11.0.0"
+    "validator": "^11.0.0",
+    "web-push": "^3.3.5"
   }
 }

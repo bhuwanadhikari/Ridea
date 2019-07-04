@@ -37,9 +37,10 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
     };
     console.log(payload, "This is the payload for fuck");
 
-    jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
+    jwt.sign(payload, keys.SECRET, { expiresIn: 36000 * 100 }, (err, token) => {
         if (!err) {
             // res.json({ success: true, token: 'Bearer ' + token });
+            console.log("up to now it is working");
             if (process.env.NODE_ENV === 'production') {
                 res.redirect(`/home?success=true&token=Bearer ${token}`);
             } else {
@@ -93,7 +94,7 @@ router.post('/register', (req, res) => {
                             console.log(user);
                             payload = { id: user.id, name: user.name, email: user.email };
                             console.log(payload);
-                            jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
+                            jwt.sign(payload, keys.SECRET, { expiresIn: 36000 * 100 }, (err, token) => {
                                 if (!err) {
                                     res.status(201).json({ success: true, token: 'Bearer ' + token });
                                 } else {
@@ -134,7 +135,7 @@ router.post('/login', (req, res) => {
                 //Credentials matched
                 payload = { id: user.id, name: user.name, email: user.email };
 
-                jwt.sign(payload, keys.secret, { expiresIn: 36000 * 100 }, (err, token) => {
+                jwt.sign(payload, keys.SECRET, { expiresIn: 36000 * 100 }, (err, token) => {
                     if (!err) {
                         res.json({ success: true, token: 'Bearer ' + token });
                     } else {

@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 
 //connection to database
-const db = require('./config/keys').mongoURI;
+const db = require('./config/keys').MONGO_URI;
 mongoose
     .connect(db, { useNewUrlParser: true })
     .then(() => console.log("Connected to the mongoose"))

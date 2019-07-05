@@ -24,7 +24,7 @@ const UserSchema = new Schema({
     thumbnail: {
         type: String, 
     },
-
+//notified by
     routeNotifications: [{
         user:{type: Schema.Types.ObjectId, ref: 'users'},
         direction: {type: Schema.Types.ObjectId, ref: 'directions'},

@@ -75,7 +75,7 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
                     const selectedRouteOwner = await Direction.findById(selectedRouteId).then(res => res.owner).catch(err => { throw err });
                     await User
                         .updateOne(
-                            { _id: selectedRouteOwner },
+                            { _id: selectedRouteOwner }, //change to notified by in next deletion
                             { $push: { routeNotifications: { user: req.user.id, direction: newDirection._id } } }
                         )
                         .then(() => {

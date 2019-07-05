@@ -5,7 +5,7 @@ import Footer from '../../components/Footer/Footer';
 import NavBar from '../../components/NavBar/NavBar';
 import SideDrawer from '../../components/SideDrawer/SideDrawer';
 import Maps from '../Maps/Maps';
-// import keys from '../../config/keys';
+import keys from '../../config/keys';
 
 
 
@@ -67,8 +67,8 @@ class App extends Component {
         <div className='BodyWrapper'>
           <Maps
             isMarkerShown={false}
-            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places`}
-            // googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.googleAPIKey}`}
+            // googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places`}
+            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.GOOGLE_API_KEY}`}
             loadingElement={<div style={{ height: `100vw` }} />}
             containerElement={<div style={{ height: `100vh` }} />}
             mapElement={<div style={{ height: `100%` }} />}

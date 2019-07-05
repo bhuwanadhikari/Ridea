@@ -85,6 +85,51 @@ class Maps extends Component {
 
     }
 
+
+    onCenterChangedHandler = () => {
+        let center = this.mapRef.getCenter();
+        let latitude = center.lat();
+        let longitude = center.lng();
+        this.setState({ dynamicCenter: { lat: latitude, lng: longitude } });
+        // console.log("Update center", this.state.dynamicCenter.lat, this.state.dynamicCenter.lng, "testCenter", this.state.testCenter);
+    }
+
+
+    // Fire Events when marker is clicked
+    onMarkerClickHandler = () => {
+
+        const currentMark = this.state.dynamicCenter;
+        const { progress } = this.state;
+
+        if (progress === null) {
+            this.setState({
+                pickupPoint: { ...this.state.pickupPoint, lat: parseFloat(currentMark.lat), lng: parseFloat(currentMark.lng) },
+                progress: 'pickupPointIsSet',
+                defaultZoom: 15,
+                dynamicCenter: { lat: parseFloat(this.state.dynamicCenter.lat) - 0.010, lng: parseFloat(this.state.dynamicCenter.lng) + 0.0150 }
+            });
+        } else if (progress === 'pickupPointIsSet') {
+            this.setState({
+
+                dropPoint: { lat: parseFloat(currentMark.lat), lng: parseFloat(currentMark.lng) },
+                progress: 'dropPointIsSet',
+                dynamicCenter: { lat: parseFloat(this.state.dynamicCenter.lat) + 0.0050, lng: parseFloat(this.state.dynamicCenter.lng) - 0.00750 },
+                defaultZoom: 14,
+            });
+        } else {
+            console.log("Both points have been set");
+        }
+    }
+
+
+    //get ride data from rideData child component
+    getRideDataHandler = (rideData, getDirectionFunction) => {
+        console.log('get ride data handler has been set', rideData);
+        this.setState({ rideData, progress: 'rideDataIsReady', isDirectionGoogled: false });
+        this.getDirectionFunction();
+    }
+
+
     getDirectionFunction = () => {
         const { pickupPoint, dropPoint } = this.state;
         const DirectionsService = new window.google.maps.DirectionsService();
@@ -128,58 +173,11 @@ class Maps extends Component {
         });
     }
 
-    componentDidMount() {
-
-
-    }
-
-
-    // Fire Events when marker is clicked
-    onMarkerClickHandler = () => {
-
-        const currentMark = this.state.dynamicCenter;
-        const { progress } = this.state;
-
-        if (progress === null) {
-            this.setState({
-                pickupPoint: {...this.state.pickupPoint, lat: parseFloat(currentMark.lat), lng: parseFloat(currentMark.lng) },
-                progress: 'pickupPointIsSet',
-                defaultZoom: 15,
-                dynamicCenter: { lat: parseFloat(this.state.dynamicCenter.lat) - 0.010, lng: parseFloat(this.state.dynamicCenter.lng) + 0.0150 }
-            });
-        } else if (progress === 'pickupPointIsSet') {
-            this.setState({
-
-                dropPoint: { lat: parseFloat(currentMark.lat), lng: parseFloat(currentMark.lng) },
-                progress: 'dropPointIsSet',
-                dynamicCenter: { lat: parseFloat(this.state.dynamicCenter.lat) + 0.0050, lng: parseFloat(this.state.dynamicCenter.lng) - 0.00750 },
-                defaultZoom: 14,
-            });
-        } else {
-            console.log("Both points have been set");
-        }
-    }
-
-    onCenterChangedHandler = () => {
-        let center = this.mapRef.getCenter();
-        let latitude = center.lat();
-        let longitude = center.lng();
-        this.setState({ dynamicCenter: { lat: latitude, lng: longitude } });
-        // console.log("Update center", this.state.dynamicCenter.lat, this.state.dynamicCenter.lng, "testCenter", this.state.testCenter);
-    }
-
-
-
-    //get ride data from rideData child component
-    getRideDataHandler = (rideData, getDirectionFunction) => {
-        console.log('get ride data handler has been set', rideData);
-        this.setState({ rideData, progress: 'rideDataIsReady', isDirectionGoogled: false });
-        this.getDirectionFunction();
-    }
 
     //continue to get matching routes
     onContinueHandler = () => {
         if (this.state.matchedRoutes.fetched.length > 0) {
+            console.log("Test failed");
             this.setState({ progress: 'continuing' }, () => {
                 const routeId = this.state.matchedRoutes.fetched[this.state.matchedRoutes.counter - 1];
                 if (!this.state.loading) {
@@ -213,30 +211,6 @@ class Maps extends Component {
 
     }
 
-    onCancelAllHandler = () => {
-        this.setState({
-            pickupPoint: {
-                lat: null,
-                lng: null
-            },
-            dropPoint: {
-                lat: null,
-                lng: null
-            },
-            rideData: {},
-
-            defaultZoom: 12,
-
-            directions: null,
-            directionsOnShow: null,
-            progress: null,
-            matchedRoutes: {
-                fetched: [],
-                selected: [],
-                counter: 1
-            },
-        });
-    }
 
     onYesHandler = () => {
         //display matched route
@@ -363,69 +337,6 @@ class Maps extends Component {
 
     }
 
-    onCancelAllHandler = () => {
-        this.setState({
-            pickupPoint: {
-                lat: null,
-                lng: null
-            },
-            dropPoint: {
-                lat: null,
-                lng: null
-            },
-            rideData: {},
-
-            defaultZoom: 12,
-
-            directions: null,
-            directionsOnShow: null,
-            progress: null,
-            matchedRoutes: {
-                fetched: [],
-                selected: [],
-                counter: 1
-            }
-        });
-    }
-
-    //Handler for registering as new independent route
-    onDoneHandler = () => {
-        this.setState({ loading: true })
-        axios
-            .post('/api/directions/addition', {
-                directionData: this.state.directions,
-                rideData: this.state.rideData,
-                selectedRoutes: this.state.matchedRoutes.selected,
-            })
-            .then(addedRoute => {
-                console.log("Added route:", addedRoute);
-                this.setState({
-                    progress: null,
-                    loading: false,
-                    pickupPoint: {
-                        lat: null,
-                        lng: null
-                    },
-                    dropPoint: {
-                        lat: null,
-                        lng: null
-                    },
-                    rideData: {},
-
-                    defaultZoom: 12,
-
-                    directions: null,
-                    directionsOnShow: null,
-                    matchedRoutes: {
-                        fetched: [],
-                        selected: [],
-                        counter: 1
-                    }
-                });
-            })
-            .catch(err => console.log(err));
-    }
-
 
     onChooseAgainHandler = () => {
         this.setState({
@@ -461,13 +372,73 @@ class Maps extends Component {
     }
 
 
+    //Handler for registering as new independent route
+    onDoneHandler = () => {
+        this.setState({ loading: true })
+        axios
+            .post('/api/directions/addition', {
+                directionData: this.state.directions,
+                rideData: this.state.rideData,
+                selectedRoutes: this.state.matchedRoutes.selected,
+            })
+            .then(addedRoute => {
+                console.log("Added route:", addedRoute.data);
+                this.setState({
+                    progress: null,
+                    loading: false,
+                    pickupPoint: {
+                        lat: null,
+                        lng: null
+                    },
+                    dropPoint: {
+                        lat: null,
+                        lng: null
+                    },
+                    rideData: {},
+
+                    defaultZoom: 12,
+
+                    directions: null,
+                    directionsOnShow: null,
+                    matchedRoutes: {
+                        fetched: [],
+                        selected: [],
+                        counter: 1
+                    }
+                });
+            })
+            .catch(err => console.log(err));
+    }
+
+
+    onCancelAllHandler = () => {
+        this.setState({
+            pickupPoint: {
+                lat: null,
+                lng: null
+            },
+            dropPoint: {
+                lat: null,
+                lng: null
+            },
+            rideData: {},
+
+            defaultZoom: 12,
+
+            directions: null,
+            directionsOnShow: null,
+            progress: null,
+            matchedRoutes: {
+                fetched: [],
+                selected: [],
+                counter: 1
+            },
+        });
+    }
 
 
     render() {
-        // console.log("This is the pickup point", this.state.pickupPoint);
-        // console.log("This is the drop Point", this.state.dropPoint);
         console.log("State of the app: ", this.state);
-        // console.log("Condition of selected routes:", this.state.matchedRoutes);
         let dialogMessage, content;
         if (this.state.progress === 'continuing') {
             dialogMessage = 'Wanna share with this route?';
@@ -482,10 +453,13 @@ class Maps extends Component {
         let iconMarker = new window.google.maps.MarkerImage(
             require('../../img/mapImg/point.png'),
             null, /* size is determined at runtime */
-            (20,20), /* origin is 0,0 */
+            (20, 20), /* origin is 0,0 */
             null, /* anchor is bottom center of the scaled image */
             new window.google.maps.Size(42, 42)
         );
+
+
+        
         if (this.state.loading) {
             return <Spinner />
         }
@@ -498,7 +472,7 @@ class Maps extends Component {
                     center={{ lat: this.state.dynamicCenter.lat, lng: this.state.dynamicCenter.lng }}
                     onCenterChanged={this.onCenterChangedHandler}
                 >
-                    {this.state.directionsOnShow? (<DirectionsRenderer directions={this.state.directionsOnShow} />):null}
+                    {this.state.directionsOnShow ? (<DirectionsRenderer directions={this.state.directionsOnShow} />) : null}
 
                     {
                         (this.state.progress === null) || (this.state.progress === 'pickupPointIsSet')
@@ -534,7 +508,7 @@ class Maps extends Component {
 
                 {/*----------- Modal to collect Ride data --------------------------------------------------------*/}
                 <Modal
-                    show={this.state.progress === 'dropPointIsSet'} 
+                    show={this.state.progress === 'dropPointIsSet'}
                     modalClosed={this.onCancelAllHandler}
                     fromTop='27%'
                 >
@@ -546,7 +520,7 @@ class Maps extends Component {
                 {/*----------- Modal to show noContinuing ---------------------------------------------*/}
                 <Modal
                     show={this.state.progress === 'noContinuing'} modalClosed={() => {
-                        this.setState({ progress: 'null' });
+                        this.setState({ progress: 'null', loading: false });
                     }}
                     fromTop='27%'
                 >
@@ -560,7 +534,7 @@ class Maps extends Component {
 
                 <Modal
                     show={this.state.progress === 'almostComplete' || this.state.progress === 'noSelectedRoutes'} modalClosed={() => {
-                        this.setState({ progress: 'null' });
+                        this.setState({ progress: 'null', loading: false });
                     }}
                     fromTop='27%'
                 >

@@ -25,6 +25,11 @@ const UserSchema = new Schema({
         type: String, 
     },
 
+    routeNotifications: [{
+        user:{type: Schema.Types.ObjectId, ref: 'users'},
+        direction: {type: Schema.Types.ObjectId, ref: 'directions'},
+    }]
+
 }, {timestamps: true});
 
 module.exports = mongoose.model('User', UserSchema);

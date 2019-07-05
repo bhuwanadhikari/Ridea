@@ -18,6 +18,14 @@ const DirectionSchema = new Schema({
     },
     selectedRoutes: [{
         type: Object
+    }],
+    status: {
+        type: Boolean,
+        default: false
+    },
+    requestedBy: [{
+        user:{type: Schema.Types.ObjectId, ref: 'users'},
+        direction: {type: Schema.Types.ObjectId, ref: 'directions'},
     }]
 },
     { timestamps: true }

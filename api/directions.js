@@ -11,7 +11,7 @@ router = express();
 //Pre-addtion of the direction to find the matching route
 router.post('/matched-routes', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
     // Find all of the matching routes and algorithm for matching here
-    const matchedRoutes = ['5d18b3619ce89717a039bcca', '5d18b3c49ce89717a039bccb', '5d18b40b9ce89717a039bccc']
+    const matchedRoutes = ['5d1f6e0af2522e2544a50389', '5d1f6deaf2522e2544a50388']
     Direction.find()
         .then(result => res.status(200).send(matchedRoutes))
         .catch(err => console.log(err))
@@ -39,17 +39,58 @@ router.get('/route/:routeId', passport.authenticate('jwt', { session: 'false' })
 
 });
 
+const notifyUser = () => {
+    return new Promise(() => {
+        User
+
+    })
+
+}
+
 //Addition of new route
 router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
     console.log(req.body, " is the requested data");
     const newDirection = new Direction({
         ...req.body,
-        owner: req.user.id
+        owner: req.user.id,
     });
 
     newDirection
         .save()
-        .then(newDirection => res.status(200).send(newDirection))
+        .then(async newDirection => {
+            if (newDirection.selectedRoutes.length > 0) {
+                for (let selectedRouteId of newDirection.selectedRoutes) {
+                    await Direction
+                        .updateOne(
+                            { _id: selectedRouteId },
+                            { $push: { requestedBy: { user: req.user.id, direction: newDirection._id } } },
+                            { $set: { status: true } }
+                        )
+                        .then(() => {
+                            return;
+                        }).catch((err) => {
+                            throw err;
+                        });
+
+                    const selectedRouteOwner = await Direction.findById(selectedRouteId).then(res => res.owner).catch(err => { throw err });
+                    await User
+                        .updateOne(
+                            { _id: selectedRouteOwner },
+                            { $push: { routeNotifications: { user: req.user.id, direction: newDirection._id } } }
+                        )
+                        .then(() => {
+                            return;
+                        }).catch((err) => {
+                            throw err;
+                        });
+                }
+                Direction.findById(newDirection._id).then(savedDirection => {
+                    res.status(200).json(savedDirection);
+                })
+            } else {
+                res.status(200).json(newDirection);
+            }
+        })
         .catch(err => console.log(err));
 
 
@@ -60,13 +101,17 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
 
 
 
-router.get('/all-routes', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
-    Direction.find().then(allDirections => {
+router.get('/all-routes', (req, res) => {
+    Direction.find().then(async allDirections => {
         if (!allDirections) {
             res.status(404).json({ msg: "No directions has been stored yet" });
         }
+        // const selectedRouteOwner = await Direction.findById('5d1f43e49fe10420c816a239').then(res => res.owner).catch(err => {throw err});
+        // console.log("We got something ehre", selectedRouteOwner);
+
+
         res.status(200).json(allDirections);
-        console.log("get directions has been hit");
+        console.log("get all routes has been hit");
     })
 
 });

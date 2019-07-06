@@ -8,28 +8,27 @@ const UserSchema = new Schema({
         required: true,
     },
     email: {
-        type: String, 
+        type: String,
         required: true,
     },
 
     password: {
-        type: String, 
+        type: String,
     },
     username: {
-        type: String, 
+        type: String,
     },
     googleId: {
-        type: String, 
+        type: String,
     },
     thumbnail: {
-        type: String, 
+        type: String,
     },
-//notified by
-    routeNotifications: [{
-        user:{type: Schema.Types.ObjectId, ref: 'users'},
-        direction: {type: Schema.Types.ObjectId, ref: 'directions'},
+    notifiedBy: [{
+        user: { type: Schema.Types.ObjectId, ref: 'users' },
+        direction: { type: Schema.Types.ObjectId, ref: 'directions' },
     }]
 
-}, {timestamps: true});
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

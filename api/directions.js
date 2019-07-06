@@ -11,10 +11,27 @@ router = express();
 //Pre-addtion of the direction to find the matching route
 router.post('/matched-routes', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
     // Find all of the matching routes and algorithm for matching here
-    const matchedRoutes = ['5d1f6e0af2522e2544a50389', '5d1f6deaf2522e2544a50388']
-    Direction.find()
-        .then(result => res.status(200).send(matchedRoutes))
-        .catch(err => console.log(err))
+
+    // const matchedRoutes = ['5d1f6e0af2522e2544a50389', '5d1f6deaf2522e2544a50388']
+    // Direction.find()
+    //     .then(result => res.status(200).send(matchedRoutes))
+    //     .catch(err => console.log(err))
+    Direction
+        .find({ owner: { $ne: req.user.id } })
+        .select('_id')
+        .then((matchedRoutes) => {
+            console.log(matchedRoutes, "is the matched routes");
+
+            let cleanArray = [];
+            if (matchedRoutes.length > 0) {
+                matchedRoutes.forEach((routeObject) => {
+                    cleanArray.push(routeObject._id);
+                })
+            }
+            res.status(200).json(cleanArray);
+        }).catch((err) => {
+            console.log(err);
+        });
 
 
 });
@@ -75,8 +92,8 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
                     const selectedRouteOwner = await Direction.findById(selectedRouteId).then(res => res.owner).catch(err => { throw err });
                     await User
                         .updateOne(
-                            { _id: selectedRouteOwner }, //change to notified by in next delete
-                            { $push: { routeNotifications: { user: req.user.id, direction: newDirection._id } } }
+                            { _id: selectedRouteOwner },
+                            { $push: { notifiedBy: { user: req.user.id, direction: newDirection._id } } }
                         )
                         .then(() => {
                             return;

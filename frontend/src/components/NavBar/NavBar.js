@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios';
 import './NavBar.css';
 import DrawerToggleButton from '../SideDrawer/DrawerToggleButton';
 import Search from '../Search/Search';
@@ -6,6 +7,10 @@ import message from '../../img/navImg/message.svg';
 import {Link} from 'react-router-dom';
 
 class NavBar extends Component {
+
+
+    
+    
     render() {
         return (
             <header className='Toolbar'>

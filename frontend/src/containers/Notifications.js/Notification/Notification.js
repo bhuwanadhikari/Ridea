@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 
-class Notification extends Component {
-    render() {
-        return (
-            <div>
-                
-            </div>
-        )
-    }
+const Notification = ({ notifier }) => {
+    let i = 1;
+    return (
+        <div className="NotificationWrapper">
+            <div className="SN">{i++}</div>
+            <div className="Name">{notifier.name}</div>
+            <div className="View">Show Route</div>
+        </div>
+    )
 }
+
 
 export default Notification

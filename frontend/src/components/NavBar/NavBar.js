@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import axios from 'axios';
-import { NotificationProvider } from '../../context/NotificationContext';
 import './NavBar.css';
 import DrawerToggleButton from '../SideDrawer/DrawerToggleButton';
 import Search from '../Search/Search';
@@ -14,7 +13,6 @@ class NavBar extends Component {
 
     render() {
         return (
-            <NotificationProvider>
                 <header className='Toolbar'>
                     <nav className='ToolbarNavigation'>
                         <div className='HamBurgerWrapper'><DrawerToggleButton clicked={this.props.clicked} /></div>
@@ -25,7 +23,6 @@ class NavBar extends Component {
                         </Link>
                     </nav>
                 </header>
-            </NotificationProvider>
         )
     }
 }

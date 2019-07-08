@@ -25,8 +25,8 @@ const UserSchema = new Schema({
         type: String,
     },
     notifiedBy: [{
-        user: { type: Schema.Types.ObjectId, ref: 'users' },
-        direction: { type: Schema.Types.ObjectId, ref: 'directions' },
+        user: { type: Schema.Types.ObjectId, ref: 'User' },
+        direction: { type: Schema.Types.ObjectId, ref: 'Direction' },
     }]
 
 }, { timestamps: true });

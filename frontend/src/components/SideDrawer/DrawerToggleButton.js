@@ -4,7 +4,7 @@ import { NotificationContext } from '../../context/NotificationContext';
 import './DrawerToggleButton.css';
 const DrawerToggleButton = (props) => {
 
-    const [notification, setNotification] = useContext(NotificationContext);
+    const {notification, setNotification} = useContext(NotificationContext);
 
 
     console.log(notification);

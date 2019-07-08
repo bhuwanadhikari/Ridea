@@ -1,7 +1,7 @@
 .Modal {
     position: fixed;
     height: auto;
-    z-index: 35;
+    z-index: 1000;
     background-color: white;
     width: 90%;
     border-radius: 5px;

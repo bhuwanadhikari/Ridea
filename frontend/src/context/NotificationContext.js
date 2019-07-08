@@ -1,4 +1,4 @@
-import React, { useState, createContext,useEffect } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import axios from 'axios';
 
 export const NotificationContext = createContext();
@@ -6,6 +6,8 @@ export const NotificationContext = createContext();
 
 export const NotificationProvider = (props) => {
     const [notification, setNotification] = useState(false);
+    const [notifiedBy, setNotifiedBy] = useState();
+
 
     useEffect(() => {
         axios
@@ -20,10 +22,22 @@ export const NotificationProvider = (props) => {
             }).catch((err) => {
                 console.log(err);
             });
+
+        axios
+            .get('/api/notifications/notified-by')
+            .then((notifiedBy) => {
+                console.log("NOtified by is given as here as said----------------------", notifiedBy.data);
+                setNotifiedBy(notifiedBy.data);
+            }).catch((err) => {
+                console.log(err);
+            });
     }, [])
 
     return (
-        <NotificationContext.Provider value={[notification, setNotification]}>
+        <NotificationContext.Provider value={{
+            notification, setNotification,
+            notifiedBy, setNotifiedBy
+        }}>
             {props.children}
         </NotificationContext.Provider>
     )

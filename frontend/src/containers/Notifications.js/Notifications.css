@@ -1,0 +1,28 @@
+.NotificationWrapper {
+    height: 50px;
+    line-height: 50px;
+}
+.SN {
+	height: 50px;
+	width: 50px;
+	float: left;
+}
+
+.Name {
+	width: calc(100% - 50px - 120px);
+	height: 50px;
+	float: left;
+}
+
+.View {
+	width: 120px;
+	height: 50px;
+    float: left;
+    text-align: center;
+    color: var(--medium-dark);
+}
+
+.View:hover {
+    color: var(--lighter-theme);
+    cursor: pointer;
+}

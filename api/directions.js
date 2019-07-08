@@ -12,10 +12,6 @@ router = express();
 router.post('/matched-routes', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
     // Find all of the matching routes and algorithm for matching here
 
-    // const matchedRoutes = ['5d1f6e0af2522e2544a50389', '5d1f6deaf2522e2544a50388']
-    // Direction.find()
-    //     .then(result => res.status(200).send(matchedRoutes))
-    //     .catch(err => console.log(err))
     Direction
         .find({ owner: { $ne: req.user.id } })
         .select('_id')

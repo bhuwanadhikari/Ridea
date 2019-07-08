@@ -29,7 +29,9 @@ class App extends Component {
   render() {
     console.log("The environment now is:", process.env.NODE_ENV);
     return (
-      <Provider store = {store}>
+      //Redux Provider
+      <Provider store = {store}> 
+      
         <Router>
           <div style={{ height: '100%' }} className="App">
             <Switch>
@@ -37,6 +39,7 @@ class App extends Component {
             </Switch>
           </div>
         </Router>
+        
       </Provider>
 
     );

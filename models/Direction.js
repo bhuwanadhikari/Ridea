@@ -16,6 +16,7 @@ const DirectionSchema = new Schema({
         type: Object,
         required: true,
     },
+    //Make this selectedRoutes with the ref as well
     selectedRoutes: [{
         type: Object
     }],

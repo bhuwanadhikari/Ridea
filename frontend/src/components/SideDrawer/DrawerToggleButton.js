@@ -1,50 +1,50 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import axios from 'axios';
 import './DrawerToggleButton.css';
+import { NotificationProvider, NotificationContext } from '../../context/NotificationContext';
 
-class DrawerToggleButton extends React.Component {
-    constructor(props) {
-        super(props)
+const DrawerToggleButton = () => {
 
-        this.state = {
-            notification: false
-        }
-    }
-    componentDidMount() {
-        //request for the notification of the user
-        axios
-            .get('/api/notifications')
-            .then((result) => {
-                if (result.data.status === true) {
-                    console.log("Notificaition status", result.data.status);
-                    this.setState({
-                        notification: true
-                    })
-                } else {
-                    this.setState({
-                        notification: false
-                    })
-                }
-            }).catch((err) => {
-                console.log(err);
-            });
-    }
+    const [notification, setNotification] = useContext(NotificationContext)
 
-    render() {
 
-        let notifier = (
-            <div className="Notifier"></div>
-        )
-        return (
-            <button className='ToggleButton' id='ToggleButton' onClick={this.props.clicked}>
-                {this.state.notification
+    // componentDidMount() {
+    //request for the notification of 
+    //     axios
+    //         .get('/api/notifications')
+    //         .then((result) => {
+    //             if (result.data.status === true) {
+    //                 console.log("Notificaition status", result.data.status);
+    //                 this.setState({
+    //                     notification: true
+    //                 })
+    //             } else {
+    //                 this.setState({
+    //                     notification: false
+    //                 })
+    //             }
+    //         }).catch((err) => {
+    //             console.log(err);
+    //         });
+    // }
+
+
+
+    let notifier = (
+        <div className="Notifier"></div>
+    )
+    return (
+        <NotificationProvider>
+            <button className='ToggleButton' id='ToggleButton' onClick={() => console.log("hello world")}>
+                {notification
                     ? (notifier)
                     : null}
                 <div className='ToggleButtonLine'></div>
                 <div className='ToggleButtonLine' ></div>
                 <div className='ToggleButtonLine'></div>
-            </button>)
-    }
+            </button>
+        </NotificationProvider>
+    )
 }
 
 export default DrawerToggleButton;

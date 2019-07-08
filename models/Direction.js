@@ -20,6 +20,7 @@ const DirectionSchema = new Schema({
     selectedRoutes: [{
         type: Object
     }],
+    //shared or not shared
     status: {
         type: Boolean,
         default: false

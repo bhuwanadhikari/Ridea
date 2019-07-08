@@ -1,28 +1,31 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+import { NotificationProvider } from '../../context/NotificationContext';
 import './NavBar.css';
 import DrawerToggleButton from '../SideDrawer/DrawerToggleButton';
 import Search from '../Search/Search';
 import message from '../../img/navImg/message.svg';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class NavBar extends Component {
 
 
-    
-    
+
+
     render() {
         return (
-            <header className='Toolbar'>
-                <nav className='ToolbarNavigation'>
-                    <div className='HamBurgerWrapper'><DrawerToggleButton clicked={this.props.clicked}/></div>
-                    <div className='SearchWrapper'><Search/></div>
-                    <div className='Spacer'></div>
-                    <Link to='/chat'>
-                    <div className='ChatIconWrapper'><div className='ImageEnclosure'><img className='AuthMessageIcon' src={message} alt='Message icon of ridea'></img></div></div>
-                    </Link>
-                </nav>
+            <NotificationProvider>
+                <header className='Toolbar'>
+                    <nav className='ToolbarNavigation'>
+                        <div className='HamBurgerWrapper'><DrawerToggleButton clicked={this.props.clicked} /></div>
+                        <div className='SearchWrapper'><Search /></div>
+                        <div className='Spacer'></div>
+                        <Link to='/chat'>
+                            <div className='ChatIconWrapper'><div className='ImageEnclosure'><img className='AuthMessageIcon' src={message} alt='Message icon of ridea'></img></div></div>
+                        </Link>
+                    </nav>
                 </header>
+            </NotificationProvider>
         )
     }
 }

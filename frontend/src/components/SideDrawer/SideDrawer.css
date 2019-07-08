@@ -39,7 +39,7 @@
 }
 .SideDrawer li:hover,
 .SideDrawer li:active{
-    color: skyblue;
+    cursor: pointer;
 }
 .IconWrapper{
     height: 30px;

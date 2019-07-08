@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 const router = express();
 
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/status', passport.authenticate('jwt', { session: false }), (req, res) => {
     const userId = req.params.id;   
     User
         .findOne({_id: req.user.id})

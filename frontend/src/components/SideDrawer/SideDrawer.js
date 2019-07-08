@@ -11,28 +11,26 @@ class SideDrawer extends React.Component {
         return (
             <Aux>
                 <BackDrop show={this.props.show} clicked={this.props.drawerClosed} />
-                <div 
-                className='SideDrawer' 
-                style={{
-                    transform: this.props.show ? 'translateX(0)' : 'translateX(-100vw)'
-                 }}
+                <div
+                    className='SideDrawer'
+                    style={{
+                        transform: this.props.show ? 'translateX(0)' : 'translateX(-100vw)'
+                    }}
                 >
                     <div className="ProfileContainer"></div>
                     <div className="OptionsWrapper">
-                    <ul>
-                       <div className="ListWrapper"> <li><div className="IconWrapper"><img src={home} alt="Ridea home"></img></div>Home</li></div>
-                       <div className="ListWrapper"> <li><div className="IconWrapper"><img src={notification} alt="Ridea notification"></img></div>Notification</li></div>
-                       <div className="ListWrapper"> <li><div className="IconWrapper"><img src={feedback} alt="Ridea feedback"></img></div>Feedback</li></div>
-                       <div className="ListWrapper"> <li><div className="IconWrapper"></div>About</li></div>
-                       <div className="ListWrapper"> <li><div className="IconWrapper"></div>Privacy policy</li></div>
-                       <div className="ListWrapper"> <li><div className="IconWrapper"></div>Logout</li></div>
+                        <div className="ListWrapper"><div className="IconWrapper"><img src={home} alt="Ridea Home"></img></div>Home</div>
+                        <div className="ListWrapper"><div className="IconWrapper"><img src={notification} alt="Ridea Notification"></img></div>Notification</div>
+                        <div className="ListWrapper"><div className="IconWrapper"><img src={feedback} alt="Ridea Feedback"></img></div>Feedback</div>
+                        <div className="ListWrapper"><div className="IconWrapper"></div>About</div>
+                        <div className="ListWrapper"><div className="IconWrapper"></div>Privacy policy</div>
+                        <div className="ListWrapper"><div className="IconWrapper"></div>Logout</div>
 
-                    </ul>
                     </div>
                 </div>
             </Aux>
         )
     }
-} 
+}
 
 export default SideDrawer;

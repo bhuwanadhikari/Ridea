@@ -8,23 +8,58 @@ import feedback from '../../img/SidebarImg/feedback.svg';
 
 class SideDrawer extends React.Component {
     render() {
+        let { show } = this.props;
+        show = true;
         return (
             <Aux>
-                <BackDrop show={this.props.show} clicked={this.props.drawerClosed} />
+                <BackDrop show={show} clicked={this.props.drawerClosed} />
                 <div
                     className='SideDrawer'
                     style={{
-                        transform: this.props.show ? 'translateX(0)' : 'translateX(-100vw)'
+                        transform: show ? 'translateX(0)' : 'translateX(-100vw)'
                     }}
                 >
                     <div className="ProfileContainer"></div>
                     <div className="OptionsWrapper">
-                        <div className="ListWrapper"><div className="IconWrapper"><img src={home} alt="Ridea Home"></img></div>Home</div>
-                        <div className="ListWrapper"><div className="IconWrapper"><img src={notification} alt="Ridea Notification"></img></div>Notification</div>
-                        <div className="ListWrapper"><div className="IconWrapper"><img src={feedback} alt="Ridea Feedback"></img></div>Feedback</div>
-                        <div className="ListWrapper"><div className="IconWrapper"></div>About</div>
-                        <div className="ListWrapper"><div className="IconWrapper"></div>Privacy policy</div>
-                        <div className="ListWrapper"><div className="IconWrapper"></div>Logout</div>
+
+                        <div className="ListWrapper">
+                            <img className="ListImg" src={home} alt="Ridea Home" />
+                            <div className="LabelWrapper">
+                                Home
+                            </div>
+                        </div>
+
+                        <div className="ListWrapper">
+                            <img className="ListImg" src={notification} alt="Ridea Notification" />
+                            <div className="LabelWrapper">
+                                Notification
+                            </div>
+                        </div>
+
+                        <div className="ListWrapper">
+                            <img className="ListImg" src={feedback} alt="Ridea Feedback" />
+                            <div className="LabelWrapper">
+                                Feedback
+                            </div>
+                        </div>
+
+                        <div className="ListWrapper">
+                            <div className="LabelWrapper">
+                                About
+                            </div>
+                        </div>
+
+                        <div className="ListWrapper">
+                            <div className="LabelWrapper">
+                                Privacy Policy
+                            </div>
+                        </div>
+
+                        <div className="ListWrapper">
+                            <div className="LabelWrapper">
+                                Logout
+                            </div>
+                        </div>
 
                     </div>
                 </div>

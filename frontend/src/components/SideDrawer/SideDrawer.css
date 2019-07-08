@@ -1,53 +1,45 @@
-.SideDrawer{
-    height: 100%;
-    background: white;
-    box-shadow: 0 0 15px var(--medium-dark);
-    position: fixed;
-    top:0;
-    left:0;
-    max-width: 400px;
-    width: 70%;
-    z-index: 3500;
-    transition: all 0.5s ease-in-out;
+.SideDrawer {
+	height: 100%;
+	background: white;
+	box-shadow: 0 0 15px var(--medium-dark);
+	position: fixed;
+	top: 0;
+	left: 0;
+	max-width: 400px;
+	width: 70vw;
+	z-index: 3500;
+	transition: all 0.75s ease-in-out;
 }
-.ProfileContainer{
-    width:100%;
-    height:200px;
-    box-shadow: 1px 1px 6px var(--lighter-theme);
+.ProfileContainer {
+	width: 100%;
+	height: 200px;
+	box-shadow: 1px 1px 6px var(--lighter-theme);
 }
-.SideDrawer ul{
-    height: 100%;
-    width:100%;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    align-content: space-around;
+
+.ListWrapper {
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid silver;
 }
-.ListWrapper{
-    position: relative;
-    left:0;
-    top:0;
+
+.ListImg {
+    width: 20px;
+    float: left;
+    padding: 15px;
+
 }
-.ListWrapper:hover{
-    background-color: #cccccc;
+
+.LabelWrapper{
+    position: absolute;
+    left: 50px;
+    height: 50px;
+    text-align: left;
+    font-weight: bolder;
+    line-height: 50px;
 }
-.SideDrawer li{
-    margin: 1rem 0;
-    font-size: 1.2rem;
-    display: flex;
-    flex-direction:row;
-}
-.SideDrawer li:hover,
-.SideDrawer li:active{
+
+
+.ListWrapper:hover {
+    background-color: silver;
     cursor: pointer;
-}
-.IconWrapper{
-    height: 30px;
-    width:30px;
-    border-radius:30px;
-    margin-right: 20px;
-}
-.IconWrapper img{
-   width:100%;
-   height: 100%;
 }

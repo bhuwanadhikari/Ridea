@@ -6,7 +6,6 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-    console.log("login reducer has been hit");
     switch (action.type) {
         case 'SET_USER':
             return {

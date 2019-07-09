@@ -1,11 +1,11 @@
 
 const initialState = {
+    showBellSign: false,
     notifiedByRoutes: null,
     responseProgress: null
 };
 
 export default function (state = initialState, action) {
-    console.log("login reducer has been hit");
     switch (action.type) {
         case 'SET_RESPONSE_PROGRESS':
             return {
@@ -16,6 +16,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 notifiedByRoutes: action.payload
+            }
+        case 'SET_BELL_SIGN':
+            return {
+                ...state,
+                showBellSign: action.payload
             }
         default:
             return state;

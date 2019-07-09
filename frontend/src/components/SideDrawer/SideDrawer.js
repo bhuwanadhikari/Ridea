@@ -1,6 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import Aux from '../../hoc/Auxi';
 import BackDrop from '../../ui/BackDrop/BackDrop';
@@ -11,141 +12,153 @@ import './SideDrawer.css';
 import home from '../../img/SidebarImg/home.svg';
 import notification from '../../img/SidebarImg/notification.svg';
 import feedback from '../../img/SidebarImg/feedback.svg';
-import { NotificationContext } from '../../context/NotificationContext';
 
-const SideDrawer = (props) => {
-    const { notifiedBy } = useContext(NotificationContext);
+class SideDrawer extends React.Component {
 
-    const [notificationsModal, setNotificationsModal] = useState(false);
+    constructor(props) {
+        super(props)
 
-    let { show } = props;
-    const onNotificationClickHandler = () => {
-        if (notificationsModal) {
+        this.state = {
+            showNotificationsModal: false,
+        }
+    }
+
+
+    componentDidMount() {
+        axios
+            .get('/api/notifications/status')
+            .then((result) => {
+
+                if (result.data.status === true) {
+                    console.log("Notificaition status----------------------------------", result.data.status);
+                    store.dispatch({
+                        type: 'SET_BELL_SIGN',
+                        payload: true
+                    })
+                } else {
+                    store.dispatch({
+                        type: 'SET_BELL_SIGN',
+                        payload: false
+                    })
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+
+        axios
+            .get('/api/notifications/notified-by')
+            .then((notifiedBy) => {
+                store.dispatch({
+                    type: 'SET_NOTIFIEDBY_ROUTES',
+                    payload: notifiedBy.data
+                })
+            }).catch((err) => {
+                console.log(err);
+            });
+    }
+
+    onNotificationClickHandler = () => {
+        if (this.state.showNotificationsModal) {
             return;
         }
-        setNotificationsModal(true);
-        props.drawerClosed();
+        this.setState({ showNotificationsModal: true });
+        this.props.drawerClosed();
 
     }
 
-    const onModalCloseHandler = () => {
-        if (!notificationsModal) {
+    onModalCloseHandler = () => {
+        if (!this.state.showNotificationsModal) {
             return;
         }
-        setNotificationsModal(false);
+        this.setState({ showNotificationsModal: false });
     }
 
-    useEffect(() => {
-        return () => {
-            console.log("SET_NOTIFIEDBY_ROUTES has been hit");
-            store.dispatch({
-                type: 'SET_NOTIFIEDBY_ROUTES',
-                payload: { ...notifiedBy }
-            });
-            store.dispatch({
-                type: 'SET_RESPONSE_PROGRESS',
-                payload: 'notifiedByIsSet'
-            });
 
-        };
-    });
+    render() {
 
 
-    console.log("Show sideDrawer:", show);
-    return (
-        <Aux>
-            <BackDrop show={show} clicked={props.drawerClosed} />
-            <div
-                className='SideDrawer'
-                style={{
-                    transform: show ? 'translateX(0)' : 'translateX(-100vw)'
-                }}
-            >
-                <div className="ProfileContainer"></div>
-                <div className="OptionsWrapper">
+        let { show } = this.props;
+        var notifiedBy = this.props.bell.notifiedByRoutes;
 
-                    <div className="ListWrapper">
-                        <img className="ListImg" src={home} alt="Ridea Home" />
-                        <div className="LabelWrapper">
-                            Home
+        return (
+            <Aux>
+                <BackDrop show={show} clicked={this.props.drawerClosed} />
+                <div
+                    className='SideDrawer'
+                    style={{
+                        transform: show ? 'translateX(0)' : 'translateX(-100vw)'
+                    }}
+                >
+                    <div className="ProfileContainer"></div>
+                    <div className="OptionsWrapper">
+
+                        <div className="ListWrapper">
+                            <img className="ListImg" src={home} alt="Ridea Home" />
+                            <div className="LabelWrapper">
+                                Home
                             </div>
-                    </div>
-
-                    <div className="ListWrapper"
-                        onClick={onNotificationClickHandler}
-                    >
-                        <img className="ListImg" src={notification} alt="Ridea Notification" />
-                        <div className="LabelWrapper">
-                            Notification{notifiedBy && `(${notifiedBy.length})`}
                         </div>
-                    </div>
 
-                    <div className="ListWrapper">
-                        <img className="ListImg" src={feedback} alt="Ridea Feedback" />
-                        <div className="LabelWrapper">
-                            Feedback
+                        <div className="ListWrapper"
+                            onClick={this.onNotificationClickHandler}
+                        >
+                            <img className="ListImg" src={notification} alt="Ridea Notification" />
+                            <div className="LabelWrapper">
+                                Notification{notifiedBy && `(${notifiedBy.length})`}
                             </div>
-                    </div>
+                        </div>
 
-                    <div className="ListWrapper">
-                        <div className="LabelWrapper">
-                            About
+                        <div className="ListWrapper">
+                            <img className="ListImg" src={feedback} alt="Ridea Feedback" />
+                            <div className="LabelWrapper">
+                                Feedback
                             </div>
-                    </div>
+                        </div>
 
-                    <div className="ListWrapper">
-                        <div className="LabelWrapper">
-                            Privacy Policy
+                        <div className="ListWrapper">
+                            <div className="LabelWrapper">
+                                About
                             </div>
-                    </div>
+                        </div>
 
-                    <div className="ListWrapper">
-                        <div className="LabelWrapper">
-                            Logout
+                        <div className="ListWrapper">
+                            <div className="LabelWrapper">
+                                Privacy Policy
                             </div>
-                    </div>
+                        </div>
 
+                        <div className="ListWrapper">
+                            <div className="LabelWrapper">
+                                Logout
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
 
 
 
-            {/*----------- Show Notification Boxes   --------------------------------------*/}
+                {/*----------- Show Notification Boxes   --------------------------------------*/}
 
-            <Modal
-                show={notificationsModal} modalClosed={onModalCloseHandler}
-                fromTop='27%'
-            >
-                <div className="NotificationsContainer">
-                    {
-                        notifiedBy && notifiedBy.map((item, index) => {
-                            return (
-                                <div className="NotificationWrapper">
-                                    <div className="SN">{index + 1}</div>
-                                    <div className="Name">{item.name}</div>
-                                    <div className="View"
-                                        onClick={onModalCloseHandler}
-                                    >
-                                        Show Route
-                                    </div>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-            </Modal>
+                <Modal
+                    show={this.state.showNotificationsModal} modalClosed={this.onModalCloseHandler}
+                    fromTop='27%'
+                >
+                    <Notifications notificationData={notifiedBy} />
+                </Modal>
 
-        </Aux>
-    )
+            </Aux>
+        )
 
+    }
 }
 
 SideDrawer.propTypes = {
-    routeManage: PropTypes.object
+    bell: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-    routeManage: state.routeManage
+    bell: state.bell
 });
 
 

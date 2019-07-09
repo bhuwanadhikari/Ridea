@@ -6,12 +6,12 @@ import NavBar from '../../components/NavBar/NavBar';
 import SideDrawer from '../../components/SideDrawer/SideDrawer';
 import Maps from '../Maps/Maps';
 
-import { NotificationProvider } from '../../context/NotificationContext';
+import './Home.css'
 import keys from '../../config/keys';
 
 
 
-import './Home.css'
+
 
 
 class App extends Component {
@@ -39,7 +39,6 @@ class App extends Component {
 
   componentDidMount() {
     if (navigator.geolocation) {
-      console.log("inside the component did mount for the locating purpose");
       navigator.geolocation.getCurrentPosition(
         position => {
           this.setState(prevState => ({
@@ -54,7 +53,7 @@ class App extends Component {
         }
       );
     } else {
-      console.log("cannot be updated");
+      console.log("Location cannot be updated");
     }
   }
 
@@ -62,35 +61,33 @@ class App extends Component {
 
   render() {
     return (
-      <NotificationProvider>
 
-        <div className="Home">
-          <NavBar clicked={this.drawerToggleClickHandler} />
+      <div className="Home">
+        <NavBar clicked={this.drawerToggleClickHandler} />
 
 
-          <div className='BodyWrapper'>
-            <Maps
-              isMarkerShown={false}
-              googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places`}
-              // googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.GOOGLE_API_KEY}`}
-              loadingElement={<div style={{ height: `100vw` }} />}
-              containerElement={<div style={{ height: `100vh` }} />}
-              mapElement={<div style={{ height: `100%` }} />}
-              direction={true}
-              currentLocation={this.state.currentLocation}
-              isCurrentLocationSet={this.state.isCurrentLocationSet}
-            />
-          </div>
-          <SideDrawer
-            show={this.state.showDrawer}
-            drawerClosed={() => {
-              this.setState({ showDrawer: false });
-            }}
+        <div className='BodyWrapper'>
+          <Maps
+            isMarkerShown={false}
+            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places`}
+            // googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.GOOGLE_API_KEY}`}
+            loadingElement={<div style={{ height: `100vw` }} />}
+            containerElement={<div style={{ height: `100vh` }} />}
+            mapElement={<div style={{ height: `100%` }} />}
+            direction={true}
+            currentLocation={this.state.currentLocation}
+            isCurrentLocationSet={this.state.isCurrentLocationSet}
           />
-
-          <Footer />
         </div>
-      </NotificationProvider>
+        <SideDrawer
+          show={this.state.showDrawer}
+          drawerClosed={() => {
+            this.setState({ showDrawer: false });
+          }}
+        />
+
+        <Footer />
+      </div>
 
     );
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 
@@ -17,7 +17,6 @@ if (localStorage.jwtToken) {
   //decode stored token
   const decoded = jwt_decode(localStorage.jwtToken);
   //set user's statuses
-  console.log("we are insdide", decoded);
   store.dispatch({ type: 'SET_USER', payload: decoded });
   /////////////////////////
   ///expiration code///////

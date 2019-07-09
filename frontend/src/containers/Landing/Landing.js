@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
 import SignUp from '../SignUp/SignUp';
@@ -13,7 +12,6 @@ class Landing extends Component {
   componentDidMount() {
     const search = this.props.location.search;
     const params = new URLSearchParams(search);
-    console.log(search);
     const token = params.get('token');
     if (token) {
       localStorage.setItem('jwtToken', token);

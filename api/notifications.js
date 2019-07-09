@@ -33,7 +33,10 @@ router.get('/notified-by', passport.authenticate('jwt', { session: false }), (re
                 user.notifiedBy.forEach(el => {
                     const aNotifier = {
                         name: el.user.name,
-                        directionData: el.direction.directionData
+                        directionData: el.direction.directionData,
+                        user_id: el.user._id,
+                        direction_id: el.direction._id
+
                     }
                     cleanNotifiers.push(aNotifier);
                 });

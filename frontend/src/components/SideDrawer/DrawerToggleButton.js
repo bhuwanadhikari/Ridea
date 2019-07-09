@@ -1,22 +1,18 @@
-import React, { useContext } from 'react'
-import axios from 'axios';
-import { NotificationContext } from '../../context/NotificationContext';
+import React from 'react'
+ 
+import {connect} from 'react-redux';
+import store from '../../redux/store/store';
 import './DrawerToggleButton.css';
 const DrawerToggleButton = (props) => {
 
-    const {notification, setNotification} = useContext(NotificationContext);
-
-
-    console.log(notification);
+    const notification = props.bell.showBellSign;
 
     let notifier = (
         <div className="Notifier"></div>
     )
     return (
         <button className='ToggleButton' id='ToggleButton' onClick={props.clicked}>
-            {notification
-                ? notifier
-                : null}
+            {notification && notifier}
 
             <div className='ToggleButtonLine'></div>
             <div className='ToggleButtonLine' ></div>
@@ -25,4 +21,8 @@ const DrawerToggleButton = (props) => {
     )
 }
 
-export default DrawerToggleButton;
+const mapStateToProps = state => ({
+    bell: state.bell
+})
+
+export default connect(mapStateToProps)(DrawerToggleButton);

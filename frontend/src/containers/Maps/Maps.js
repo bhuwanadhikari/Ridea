@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import Auxi from '../../hoc/Auxi';
 import RideData from './RideData/RideData';
 import Modal from '../../ui/Modal/Modal';
@@ -80,8 +83,6 @@ class Maps extends Component {
         //Fetch the Route after ride data is ready
 
 
-        let shouldNewMatchBeFetched = this.state.matchedRoutes.counter !== prevState.matchedRoutes.counter;
-        shouldNewMatchBeFetched = shouldNewMatchBeFetched || this.state.matchedRoutes.counter === 1;
 
     }
 
@@ -437,8 +438,12 @@ class Maps extends Component {
     }
 
 
+
+
     render() {
-        console.log("State of the app: ", this.state);
+        // console.log("State of the app: ", this.state);
+
+
         let dialogMessage, content;
         if (this.state.progress === 'continuing') {
             dialogMessage = 'Wanna share with this route?';
@@ -459,7 +464,7 @@ class Maps extends Component {
         );
 
 
-        
+
         if (this.state.loading) {
             return <Spinner />
         }
@@ -546,7 +551,7 @@ class Maps extends Component {
 
 
 
-                {/*----------- Dialog at the bottom of screen -----------*/}
+                {/*----------- Continuing Dialog Bottom -----------*/}
                 <DialogBottom
                     show={
                         (this.state.progress === 'directionIsFetched'
@@ -567,15 +572,33 @@ class Maps extends Component {
 
                 </DialogBottom>
 
+                {/*----------- Accept Reject Bottom Dialog -----------*/}
+                <DialogBottom
+                    show={this.props.bell.responseProgress === 'requestIsShowing'}
+                >
+                    <Auxi>
+                        <button onClick={this.onContinueHandler}>Accept</button>
+                        <button onClick={this.onCancelAllHandler}>Reject</button>
+                    </Auxi>
+                </DialogBottom>
+
 
             </Auxi >
         )
     }
 }
 
+Maps.propTypes = {
+    bell: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = state => ({
+    bell: state.bell
+})
 
 
-export default withScriptjs(withGoogleMap(Maps))
+
+export default connect(mapStateToProps)(withScriptjs(withGoogleMap(Maps)));
 
 
 // {/*-----------  -----------*/}

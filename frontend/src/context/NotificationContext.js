@@ -26,7 +26,6 @@ export const NotificationProvider = (props) => {
         axios
             .get('/api/notifications/notified-by')
             .then((notifiedBy) => {
-                console.log("NOtified by is given as here as said----------------------", notifiedBy.data);
                 setNotifiedBy(notifiedBy.data);
             }).catch((err) => {
                 console.log(err);

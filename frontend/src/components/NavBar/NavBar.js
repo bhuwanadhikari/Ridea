@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios';
 import './NavBar.css';
 import DrawerToggleButton from '../SideDrawer/DrawerToggleButton';
 import Search from '../Search/Search';

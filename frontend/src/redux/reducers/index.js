@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import authReducer from './authReducer';
-import routeManageReducer from './notificationReducer';
+import notificationReducer from './notificationReducer';
 
 export default combineReducers({
-    routeManager: routeManageReducer,
+    bell: notificationReducer,
     auth: authReducer
 })

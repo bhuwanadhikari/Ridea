@@ -52,7 +52,6 @@ class SignUp extends Component {
             localStorage.setItem('jwtToken', res.data.token);
             setAuthToken(res.data.token);
             const decoded = jwtDecode(res.data.token);
-            console.log("Decoded output of the data", decoded);
             store.dispatch({ type: 'SET_USER', payload: decoded });
             if(store.getState().auth.isAuthenticated){
                this.props.history.push('/home');

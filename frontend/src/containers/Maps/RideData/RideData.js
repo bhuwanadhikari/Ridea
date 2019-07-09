@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import InputField from '../../../ui/InputField/InputField';
 import Button from '../../../ui/Button/Button';
 
 import './RideData.css'

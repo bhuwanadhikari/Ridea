@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 const PrivateRoute = ({ component: Component, auth, ...rest }) => {
 
     const authState = store.getState().auth.isAuthenticated;
-    console.log(authState, "is the state of token");
 
     return (
         <Route
@@ -22,7 +21,7 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
             }}
         />
     )
-}
+};
 
 
 PrivateRoute.propTypes = {

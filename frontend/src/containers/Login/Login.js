@@ -41,7 +41,6 @@ class Login extends Component {
             localStorage.setItem('jwtToken', res.data.token);
             setAuthToken(res.data.token);
             const decoded = jwtDecode(res.data.token);
-            console.log("Decoded output of the data", decoded);
             store.dispatch({ type: 'SET_USER', payload: decoded });
             if(store.getState().auth.isAuthenticated){
                this.props.history.push('/home');
@@ -55,7 +54,6 @@ class Login extends Component {
 
    componentDidUpdate(prevProps, prevState) {
       if (prevProps.showModal !== this.props.showModal) {
-         console.log("mounting and unmounting");
          this.setState({
             email: '',
             password: '',

@@ -11,6 +11,7 @@ import Spinner from '../../ui/Spinnner/Spinner';
 // import Pindrop from './Pindrop/Pindrop';
 import './Maps.css';
 import axios from 'axios';
+import AcceptReject from './AcceptReject';
 
 
 
@@ -76,11 +77,21 @@ class Maps extends Component {
             this.setState({ defaultZoom: 16 })
         }
 
-        if (this.state.progress === 'rideDataIsReady') {
+        if (this.state.progress === 'rideDataIsReady') {                
             console.log("ride data is ready");
         }
 
-        //Fetch the Route after ride data is ready
+        const {responseProgress, notifiedByRoutes, activeDirection} = this.props.bell;
+        const prevResponseProgress = prevProps.bell.responseProgress;
+        if((responseProgress !== prevResponseProgress) && responseProgress === 'REQUEST_IS_SHOWING'){
+            this.setState({
+                directionsOnShow: activeDirection.directionData
+            });
+        } else if((responseProgress !== prevResponseProgress) &&(responseProgress === 'NOTIFIEDBY_IS_FETCHED' || this.state.progress === null)) {
+            this.setState({
+                directionsOnShow: null
+            })
+        }
 
 
 
@@ -574,12 +585,12 @@ class Maps extends Component {
 
                 {/*----------- Accept Reject Bottom Dialog -----------*/}
                 <DialogBottom
-                    show={this.props.bell.responseProgress === 'requestIsShowing'}
+                    show={
+                        this.props.bell.responseProgress === 'REQUEST_IS_SHOWING'
+                       
+                    }
                 >
-                    <Auxi>
-                        <button onClick={this.onContinueHandler}>Accept</button>
-                        <button onClick={this.onCancelAllHandler}>Reject</button>
-                    </Auxi>
+                    <AcceptReject />
                 </DialogBottom>
 
 

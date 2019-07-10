@@ -16,9 +16,8 @@ const DirectionSchema = new Schema({
         type: Object,
         required: true,
     },
-    //Make this selectedRoutes with the ref as well
     selectedRoutes: [{
-        type: Object
+        type: Schema.Types.ObjectId, ref: 'Direction'
     }],
     //shared or not shared
     status: {
@@ -26,11 +25,12 @@ const DirectionSchema = new Schema({
         default: false
     },
     requestedBy: [{
-        user:{type: Schema.Types.ObjectId, ref: 'users'},
-        direction: {type: Schema.Types.ObjectId, ref: 'directions'},
+        user:{type: Schema.Types.ObjectId, ref: 'User'},
+        direction: {type: Schema.Types.ObjectId, ref: 'Direction'},
     }]
 },
     { timestamps: true }
 );
+
 
 module.exports = mongoose.model('Direction', DirectionSchema);

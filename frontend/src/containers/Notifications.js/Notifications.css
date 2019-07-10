@@ -1,15 +1,17 @@
 .NotificationWrapper {
     height: 50px;
-    line-height: 50px;
+	line-height: 50px;
+	font-size: 0.8em;
 }
 .SN {
 	height: 50px;
-	width: 50px;
+	width: 80px;
 	float: left;
+	color: darkblue;
 }
 
 .Name {
-	width: calc(100% - 50px - 120px);
+	width: calc(100% - 80px - 120px);
 	height: 50px;
 	float: left;
 }

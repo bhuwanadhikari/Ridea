@@ -2,7 +2,9 @@
 const initialState = {
     showBellSign: false,
     notifiedByRoutes: null,
-    responseProgress: null
+    responseProgress: null,
+    activeDirection: null,
+    respondedRoutes: [],
 };
 
 export default function (state = initialState, action) {
@@ -21,6 +23,17 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 showBellSign: action.payload
+            }
+
+        case 'SET_ACTIVE_DIRECTION':
+            return {
+                ...state,
+                activeDirection: action.payload
+            }
+        case 'SET_RESPONDED_ROUTES':
+            return {
+                ...state,
+                respondedRoutes: action.payload
             }
         default:
             return state;

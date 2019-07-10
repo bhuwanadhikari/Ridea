@@ -8,6 +8,7 @@ import BackDrop from '../../ui/BackDrop/BackDrop';
 import Modal from '../../ui/Modal/Modal';
 import Notifications from '../../containers/Notifications.js/Notifications';
 import store from '../../redux/store/store';
+import setAuthToken from '../../utils/setAuthToken';
 import './SideDrawer.css';
 import home from '../../img/SidebarImg/home.svg';
 import notification from '../../img/SidebarImg/notification.svg';
@@ -52,6 +53,10 @@ class SideDrawer extends React.Component {
                     type: 'SET_NOTIFIEDBY_ROUTES',
                     payload: notifiedBy.data
                 })
+                store.dispatch({
+                    type: 'SET_RESPONSE_PROGRESS',
+                    payload: 'NOTIFIEDBY_IS_FETCHED'
+                })
             }).catch((err) => {
                 console.log(err);
             });
@@ -71,11 +76,31 @@ class SideDrawer extends React.Component {
             return;
         }
         this.setState({ showNotificationsModal: false });
+        store.dispatch({
+            type: 'SET_RESPONSE_PROGRESS',
+            payload: 'NOTIFIEDBY_IS_FETCHED'
+        });
+
+        store.dispatch({
+            type: 'SET_ACTIVE_DIRECTION',
+            payload: null
+        })
+    }
+
+    setNotificationModal = (status) => {
+        console.log(status, 'ist the state of notification modal')
+        this.setState((state, props) => {
+            return {
+                showNotificationsModal: status
+            }
+        })
+
     }
 
 
     render() {
 
+        console.log(this.state.showNotificationsModal, 'ist the state of notification modal')
 
         let { show } = this.props;
         var notifiedBy = this.props.bell.notifiedByRoutes;
@@ -127,7 +152,17 @@ class SideDrawer extends React.Component {
                             </div>
                         </div>
 
-                        <div className="ListWrapper">
+                        <div className="ListWrapper"
+                        onClick = { () => {
+                            console.log('Logged oute');
+                            localStorage.removeItem('jwtToken');
+                            setAuthToken(false);
+                            store.dispatch({
+                                type: 'SET_USER',
+                                payload: {}
+                            });
+                        }}
+                        >
                             <div className="LabelWrapper">
                                 Logout
                             </div>
@@ -138,13 +173,17 @@ class SideDrawer extends React.Component {
 
 
 
-                {/*----------- Show Notification Boxes   --------------------------------------*/}
+                {/*----------- Notifications List Modal   --------------------------------------*/}
 
                 <Modal
-                    show={this.state.showNotificationsModal} modalClosed={this.onModalCloseHandler}
+                    show={
+                        this.state.showNotificationsModal
+                        || this.props.bell.responseProgress === 'REQUEST_HANGING'
+                    }
+                    modalClosed={this.onModalCloseHandler}
                     fromTop='27%'
                 >
-                    <Notifications notificationData={notifiedBy} />
+                    <Notifications notificationData={notifiedBy} setNotificationModal={this.setNotificationModal} />
                 </Modal>
 
             </Aux>

@@ -52,13 +52,7 @@ router.get('/route/:routeId', passport.authenticate('jwt', { session: 'false' })
 
 });
 
-const notifyUser = () => {
-    return new Promise(() => {
-        User
 
-    })
-
-}
 
 //Addition of new route
 router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
@@ -70,7 +64,7 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
 
     newDirection
         .save()
-        .then(async newDirection => {
+        .then(async newDirection => {   
             if (newDirection.selectedRoutes.length > 0) {
                 for (let selectedRouteId of newDirection.selectedRoutes) {
                     await Direction
@@ -89,7 +83,8 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
                     await User
                         .updateOne(
                             { _id: selectedRouteOwner },
-                            { $push: { notifiedBy: { user: req.user.id, direction: newDirection._id } } }
+                            { $push: { notifiedBy: { user: req.user.id, direction: newDirection._id } } },
+                            { $set: { status: true } }
                         )
                         .then(() => {
                             return;

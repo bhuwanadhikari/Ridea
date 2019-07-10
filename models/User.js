@@ -11,7 +11,6 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
-
     password: {
         type: String,
     },
@@ -27,7 +26,25 @@ const UserSchema = new Schema({
     notifiedBy: [{
         user: { type: Schema.Types.ObjectId, ref: 'User' },
         direction: { type: Schema.Types.ObjectId, ref: 'Direction' },
-    }]
+    }],
+
+    acceptedTo: {
+        type: Schema.Types.ObjectId, ref: 'User'
+    },
+    rejectedTo: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+    }],
+    acceptedBy: {
+        type: Schema.Types.ObjectId, ref: 'User'
+    },
+    rejectedBy: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+    }],
+
+    status: {
+        type: Boolean,
+        default: false
+    },
 
 }, { timestamps: true });
 

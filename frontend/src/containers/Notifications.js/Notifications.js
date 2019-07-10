@@ -87,7 +87,10 @@ class Notifications extends Component {
               if (bufferRoute.responseStatus === 'Rejected') {
                 stateOfRequest = "Rejected"
               }
+
+
             }
+            
 
             return (
               <div className="NotificationWrapper" key={index}>

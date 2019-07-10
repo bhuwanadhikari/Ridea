@@ -13,6 +13,7 @@ import home from '../../img/SidebarImg/home.svg';
 import notification from '../../img/SidebarImg/notification.svg';
 import feedback from '../../img/SidebarImg/feedback.svg';
 import routeIcon from '../../img/SidebarImg/routeIcon.png';
+import { getMyData, poleData } from '../../redux/actions/action';
 import './SideDrawer.css';
 
 class SideDrawer extends React.Component {
@@ -61,7 +62,18 @@ class SideDrawer extends React.Component {
             }).catch((err) => {
                 console.log(err);
             });
+            
+        this.timer = setInterval(()=> {
+            this.props.poleData();
+        }, 5000);
     }
+
+    componentWillUnmount() {
+      this.timer = null;
+    }
+    
+
+
 
     onNotificationClickHandler = () => {
         
@@ -103,9 +115,6 @@ class SideDrawer extends React.Component {
 
     render() {
         
-        setInterval(()=> {
-            console.log("=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        }, 5000);
 
         console.log(this.state.showNotificationsModal, 'ist the state of notification modal')
 
@@ -206,7 +215,9 @@ class SideDrawer extends React.Component {
 }
 
 SideDrawer.propTypes = {
-    bell: PropTypes.object
+    bell: PropTypes.object,
+    getMyData: PropTypes.func.isRequired,
+    poleData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -214,4 +225,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps)(SideDrawer);
+export default connect(mapStateToProps, {getMyData, poleData})(SideDrawer);

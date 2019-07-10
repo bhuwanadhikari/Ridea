@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import store from '../../redux/store/store';
 import Toast from '../../ui/Toast/Toast';
-import { getMyData } from '../../redux/actions/action';
+import { getMyData, poleData } from '../../redux/actions/action';
 import './Notifications.css';
 import { connect } from 'react-redux';
 import { ToastsContainer, ToastsStore } from 'react-toasts';
@@ -45,6 +45,12 @@ class Notifications extends Component {
     //post to backend
     console.log("Submit has been clicked")
     const { respondedRoutes } = this.props.bell;
+    await this.props.poleData();
+    if (this.props.bell.shared.with) {
+      ToastsStore.success("Try again after few seconds");
+      return;
+    }
+
     if (respondedRoutes.length > 0) {
       await axios
         .post('/api/notifications/respond-notification', { respondedRoutes })
@@ -66,7 +72,7 @@ class Notifications extends Component {
           console.log(err);
         });
 
-      await this.props.getMyData();
+      
       if (respondedRoutes.find(el => el.responseStatus === 'Accepted')) {
         ToastsStore.success("Visit chat page to chat with Ride Partner")
       }
@@ -139,10 +145,11 @@ class Notifications extends Component {
 Notifications.propTypes = {
   bell: PropTypes.object.isRequired,
   getMyData: PropTypes.func.isRequired,
+  poleData: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
   bell: state.bell
 })
 
-export default connect(mapStateToProps, {getMyData})(Notifications);
+export default connect(mapStateToProps, { getMyData, poleData })(Notifications);

@@ -8,10 +8,9 @@ class AcceptReject extends Component {
 
     onAcceptHandler = () => {
         var { respondedRoutes, activeDirection, notifiedByRoutes } = this.props.bell;
-        var tempRespondedRoutes = respondedRoutes;
         respondedRoutes = respondedRoutes.filter(aRoute => aRoute.user_id !== activeDirection.user_id);
         respondedRoutes = respondedRoutes.filter(aRoute => aRoute.responseStatus != 'Accepted');
-        
+
         var tempArray = notifiedByRoutes.filter(notifiedRoute => notifiedRoute.user_id !== activeDirection.user_id);
         tempArray.forEach(el => {
             el.responseStatus = "Rejected";

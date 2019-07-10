@@ -3,10 +3,11 @@ const passport = require('passport');
 const User = require('../models/User');
 const mongoose = require('mongoose');
 
-const ObjectId = mongoose.Types.ObjectId;
+const ObjectId = mongoose.Types.ObjectId
 
 
 const router = express();
+
 
 router.get('/status', passport.authenticate('jwt', { session: false }), (req, res) => {
     const userId = req.params.id;
@@ -22,6 +23,8 @@ router.get('/status', passport.authenticate('jwt', { session: false }), (req, re
         })
         .catch(err => console.log(err))
 });
+
+
 
 router.get('/notified-by', passport.authenticate('jwt', { session: false }), (req, res) => {
     User
@@ -49,6 +52,8 @@ router.get('/notified-by', passport.authenticate('jwt', { session: false }), (re
         })
         .catch(err => console.log(err))
 });
+
+
 
 router.post('/respond-notification', passport.authenticate('jwt', { session: false }), (req, res) => {
 
@@ -141,14 +146,6 @@ router.post('/respond-notification', passport.authenticate('jwt', { session: fal
                 console.log(err);
             });
         })
-
-
-
-
-
-
-
-
 });
 
 module.exports = router;

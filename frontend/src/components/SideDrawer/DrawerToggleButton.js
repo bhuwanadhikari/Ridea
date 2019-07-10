@@ -5,7 +5,12 @@ import store from '../../redux/store/store';
 import './DrawerToggleButton.css';
 const DrawerToggleButton = (props) => {
 
-    const notification = props.bell.showBellSign;
+    var notification = false;
+    if(props.bell.notifiedByRoutes){
+        if(props.bell.notifiedByRoutes.length>0){
+        notification = true;
+        }
+    }
 
     let notifier = (
         <div className="Notifier"></div>

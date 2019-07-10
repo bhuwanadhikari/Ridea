@@ -1,10 +1,13 @@
 
 const initialState = {
-    showBellSign: false,
     notifiedByRoutes: null,
     responseProgress: null,
     activeDirection: null,
     respondedRoutes: [],
+    shared: {
+        status: false,
+        with: null
+    }
 };
 
 export default function (state = initialState, action) {
@@ -19,12 +22,7 @@ export default function (state = initialState, action) {
                 ...state,
                 notifiedByRoutes: action.payload
             }
-        case 'SET_BELL_SIGN':
-            return {
-                ...state,
-                showBellSign: action.payload
-            }
-
+     
         case 'SET_ACTIVE_DIRECTION':
             return {
                 ...state,
@@ -34,6 +32,15 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 respondedRoutes: action.payload
+            }
+        case 'SET_SHARED':
+            return {
+                ...state,
+                shared: {
+                    ...state.shared,
+                    status:action.payload.status,
+                    with: action.payload.with
+                }
             }
         default:
             return state;

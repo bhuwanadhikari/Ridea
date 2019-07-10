@@ -9,10 +9,11 @@ import Modal from '../../ui/Modal/Modal';
 import Notifications from '../../containers/Notifications.js/Notifications';
 import store from '../../redux/store/store';
 import setAuthToken from '../../utils/setAuthToken';
-import './SideDrawer.css';
 import home from '../../img/SidebarImg/home.svg';
 import notification from '../../img/SidebarImg/notification.svg';
 import feedback from '../../img/SidebarImg/feedback.svg';
+import routeIcon from '../../img/SidebarImg/routeIcon.png';
+import './SideDrawer.css';
 
 class SideDrawer extends React.Component {
 
@@ -63,10 +64,12 @@ class SideDrawer extends React.Component {
     }
 
     onNotificationClickHandler = () => {
-        if (this.state.showNotificationsModal) {
-            return;
-        }
+        
         this.setState({ showNotificationsModal: true });
+        store.dispatch({
+            type: 'SET_RESPONSE_PROGRESS',
+            payload: 'REQUEST_HANGING'
+        })
         this.props.drawerClosed();
 
     }
@@ -99,6 +102,10 @@ class SideDrawer extends React.Component {
 
 
     render() {
+        
+        setInterval(()=> {
+            console.log("=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        }, 5000);
 
         console.log(this.state.showNotificationsModal, 'ist the state of notification modal')
 
@@ -130,6 +137,13 @@ class SideDrawer extends React.Component {
                             <img className="ListImg" src={notification} alt="Ridea Notification" />
                             <div className="LabelWrapper">
                                 Notification{notifiedBy && `(${notifiedBy.length})`}
+                            </div>
+                        </div>
+
+                        <div className="ListWrapper">
+                            <img className="ListImg" src={routeIcon} alt="Ridea Feedback" />
+                            <div className="LabelWrapper">
+                                My Route
                             </div>
                         </div>
 
@@ -177,8 +191,7 @@ class SideDrawer extends React.Component {
 
                 <Modal
                     show={
-                        this.state.showNotificationsModal
-                        || this.props.bell.responseProgress === 'REQUEST_HANGING'
+                        this.props.bell.responseProgress === 'REQUEST_HANGING'
                     }
                     modalClosed={this.onModalCloseHandler}
                     fromTop='27%'

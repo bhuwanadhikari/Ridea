@@ -208,7 +208,7 @@ class Maps extends Component {
                                 alert("Not direction data is found for the")
                             }
                         }).catch((err) => {
-                            alert('cannot ')
+                            console.log(err.response.data);
                         });
                 }
             });
@@ -249,7 +249,7 @@ class Maps extends Component {
                             alert("Not direction data is found for the")
                         }
                     }).catch((err) => {
-                        console.log(err);
+                        console.log(err.response.data);
                     });
             }
 
@@ -419,7 +419,7 @@ class Maps extends Component {
                     }
                 });
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err), 'addition has been failed');
     }
 
 
@@ -452,7 +452,7 @@ class Maps extends Component {
 
 
     render() {
-        // console.log("State of the app: ", this.state);
+        console.log("State of the app: ", this.state);
 
 
         let dialogMessage, content;

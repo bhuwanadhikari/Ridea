@@ -28,7 +28,7 @@ class SideDrawer extends React.Component {
 
 
     componentDidMount() {
-        axios
+        /* axios
             .get('/api/notifications/status')
             .then((result) => {
 
@@ -62,7 +62,7 @@ class SideDrawer extends React.Component {
             }).catch((err) => {
                 console.log(err);
             });
-            
+             */
         this.timer = setInterval(()=> {
             this.props.poleData();
         }, 5000);

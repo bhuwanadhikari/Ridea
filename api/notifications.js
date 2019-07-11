@@ -29,7 +29,7 @@ router.get('/status', passport.authenticate('jwt', { session: false }), (req, re
 router.get('/notified-by', passport.authenticate('jwt', { session: false }), (req, res) => {
     User
         .findOne({ _id: req.user.id })
-        .populate('notifiedBy.user')
+        .populate('requestedBy.user')
         .populate('notifiedBy.direction')
         .then(user => {
             if (!user) {
@@ -37,7 +37,7 @@ router.get('/notified-by', passport.authenticate('jwt', { session: false }), (re
                 res.status(400).json({ error: "User not found for this ID" });
             } else {
                 const cleanNotifiers = [];
-                user.notifiedBy.forEach(el => {
+                user.requestedBy.forEach(el => {
                     const aNotifier = {
                         name: el.user.name,
                         directionData: el.direction.directionData,

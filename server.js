@@ -42,7 +42,7 @@ app.use('/auth', auth);
 app.use('/api/directions', directions);
 app.use('/api/users', users);
 app.use('/api/push', push);
-app.use('/api/notifications', notifications);
+// app.use('/api/notifications', notifications);
 
 if (process.env.NODE_ENV === 'production') {
     //set static folder

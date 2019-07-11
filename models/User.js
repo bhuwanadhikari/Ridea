@@ -23,24 +23,32 @@ const UserSchema = new Schema({
     thumbnail: {
         type: String,
     },
-    notifiedBy: [{
-        user: { type: Schema.Types.ObjectId, ref: 'User' },
-        direction: { type: Schema.Types.ObjectId, ref: 'Direction' },
+
+
+    requestedTo: [{
+        type: Schema.Types.ObjectId, ref: 'User'
     }],
+    requestedBy: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+    }],
+
 
     acceptedTo: {
         type: Schema.Types.ObjectId, ref: 'User'
     },
-    rejectedTo: [{
-        type: Schema.Types.ObjectId, ref: 'User'
-    }],
     acceptedBy: {
         type: Schema.Types.ObjectId, ref: 'User'
     },
+
+
+    rejectedTo: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+    }],
     rejectedBy: [{
         type: Schema.Types.ObjectId, ref: 'User'
     }],
 
+    
     status: {
         type: Boolean,
         default: false

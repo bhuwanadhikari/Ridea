@@ -56,50 +56,64 @@ router.get('/route/:routeId', passport.authenticate('jwt', { session: 'false' })
 
 //Addition of new route
 router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
-    console.log(req.body, " is the requested data");
     const newDirection = new Direction({
         ...req.body,
         owner: req.user.id,
     });
 
-    newDirection
-        .save()
-        .then(async newDirection => {   
-            if (newDirection.selectedRoutes.length > 0) {
-                for (let selectedRouteId of newDirection.selectedRoutes) {
-                    await Direction
-                        .updateOne(
-                            { _id: selectedRouteId },
-                            { $push: { requestedBy: { user: req.user.id, direction: newDirection._id } } },
-                            { $set: { status: true } }
-                        )
-                        .then(() => {
-                            return;
-                        }).catch((err) => {
-                            throw err;
-                        });
-
-                    const selectedRouteOwner = await Direction.findById(selectedRouteId).then(res => res.owner).catch(err => { throw err });
-                    await User
-                        .updateOne(
-                            { _id: selectedRouteOwner },
-                            { $push: { notifiedBy: { user: req.user.id, direction: newDirection._id } } },
-                            { $set: { status: true } }
-                        )
-                        .then(() => {
-                            return;
-                        }).catch((err) => {
-                            throw err;
-                        });
-                }
-                Direction.findById(newDirection._id).then(savedDirection => {
-                    res.status(200).json(savedDirection);
-                })
+    Direction
+        .findOne({ owner: req.user.id })
+        .then((result) => {
+            if (result) {
+                res.status(400).json({ error: "You have already registered a route" });
             } else {
-                res.status(200).json(newDirection);
+                newDirection
+                    .save()
+                    .then(newDirection => {
+                        if (req.body.selectedRoutes.length > 0) {
+                            for (let selectedRouteId of req.body.selectedRoutes) {
+                                Direction.findById(selectedRouteId)
+                                    .then(async res => {
+
+                                        await User
+                                            .updateOne(
+                                                { _id: res.owner },
+                                                { $push: { requestedBy: req.user.id } }
+                                            )
+                                            .then().catch((err) => { console.log(err) });
+
+                                        await User
+                                            .updateOne(
+                                                { _id: req.user.id },
+                                                { $push: { requestedTo: res.owner } }
+                                            )
+                                            .then().catch((err) => { console.log(err) });
+
+                                    })
+                                    .catch(err => { throw err });
+                            }
+                        } else {
+                            res.status(200).json(newDirection);
+                        }
+                    })
+                    .then(async () => {
+                        await User
+                            .findById(req.user.id)
+                            .then((result) => {
+                                res.status(200).json(result);
+                            }).catch((err) => {
+                                console.log("Something has gone wrong");
+                                res.status(400).json({ error: "Something gone wrong" });
+                            });
+                    })
+                    .catch(err => console.log(err));
             }
-        })
-        .catch(err => console.log(err));
+        }).catch((err) => {
+            console.log(err);
+        });
+
+
+
 
 
 });

@@ -9,7 +9,7 @@ export const NotificationProvider = (props) => {
     const [notifiedBy, setNotifiedBy] = useState();
 
 
-    useEffect(() => {
+    /* useEffect(() => {
         axios
             .get('/api/notifications/status')
             .then((result) => {
@@ -30,7 +30,7 @@ export const NotificationProvider = (props) => {
             }).catch((err) => {
                 console.log(err);
             });
-    }, [])
+    }, []) */
 
     return (
         <NotificationContext.Provider value={{

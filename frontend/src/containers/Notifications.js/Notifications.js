@@ -52,7 +52,7 @@ class Notifications extends Component {
     }
 
     if (respondedRoutes.length > 0) {
-      await axios
+      /* await axios
         .post('/api/notifications/respond-notification', { respondedRoutes })
         .then((result) => {
           console.log("Output of the submit is:", result.data);
@@ -90,8 +90,8 @@ class Notifications extends Component {
         type: 'SET_RESPONDED_ROUTES',
         payload: []
       })
-      ToastsStore.success("Nothing is submitted");
-    }
+      ToastsStore.success("Nothing is submitted");*/
+    } 
   }
 
   render() {

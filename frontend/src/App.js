@@ -10,11 +10,15 @@ import BaseRoutes from './routes/baseRoutes';
 
 import './App.css';
 
+
+
+var Title = "Ridea";
 if (localStorage.jwtToken) {
   //set auth token header to be sent in every request
   setAuthToken(localStorage.jwtToken);
   //decode stored token
   const decoded = jwt_decode(localStorage.jwtToken);
+  Title = decoded.name;
   //set user's statuses
   store.dispatch({ type: 'SET_USER', payload: decoded });
   /////////////////////////
@@ -26,7 +30,8 @@ class App extends Component {
 
   render() {
 
-    console.log("The environment now is:", process.env.NODE_ENV);
+    window.document.title = Title;
+console.log("The environment now is:", process.env.NODE_ENV);
     return (
       //Redux Provider
       <Provider store={store}>

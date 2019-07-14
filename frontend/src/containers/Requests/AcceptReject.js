@@ -7,11 +7,11 @@ import store from '../../redux/store/store';
 class AcceptReject extends Component {
 
     onAcceptHandler = () => {
-        var { respondedRoutes, activeDirection, notifiedByRoutes } = this.props.bell;
-        respondedRoutes = respondedRoutes.filter(aRoute => aRoute.user_id !== activeDirection.user_id);
+        var { respondedRoutes, activeDirection, requestedByPopulated } = this.props.bell;
+        respondedRoutes = respondedRoutes.filter(aRoute => aRoute.owner !== activeDirection.owner);
         respondedRoutes = respondedRoutes.filter(aRoute => aRoute.responseStatus != 'Accepted');
 
-        var tempArray = notifiedByRoutes.filter(notifiedRoute => notifiedRoute.user_id !== activeDirection.user_id);
+        var tempArray = requestedByPopulated.filter(route => route.owner !== activeDirection.owner);
         tempArray.forEach(el => {
             el.responseStatus = "Rejected";
         });
@@ -39,7 +39,7 @@ class AcceptReject extends Component {
     onRejectHandler = () => {
         var { respondedRoutes, activeDirection } = this.props.bell;
 
-        respondedRoutes = respondedRoutes.filter(aRoute => aRoute.user_id !== activeDirection.user_id);
+        respondedRoutes = respondedRoutes.filter(aRoute => aRoute.owner !== activeDirection.owner);
 
         activeDirection.responseStatus = 'Rejected';
         respondedRoutes.push(activeDirection);

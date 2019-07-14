@@ -38,6 +38,30 @@
     line-height: 50px;
 }
 
+.SideDrawerSpan {
+    font-size: 0.8em;
+    font-weight: 100;
+    color: #123456
+}
+
+.RequestsBody {
+    border-bottom: 1px solid silver;
+    
+}
+
+.RequestTitle {
+    font-size: 0.75em;
+    left: 35px;
+    height: 35px;
+    text-align: left;
+    line-height: 35px;
+    padding-left: 60px;
+}
+
+.RequestTitle:hover {
+    color: blue;
+    cursor: pointer;
+}
 
 .ListWrapper:hover {
     background-color: silver;

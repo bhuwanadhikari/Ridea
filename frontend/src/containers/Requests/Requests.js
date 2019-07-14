@@ -4,14 +4,24 @@ import axios from 'axios';
 import store from '../../redux/store/store';
 import Toast from '../../ui/Toast/Toast';
 import { getMyData, poleData } from '../../redux/actions/action';
-import './Notifications.css';
+import './Requests.css';
 import { connect } from 'react-redux';
 import { ToastsContainer, ToastsStore } from 'react-toasts';
 
 
-class Notifications extends Component {
+class Requests extends Component {
+
+
+
+
+
+  componentDidMount() {
+
+  }
+
 
   onShowRouteHandler = (index) => {
+
     store.dispatch({
       type: 'SET_RESPONSE_PROGRESS',
       payload: 'REQUEST_IS_SHOWING'
@@ -19,7 +29,7 @@ class Notifications extends Component {
 
     store.dispatch({
       type: 'SET_ACTIVE_DIRECTION',
-      payload: this.props.bell.notifiedByRoutes[index]
+      payload: this.props.bell.requestedByPopulated[index]
     })
 
     this.props.setNotificationModal(false);
@@ -91,21 +101,22 @@ class Notifications extends Component {
         payload: []
       })
       ToastsStore.success("Nothing is submitted");*/
-    } 
+    }
   }
 
   render() {
 
-    const { respondedRoutes, activeDirection } = this.props.bell;
+    
 
-    const { notificationData } = this.props;
+    const { requestedByPopulated, respondedRoutes, activeDirection } = this.props.bell;
+
     return (
       <div className="NotificationsContainer">
         {
-          notificationData && notificationData.map((item, index) => {
+          requestedByPopulated && requestedByPopulated.map((item, index) => {
             console.log("REsonses sateatu sof the itemi is", item.responseStatus);
             let stateOfRequest = "Pending";
-            var bufferRoute = respondedRoutes.find(aRoute => aRoute.user_id === item.user_id)
+            var bufferRoute = respondedRoutes.find(aRoute => aRoute.owner === item.owner)
             if (bufferRoute) {
               if (bufferRoute.responseStatus === 'Accepted') {
                 stateOfRequest = 'Accepted';
@@ -142,7 +153,7 @@ class Notifications extends Component {
 
 }
 
-Notifications.propTypes = {
+Requests.propTypes = {
   bell: PropTypes.object.isRequired,
   getMyData: PropTypes.func.isRequired,
   poleData: PropTypes.func.isRequired,
@@ -152,4 +163,4 @@ const mapStateToProps = state => ({
   bell: state.bell
 })
 
-export default connect(mapStateToProps, { getMyData, poleData })(Notifications);
+export default connect(mapStateToProps, { getMyData, poleData })(Requests);

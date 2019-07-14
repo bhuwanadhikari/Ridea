@@ -6,8 +6,8 @@ import './DrawerToggleButton.css';
 const DrawerToggleButton = (props) => {
 
     var notification = false;
-    if(props.bell.notifiedByRoutes){
-        if(props.bell.notifiedByRoutes.length>0){
+    if(props.bell.requestedBy){
+        if(props.bell.requestedBy.length>0){
         notification = true;
         }
     }

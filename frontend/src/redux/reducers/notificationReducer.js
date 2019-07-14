@@ -9,6 +9,9 @@ const initialState = {
     rejectedTo: [],
     rejectedBy: [],
 
+    bufferData: [],
+    requestedByPopulated: [],
+
     responseProgress: null,
     activeDirection: null,
     respondedRoutes: [],
@@ -26,25 +29,31 @@ export default function (state = initialState, action) {
                 ...state,
                 responseProgress: action.payload
             }
-        case 'SET_REQUESTEDTO_ROUTES':
-            return { ...state, notifiedByRoutes: action.payload }
-        case 'SET_REQUESTEDBY_ROUTES':
-            return { ...state, notifiedByRoutes: action.payload }
+        case 'SET_REQUESTEDTO':
+            return { ...state, requestedTo: action.payload }
+        case 'SET_REQUESTEDBY':
+            return { ...state, requestedBy: action.payload }
 
 
-            
-        case 'SET_ACCEPTEDTO_ROUTES':
-            return { ...state, notifiedByRoutes: action.payload }
-        case 'SET_ACCEPTEDBY_ROUTES':
-            return { ...state, notifiedByRoutes: action.payload }
+
+        case 'SET_ACCEPTEDTO':
+            return { ...state, acceptedTo: action.payload }
+        case 'SET_ACCEPTEDBY':
+            return { ...state, acceptedBy: action.payload }
 
 
-        case 'SET_REJECTEDTO_ROUTES':
-            return { ...state, notifiedByRoutes: action.payload }
-        case 'SET_REJECTEDBY_ROUTES':
-            return { ...state, notifiedByRoutes: action.payload }
+        case 'SET_REJECTEDTO':
+            return { ...state, rejectedTo: action.payload }
+        case 'SET_REJECTEDBY':
+            return { ...state, rejectedBy: action.payload }
 
 
+        case 'SET_BUFFER_DATA':
+            return { ...state, bufferData: action.payload }
+
+
+        case 'SET_REQBY_POPULATED':
+            return { ...state, requestedByPopulated: action.payload }
 
         case 'SET_ACTIVE_DIRECTION':
             return { ...state, activeDirection: action.payload }

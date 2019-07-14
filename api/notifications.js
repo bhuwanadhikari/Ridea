@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const User = require('../models/User');
 const mongoose = require('mongoose');
+const Direction = require('../models/Direction');
 
 const ObjectId = mongoose.Types.ObjectId
 
@@ -26,28 +27,47 @@ router.get('/status', passport.authenticate('jwt', { session: false }), (req, re
 
 
 
-router.get('/notified-by', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/requested-by', passport.authenticate('jwt', { session: false }), (req, res) => {
     User
         .findOne({ _id: req.user.id })
-        .populate('requestedBy.user')
-        .populate('notifiedBy.direction')
+        .populate(['requestedBy', 'requestedTo', 'acceptedBy', 'acceptedTo', 'rejectedTo', 'rejectedBy'])
         .then(user => {
             if (!user) {
-
                 res.status(400).json({ error: "User not found for this ID" });
-            } else {
-                const cleanNotifiers = [];
-                user.requestedBy.forEach(el => {
-                    const aNotifier = {
-                        name: el.user.name,
-                        directionData: el.direction.directionData,
-                        user_id: el.user._id,
-                        direction_id: el.direction._id
+            } else if (user.requestedBy.length > 0) {
+                var cleanNotifiers = [];
+                var count = 0;
+                console.log("--------------------------------------");
+                const reqLength = user.requestedBy.length;
+                (async () => {
+                    for (el of user.requestedBy) {
+                        await Direction
+                            .findOne({ owner: el._id })
+                            .then((direction) => {
 
+                                console.log("Count:", count, "Index:", user.requestedBy.indexOf(el));
+                                const aNotifier = {
+                                    name: el.name,
+                                    directionData: direction.directionData,
+                                    owner: el._id,
+                                    direction_id: direction._id
+                                }
+
+                                cleanNotifiers = [...cleanNotifiers, aNotifier];
+                                count++;
+                                if (count === reqLength) {
+                                    return res.status(200).json(cleanNotifiers);
+                                }
+
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            });
                     }
-                    cleanNotifiers.push(aNotifier);
-                });
-                res.status(200).json(cleanNotifiers);
+                })();
+                console.log(1);
+            } else {
+                res.status(200).json([]);
             }
         })
         .catch(err => console.log(err))
@@ -55,96 +75,98 @@ router.get('/notified-by', passport.authenticate('jwt', { session: false }), (re
 
 
 
-// router.post('/respond-notification', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/respond-notification', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-//     const respondedRoutes = req.body.respondedRoutes;
-//     const updateFunc = async () => {
-//         respondedRoutes.forEach(async (aRoute) => {
-//             console.log("My id is given by: ", req.user.id, 'and type is ', typeof(req.user.id));
-//             console.log("Id of user on operation is ", aRoute.user_id,  'and after objecting', ObjectId(aRoute.user_id));
-//             await User
-//                 .updateOne(
-//                     { _id: req.user.id },
-//                     { $pull: { notifiedBy: { user: aRoute.user_id } } }
-//                 )
-//                 .then((result) => {
-//                     return
-//                 }).catch((err) => {
-//                     console.log(err);
-//                 });
+    const { respondedRoutes } = req.body;
+    const updateFunc = async () => {
+        await (async () => {
+            for (var aRoute of respondedRoutes) {
 
-//             if (aRoute.responseStatus === "Accepted") {
+                console.log("My id is given by: ", req.user.id, 'and type is ', typeof (req.user.id));
+                console.log("Id of user on operation is ", aRoute.user_id, 'and after objecting', ObjectId(aRoute.user_id));
+                await User
+                    .updateOne(
+                        { _id: req.user.id },
+                        { $pull: { notifiedBy: { user: aRoute.user_id } } }
+                    )
+                    .then((result) => {
+                        return
+                    }).catch((err) => {
+                        console.log(err);
+                    });
 
-// //-------------------------------------
-//                 await User
-//                     .updateOne(
-//                         { _id: req.user.id },
-//                         { $set: { acceptedTo: aRoute.user_id } }
-//                     )
-//                     .then((result) => {
-//                         return
-//                     }).catch((err) => {
-//                         console.log(err);
-//                     });
+                if (aRoute.responseStatus === "Accepted") {
 
-//                     console.log("Id to be tested is ", aRoute.user_id);
-//                 await User
-//                     .updateOne(
-//                         { _id: aRoute.user_id},
-//                         { $set: { acceptedBy: req.user.id } }
-//                     )
-//                     .then((result) => {
-//                         return
-//                     }).catch((err) => {
-//                         console.log(err);
-//                     });
-// //-----------------------------------------
+                    //-------------------------------------
+                    await User
+                        .updateOne(
+                            { _id: req.user.id },
+                            { $set: { acceptedTo: aRoute.user_id } }
+                        )
+                        .then((result) => {
+                            return
+                        }).catch((err) => {
+                            console.log(err);
+                        });
 
+                    console.log("Id to be tested is ", aRoute.user_id);
+                    await User
+                        .updateOne(
+                            { _id: aRoute.user_id },
+                            { $set: { acceptedBy: req.user.id } }
+                        )
+                        .then((result) => {
+                            return
+                        }).catch((err) => {
+                            console.log(err);
+                        });
+                }
+                //-----------------------------------------
 
-//             }
-//             if (aRoute.responseStatus === "Rejected") {
-//                 await User
-//                     .updateOne(
-//                         { _id: req.user.id },
-//                         { $push: { rejectedTo: aRoute.user_id } }
-//                     )
-//                     .then((result) => {
-//                         return
-//                     }).catch((err) => {
-//                         console.log(err);
-//                     });
+                if (aRoute.responseStatus === "Rejected") {
+                    await User
+                        .updateOne(
+                            { _id: req.user.id },
+                            { $push: { rejectedTo: aRoute.user_id } }
+                        )
+                        .then((result) => {
+                            return
+                        }).catch((err) => {
+                            console.log(err);
+                        });
 
-//                 await User
-//                     .updateOne(
-//                         { _id: aRoute.user_id},
-//                         { $push: { rejectedBy: req.user.id } }
-//                     )
-//                     .then((result) => {
-//                         return
-//                     }).catch((err) => {
-//                         console.log(err);
-//                     });
-//             }
-//         });
-//     }
+                    await User
+                        .updateOne(
+                            { _id: aRoute.user_id },
+                            { $push: { rejectedBy: req.user.id } }
+                        )
+                        .then((result) => {
+                            return
+                        }).catch((err) => {
+                            console.log(err);
+                        });
+                }
+            }
+        })();
+    }
 
-//     updateFunc()
-//         .then(() => {
-//             User
-//             .findById(req.user.id)
-//             .then((result) => {
-//                 res.status(200).json(result);
-//             }).catch((err) => {
-//                 console.log(err);
-//             });
-//         })
-// });
+    updateFunc()
+        .then(() => {
+            User
+                .findById(req.user.id)
+                .then((result) => {
+                    res.status(200).json(result);
+                }).catch((err) => {
+                    console.log(err);
+                });
+        })
+});
 
 router.get('/testing', passport.authenticate('jwt', { session: false }), (req, res) => {
     console.log("Id of mine is ", req.user.id);
 
     const myFunc = async () => {
-        var notifiedByArray = [];   
+        var notifiedByArray = [];
         console.log("outside first");
         await User
             .findOne({ _id: req.user.id })

@@ -7,11 +7,11 @@ import RideData from './RideData/RideData';
 import Modal from '../../ui/Modal/Modal';
 import DialogBottom from '../../ui/DialogBottom/DialogBottom';
 import Spinner from '../../ui/Spinnner/Spinner';
+import AcceptReject from '../Requests/AcceptReject';
 
 // import Pindrop from './Pindrop/Pindrop';
 import './Maps.css';
 import axios from 'axios';
-import AcceptReject from './AcceptReject';
 
 
 
@@ -479,6 +479,8 @@ class Maps extends Component {
         if (this.state.loading) {
             return <Spinner />
         }
+
+        
         return (
             <Auxi>
                 <GoogleMap
@@ -488,10 +490,10 @@ class Maps extends Component {
                     center={{ lat: this.state.dynamicCenter.lat, lng: this.state.dynamicCenter.lng }}
                     onCenterChanged={this.onCenterChangedHandler}
                 >
-                    {this.state.directionsOnShow ? (<DirectionsRenderer directions={this.state.directionsOnShow} />) : null}
+                    {this.state.directionsOnShow && (<DirectionsRenderer directions={this.state.directionsOnShow} />)}
 
                     {
-                        (this.state.progress === null) || (this.state.progress === 'pickupPointIsSet')
+                        (this.state.progress === null && !this.props.bell.responseProgress) || (this.state.progress === 'pickupPointIsSet')
                             ? (<div className="MapMarker">
                                 <img
                                     onClick={this.onMarkerClickHandler}

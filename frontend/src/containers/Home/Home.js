@@ -22,8 +22,8 @@ class App extends Component {
     this.state = {
       showDrawer: false,
       currentLocation: {
-        lat: 28.238284883392780,
-        lng: 83.99134304265554
+        lat: 28.256547,
+        lng: 83.977735
       },
       isCurrentLocationSet: false
     }
@@ -70,8 +70,8 @@ class App extends Component {
         <div className='BodyWrapper'>
           <Maps
             isMarkerShown={false}
-            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places`}
-            // googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.GOOGLE_API_KEY}`}
+            // googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places`}
+            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.GOOGLE_API_KEY}`}
             loadingElement={<div style={{ height: `100vw` }} />}
             containerElement={<div style={{ height: `100vh` }} />}
             mapElement={<div style={{ height: `100%` }} />}

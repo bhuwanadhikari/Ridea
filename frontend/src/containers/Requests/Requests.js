@@ -62,8 +62,8 @@ class Requests extends Component {
     }
 
     if (respondedRoutes.length > 0) {
-      /* await axios
-        .post('/api/notifications/respond-notification', { respondedRoutes })
+      await axios
+        .post('/api/notifications/respond', { respondedRoutes })
         .then((result) => {
           console.log("Output of the submit is:", result.data);
           store.dispatch({
@@ -82,7 +82,7 @@ class Requests extends Component {
           console.log(err);
         });
 
-      
+
       if (respondedRoutes.find(el => el.responseStatus === 'Accepted')) {
         ToastsStore.success("Visit chat page to chat with Ride Partner")
       }
@@ -100,13 +100,13 @@ class Requests extends Component {
         type: 'SET_RESPONDED_ROUTES',
         payload: []
       })
-      ToastsStore.success("Nothing is submitted");*/
+      ToastsStore.success("Nothing is submitted");
     }
   }
 
   render() {
 
-    
+
 
     const { requestedByPopulated, respondedRoutes, activeDirection } = this.props.bell;
 

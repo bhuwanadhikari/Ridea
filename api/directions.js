@@ -26,7 +26,7 @@ router.post('/matched-routes', passport.authenticate('jwt', { session: 'false' }
             }
             res.status(200).json(cleanArray);
         }).catch((err) => {
-            console.log(err);
+            console.log(err, 'in matched routes of the app');
         });
 
 
@@ -63,16 +63,16 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
 
     Direction
         .findOne({ owner: req.user.id })
-        .then((result) => {
+        .then(async (result) => {
             if (result) {
                 res.status(400).json({ error: "You have already registered a route" });
             } else {
-                newDirection
+                await newDirection
                     .save()
-                    .then(newDirection => {
+                    .then(async newDirection => {
                         if (req.body.selectedRoutes.length > 0) {
                             for (let selectedRouteId of req.body.selectedRoutes) {
-                                Direction.findById(selectedRouteId)
+                                await Direction.findById(selectedRouteId)
                                     .then(async res => {
 
                                         await User
@@ -80,20 +80,21 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
                                                 { _id: res.owner },
                                                 { $push: { requestedBy: req.user.id } }
                                             )
-                                            .then().catch((err) => { console.log(err) });
+                                            .then().catch((err) => { console.log(err, 'in addition of direction while pushing to requestedBy') });
 
                                         await User
                                             .updateOne(
                                                 { _id: req.user.id },
                                                 { $push: { requestedTo: res.owner } }
                                             )
-                                            .then().catch((err) => { console.log(err) });
+                                            .then().catch((err) => { console.log(err, 'in addition of direction push to requestedTo') });
 
                                     })
                                     .catch(err => { throw err });
                             }
+                            return newDirection;
                         } else {
-                            res.status(200).json(newDirection);
+                            return newDirection
                         }
                     })
                     .then(async () => {
@@ -109,7 +110,7 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
                     .catch(err => console.log(err));
             }
         }).catch((err) => {
-            console.log(err);
+            console.log(err, 'in the last of addtion api call');
         });
 
 

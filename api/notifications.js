@@ -3,6 +3,7 @@ const passport = require('passport');
 const User = require('../models/User');
 const mongoose = require('mongoose');
 const Direction = require('../models/Direction');
+const { onAccept, onReject } = require('./helper');
 
 const ObjectId = mongoose.Types.ObjectId
 
@@ -61,7 +62,7 @@ router.get('/requested-by', passport.authenticate('jwt', { session: false }), (r
 
                             })
                             .catch((err) => {
-                                console.log(err)
+                                console.log(err);
                             });
                     }
                 })();
@@ -75,7 +76,7 @@ router.get('/requested-by', passport.authenticate('jwt', { session: false }), (r
 
 
 
-router.post('/respond-notification', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/respond', passport.authenticate('jwt', { session: false }), (req, res) => {
 
     const { respondedRoutes } = req.body;
     const updateFunc = async () => {
@@ -83,68 +84,16 @@ router.post('/respond-notification', passport.authenticate('jwt', { session: fal
             for (var aRoute of respondedRoutes) {
 
                 console.log("My id is given by: ", req.user.id, 'and type is ', typeof (req.user.id));
-                console.log("Id of user on operation is ", aRoute.user_id, 'and after objecting', ObjectId(aRoute.user_id));
-                await User
-                    .updateOne(
-                        { _id: req.user.id },
-                        { $pull: { notifiedBy: { user: aRoute.user_id } } }
-                    )
-                    .then((result) => {
-                        return
-                    }).catch((err) => {
-                        console.log(err);
-                    });
+                console.log("Id of user on operation is ", aRoute.owner, 'and after objecting', ObjectId(aRoute.owner));
+
 
                 if (aRoute.responseStatus === "Accepted") {
-
-                    //-------------------------------------
-                    await User
-                        .updateOne(
-                            { _id: req.user.id },
-                            { $set: { acceptedTo: aRoute.user_id } }
-                        )
-                        .then((result) => {
-                            return
-                        }).catch((err) => {
-                            console.log(err);
-                        });
-
-                    console.log("Id to be tested is ", aRoute.user_id);
-                    await User
-                        .updateOne(
-                            { _id: aRoute.user_id },
-                            { $set: { acceptedBy: req.user.id } }
-                        )
-                        .then((result) => {
-                            return
-                        }).catch((err) => {
-                            console.log(err);
-                        });
+                    onAccept(aRoute, req.user.id);
                 }
-                //-----------------------------------------
+
 
                 if (aRoute.responseStatus === "Rejected") {
-                    await User
-                        .updateOne(
-                            { _id: req.user.id },
-                            { $push: { rejectedTo: aRoute.user_id } }
-                        )
-                        .then((result) => {
-                            return
-                        }).catch((err) => {
-                            console.log(err);
-                        });
-
-                    await User
-                        .updateOne(
-                            { _id: aRoute.user_id },
-                            { $push: { rejectedBy: req.user.id } }
-                        )
-                        .then((result) => {
-                            return
-                        }).catch((err) => {
-                            console.log(err);
-                        });
+                    onReject(aRoute, req.user.id);
                 }
             }
         })();
@@ -160,8 +109,11 @@ router.post('/respond-notification', passport.authenticate('jwt', { session: fal
                     console.log(err);
                 });
         })
+        .catch(err => console.log(err, "in the updateFunc calling"));
 });
 
+
+//Testing
 router.get('/testing', passport.authenticate('jwt', { session: false }), (req, res) => {
     console.log("Id of mine is ", req.user.id);
 

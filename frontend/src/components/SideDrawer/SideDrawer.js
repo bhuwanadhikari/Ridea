@@ -32,6 +32,9 @@ class SideDrawer extends React.Component {
 
 
     componentDidMount() {
+        const { name } = this.props.auth.user;
+        console.log("Name of the user is ", name);
+        window.document.title = name;
         /* axios
             .get('/api/notifications/status')
             .then((result) => {
@@ -99,7 +102,7 @@ class SideDrawer extends React.Component {
 
 
             }).catch((err) => {
-                console.log(err.response.data);
+                console.log(err.response.data, 'in the /requested-by wala');
             });
         this.props.drawerClosed();
     }
@@ -279,12 +282,14 @@ class SideDrawer extends React.Component {
 
 SideDrawer.propTypes = {
     bell: PropTypes.object,
+    auth: PropTypes.object.isRequired,
     getMyData: PropTypes.func.isRequired,
     poleData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-    bell: state.bell
+    bell: state.bell,
+    auth: state.auth
 });
 
 

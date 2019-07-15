@@ -77,17 +77,17 @@ class Maps extends Component {
             this.setState({ defaultZoom: 16 })
         }
 
-        if (this.state.progress === 'rideDataIsReady') {                
+        if (this.state.progress === 'rideDataIsReady') {
             console.log("ride data is ready");
         }
 
-        const {responseProgress, notifiedByRoutes, activeDirection} = this.props.bell;
+        const { responseProgress, notifiedByRoutes, activeDirection } = this.props.bell;
         const prevResponseProgress = prevProps.bell.responseProgress;
-        if((responseProgress !== prevResponseProgress) && responseProgress === 'REQUEST_IS_SHOWING'){
+        if ((responseProgress !== prevResponseProgress) && responseProgress === 'REQUEST_IS_SHOWING') {
             this.setState({
                 directionsOnShow: activeDirection.directionData
             });
-        } else if((responseProgress !== prevResponseProgress) &&(responseProgress === 'NOTIFIEDBY_IS_FETCHED' || this.state.progress === null)) {
+        } else if ((responseProgress !== prevResponseProgress) && (responseProgress === 'NOTIFIEDBY_IS_FETCHED' || this.state.progress === null)) {
             this.setState({
                 directionsOnShow: null
             })
@@ -249,7 +249,7 @@ class Maps extends Component {
                             alert("Not direction data is found for the")
                         }
                     }).catch((err) => {
-                        console.log(err.response.data);
+                        console.log(err.response.data, "in the on Yes handler");
                     });
             }
 
@@ -395,36 +395,18 @@ class Maps extends Component {
             })
             .then(addedRoute => {
                 console.log("Added route:", addedRoute.data);
-                this.setState({
-                    progress: null,
-                    loading: false,
-                    pickupPoint: {
-                        lat: null,
-                        lng: null
-                    },
-                    dropPoint: {
-                        lat: null,
-                        lng: null
-                    },
-                    rideData: {},
-
-                    defaultZoom: 12,
-
-                    directions: null,
-                    directionsOnShow: null,
-                    matchedRoutes: {
-                        fetched: [],
-                        selected: [],
-                        counter: 1
-                    }
-                });
+                this.resetState();
             })
-            .catch(err => console.log(err), 'addition has been failed');
+            .catch(err => {
+                console.log(err.response.data, 'addition has been failed');
+                this.resetState();
+            });
     }
 
-
-    onCancelAllHandler = () => {
+    resetState = () => {
         this.setState({
+            progress: null,
+            loading: false,
             pickupPoint: {
                 lat: null,
                 lng: null
@@ -439,13 +421,16 @@ class Maps extends Component {
 
             directions: null,
             directionsOnShow: null,
-            progress: null,
             matchedRoutes: {
                 fetched: [],
                 selected: [],
                 counter: 1
-            },
+            }
         });
+    }
+
+    onCancelAllHandler = () => {
+        this.resetState();
     }
 
 
@@ -480,7 +465,7 @@ class Maps extends Component {
             return <Spinner />
         }
 
-        
+
         return (
             <Auxi>
                 <GoogleMap
@@ -589,7 +574,7 @@ class Maps extends Component {
                 <DialogBottom
                     show={
                         this.props.bell.responseProgress === 'REQUEST_IS_SHOWING'
-                       
+
                     }
                 >
                     <AcceptReject />

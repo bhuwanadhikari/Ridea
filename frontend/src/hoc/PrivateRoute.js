@@ -10,7 +10,7 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
     const authState = store.getState().auth.isAuthenticated;
 
     if (Object.keys(store.getState().auth.user.length === 0)) {
-        window.location.title = store.getState().auth.user.name;
+        window.document.title = store.getState().auth.user.name;
     }
 
     return (

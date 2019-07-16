@@ -6,11 +6,13 @@ import './ChatToolBar.css';
 function ChatToolBar(props) {
     return (
         <header className='ChatToolbar'>
-                <nav className='ToolbarNavigation'>
-                    <div className='BackButtonWrapper'> <BackButton route={props.route}/> </div>
-                    <div className='Header'>Chat</div>
-                    </nav>
-                </header>
+            <nav className='ToolbarNavigation'>
+                <div className='Header'></div>
+                <div className='BackButtonWrapper'>
+                    <BackButton />
+                </div>
+            </nav>
+        </header>
     )
 }
 

@@ -52,7 +52,41 @@ router.get('/route/:routeId', passport.authenticate('jwt', { session: 'false' })
 
 });
 
+//get direction owner name, owner and direction id
+router.get('/get-by-owner', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
+    var activityArr = [];
+    User
+        .findOne({ _id: req.user.id })
+        // .populate(['requestedBy', 'requestedTo', 'rejectedBy', 'rejectedTo'])
+        .then(me => {
+            const concerned = ['requestedBy', 'requestedTo', 'rejectedBy', 'rejectedTo'];
+            (async () => {
+                for (let aTopic of concerned) {
+                    for (let owner of me[aTopic]) {
+                        await Direction
+                            .findOne({ owner: owner })
+                            .populate('owner')
+                            .then(direction => {
+                                activityObj = {
+                                    name: direction.owner.name,
+                                    did: direction.id,
+                                    owner: direction.owner._id,
+                                    label: aTopic
+                                }
+                                activityArr.push(activityObj);
+                            })
+                            .catch(err => console.log(err, 'err in getting direction by owner'))
+                    }
+                }
+                res.status(200).json(activityArr)
+            })();
 
+        })
+        .catch(err => {
+            console.log(err, "in get by owner: last");
+            res.status(400).json({ errors: 'Something unexpected' });
+        })
+})
 
 //Addition of new route
 router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (req, res) => {

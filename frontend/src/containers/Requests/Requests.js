@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import store from '../../redux/store/store';
 import Toast from '../../ui/Toast/Toast';
-import { getMyData, poleData } from '../../redux/actions/action';
+import { poleData } from '../../redux/actions/action';
 import './Requests.css';
 import { connect } from 'react-redux';
 import { ToastsContainer, ToastsStore } from 'react-toasts';
@@ -155,7 +155,6 @@ class Requests extends Component {
 
 Requests.propTypes = {
   bell: PropTypes.object.isRequired,
-  getMyData: PropTypes.func.isRequired,
   poleData: PropTypes.func.isRequired,
 }
 
@@ -163,4 +162,4 @@ const mapStateToProps = state => ({
   bell: state.bell
 })
 
-export default connect(mapStateToProps, { getMyData, poleData })(Requests);
+export default connect(mapStateToProps, { poleData })(Requests);

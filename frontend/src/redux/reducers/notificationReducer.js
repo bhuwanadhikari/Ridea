@@ -11,6 +11,7 @@ const initialState = {
 
     bufferData: [],
     requestedByPopulated: [],
+    activityData: [],
 
     responseProgress: null,
     activeDirection: null,
@@ -54,6 +55,8 @@ export default function (state = initialState, action) {
 
         case 'SET_REQBY_POPULATED':
             return { ...state, requestedByPopulated: action.payload }
+        case 'SET_ACTIVITY_DATA':
+            return { ...state, activityData: action.payload }
 
         case 'SET_ACTIVE_DIRECTION':
             return { ...state, activeDirection: action.payload }

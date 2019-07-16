@@ -4,6 +4,17 @@ body {
 		"Droid Sans", "Helvetica Neue", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	
+}
+
+*{ 
+    font-family: 'Quicksand', sans-serif;
+
+}
+
+.LabelWrapper {
+	
+    font-family: 'PT Sans', sans-serif;
 }
 
 code {

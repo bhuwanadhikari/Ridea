@@ -14,8 +14,9 @@ import notification from '../../img/SidebarImg/notification.svg';
 import feedback from '../../img/SidebarImg/feedback.svg';
 import routeIcon from '../../img/SidebarImg/routeIcon.png';
 import requestsIcon from '../../img/SidebarImg/requestsIcon.png';
-import { getMyData, poleData } from '../../redux/actions/action';
+import { poleData } from '../../redux/actions/action';
 import Spinner from '../../ui/Spinnner/Spinner';
+import Activities from '../../containers/Activities/Activities';
 import './SideDrawer.css';
 
 class SideDrawer extends React.Component {
@@ -27,6 +28,7 @@ class SideDrawer extends React.Component {
             showNotificationsModal: false,
             showActivities: false,
             loading: false,
+            activityArray: []
         }
     }
 
@@ -35,41 +37,6 @@ class SideDrawer extends React.Component {
         const { name } = this.props.auth.user;
         console.log("Name of the user is ", name);
         window.document.title = name;
-        /* axios
-            .get('/api/notifications/status')
-            .then((result) => {
-
-                if (result.data.status === true) {
-                    console.log("Notificaition status----------------------------------", result.data.status);
-                    store.dispatch({
-                        type: 'SET_BELL_SIGN',
-                        payload: true
-                    })
-                } else {
-                    store.dispatch({
-                        type: 'SET_BELL_SIGN',
-                        payload: false
-                    })
-                }
-            }).catch((err) => {
-                console.log(err);
-            });
-
-        axios
-            .get('/api/notifications/notified-by')
-            .then((notifiedBy) => {
-                store.dispatch({
-                    type: 'SET_NOTIFIEDBY_ROUTES',
-                    payload: notifiedBy.data
-                })
-                store.dispatch({
-                    type: 'SET_RESPONSE_PROGRESS',
-                    payload: 'NOTIFIEDBY_IS_FETCHED'
-                })
-            }).catch((err) => {
-                console.log(err);
-            });
-             */
         this.props.poleData();
 
         this.timer = setInterval(() => {
@@ -107,6 +74,26 @@ class SideDrawer extends React.Component {
         this.props.drawerClosed();
     }
 
+    onActivitiesClickHandler = async () => {
+
+        console.log('Activity has been clicked');
+        this.setState((state, props) => {
+            return {
+                showActivities: true
+            }
+        });
+
+        this.props.drawerClosed();
+
+
+
+
+
+    };
+
+    onActivitiesCloseHandler = (e) => [
+        this.setState({ showActivities: false })
+    ]
 
     onModalCloseHandler = () => {
         if (!this.state.showNotificationsModal) {
@@ -125,7 +112,6 @@ class SideDrawer extends React.Component {
     }
 
     setNotificationModal = (status) => {
-        console.log(status, 'ist the state of notification modal')
         this.setState((state, props) => {
             return {
                 showNotificationsModal: status
@@ -134,17 +120,11 @@ class SideDrawer extends React.Component {
 
     }
 
-    toggleRequestsHandler = () => {
-        this.setState((state, props) => {
-            return {
-                showActivities: !state.showActivities
-            }
-        })
-
-    }
 
 
     render() {
+
+        // console.log("Activity array is ", this.state.activityArray);
 
         var { requestedBy, requestedByPopulated, requestedTo, rejectedBy, rejectedTo } = this.props.bell;
 
@@ -153,7 +133,6 @@ class SideDrawer extends React.Component {
         }
 
 
-        console.log(this.state.showNotificationsModal, 'ist the state of notification modal')
 
         let { show } = this.props;
 
@@ -193,7 +172,7 @@ class SideDrawer extends React.Component {
                         </div>
 
                         <div className="ListWrapper"
-                            onClick={this.toggleRequestsHandler}
+                            onClick={this.onActivitiesClickHandler}
                         >
                             <img className="ListImg" src={requestsIcon} alt="Ridea Feedback" />
                             <div className="LabelWrapper">
@@ -274,6 +253,17 @@ class SideDrawer extends React.Component {
                     <Notifications notificationData={requestedBy} setNotificationModal={this.setNotificationModal} />
                 </Modal>
 
+                {/*----------- Notifications List Modal   --------------------------------------*/}
+                <Modal
+                    show={
+                        this.state.showActivities
+                    }
+                    modalClosed={this.onActivitiesCloseHandler}
+                    fromTop='27%'
+                >
+                    <Activities activityArray={this.props.bell.activityData} />
+                </Modal>
+
             </Aux>
         )
 
@@ -283,7 +273,6 @@ class SideDrawer extends React.Component {
 SideDrawer.propTypes = {
     bell: PropTypes.object,
     auth: PropTypes.object.isRequired,
-    getMyData: PropTypes.func.isRequired,
     poleData: PropTypes.func.isRequired,
 };
 
@@ -293,4 +282,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { getMyData, poleData })(SideDrawer);
+export default connect(mapStateToProps, { poleData })(SideDrawer);

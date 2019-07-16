@@ -1,37 +1,22 @@
-.BackButton{
-    cursor: pointer;
-    height: 20px;
-    width:20px;
-    margin-left: 5px;
+.BackButton {
+	cursor: pointer;
+	height: 20px;
+	width: 20px;
+	margin-right: 10px;
 }
-.BackButton img{
-    height: 20px;
-    width: 20px;
-   }
- .ArrowBack{
-     height: 20px;
-     width: 20px;
-    
-} 
+.BackButton img {
+	height: 25px;
+}
+
 /*For DESKTOPS ONLY*/
-@media only screen and (min-width: 800px) {
-    
-    
+@media only screen and (min-width: 700px) {
+    .BackButton img {
+        position: absolute;
+        right: calc(50% - 345px);
+    }
 }
 
 /*For TABS ONLY*/
 @media only screen and (min-width: 450px) {
-    /* .BackButton{
-        height:30px;
-        width:30px;
-    }
-    .BackButton img{
-        height: 30px;
-        width: 30px;
-    }
-    .ArrowBack{
-        height:30px;
-        width: 30px;
-    } */
-    
+
 }

@@ -5,6 +5,7 @@ import Footer from '../../components/Footer/Footer';
 import NavBar from '../../components/NavBar/NavBar';
 import SideDrawer from '../../components/SideDrawer/SideDrawer';
 import Maps from '../Maps/Maps';
+import Chat from '../../components/Chat/Chat';
 
 import './Home.css'
 import keys from '../../config/keys';
@@ -39,6 +40,15 @@ class App extends Component {
   }
 
   componentDidMount() {
+    // this.setCurrentLocation();
+  }
+
+  onLocateClickHandler = () => {
+    this.setState((state, props) => { return { isCurrentLocationSet: false } });
+    this.setCurrentLocation();
+  }
+
+  setCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         position => {
@@ -70,8 +80,8 @@ class App extends Component {
         <div className='BodyWrapper'>
           <Maps
             isMarkerShown={false}
-            // googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places`}
-            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.GOOGLE_API_KEY}`}
+            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places`}
+            // googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${keys.GOOGLE_API_KEY}`}
             loadingElement={<div style={{ height: `100vw` }} />}
             containerElement={<div style={{ height: `100vh` }} />}
             mapElement={<div style={{ height: `100%` }} />}
@@ -87,7 +97,10 @@ class App extends Component {
           }}
         />
 
-        <Footer />
+        
+        <Chat />
+
+        <Footer locateClicked={this.onLocateClickHandler} />
       </div>
 
     );

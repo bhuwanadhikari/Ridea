@@ -437,7 +437,7 @@ class Maps extends Component {
 
 
     render() {
-        console.log("State of the app: ", this.state);
+        // console.log("State of the app: ", this.state);
 
 
         let dialogMessage, content;

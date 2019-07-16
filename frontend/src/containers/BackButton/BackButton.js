@@ -1,17 +1,34 @@
 import React from 'react'
-import ArrowBack from '../../img/ArrowBack.svg';
+import PropTypes from 'prop-types';
+import ArrowBack from '../../img/SidebarImg/arrow-pointing-to-right.svg';
+import store from '../../redux/store/store';
 import './BackButton.css';
-import {Link} from 'react-router-dom'
+import { connect } from 'react-redux';
 
 function BackButton(props) {
     return (
-       <Link to={props.route}>
         <div className="BackButton">
-            <img className="ArrowBack" src={ArrowBack} alt="back button of ridea"></img>
+            <img
+                className="ArrowBack"
+                src={ArrowBack}
+                alt="back button of ridea"
+                onClick={() => {
+                    store.dispatch({
+                        type: 'SET_CHAT',
+                        payload: false
+                    })
+                }}
+            />
 
         </div>
-        </Link>
     )
 }
 
-export default BackButton
+BackButton.propTypes = {
+    nav: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = state => ({
+    nav: state.nav
+})
+export default connect(mapStateToProps)(BackButton);

@@ -15,7 +15,6 @@ import feedback from '../../img/SidebarImg/feedback.svg';
 import routeIcon from '../../img/SidebarImg/routeIcon.png';
 import requestsIcon from '../../img/SidebarImg/requestsIcon.png';
 import { poleData } from '../../redux/actions/action';
-import Spinner from '../../ui/Spinnner/Spinner';
 import Activities from '../../containers/Activities/Activities';
 import './SideDrawer.css';
 
@@ -35,13 +34,12 @@ class SideDrawer extends React.Component {
 
     componentDidMount() {
         const { name } = this.props.auth.user;
-        console.log("Name of the user is ", name);
         window.document.title = name;
         this.props.poleData();
 
         this.timer = setInterval(() => {
             this.props.poleData();
-        }, 5000);
+        }, 15000);
     }
 
     componentWillUnmount() {
@@ -126,7 +124,7 @@ class SideDrawer extends React.Component {
 
         // console.log("Activity array is ", this.state.activityArray);
 
-        var { requestedBy, requestedByPopulated, requestedTo, rejectedBy, rejectedTo } = this.props.bell;
+        var { requestedBy, requestedByPopulated, rejectedBy } = this.props.bell;
 
         if (requestedBy.length !== requestedByPopulated.length) {
             this.onModalCloseHandler();

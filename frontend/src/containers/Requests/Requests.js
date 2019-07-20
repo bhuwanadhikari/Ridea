@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import store from '../../redux/store/store';
-import Toast from '../../ui/Toast/Toast';
 import { poleData } from '../../redux/actions/action';
 import './Requests.css';
 import { connect } from 'react-redux';
@@ -108,7 +107,7 @@ class Requests extends Component {
 
 
 
-    const { requestedByPopulated, respondedRoutes, activeDirection } = this.props.bell;
+    const { requestedByPopulated, respondedRoutes } = this.props.bell;
 
     return (
       <div className="NotificationsContainer">

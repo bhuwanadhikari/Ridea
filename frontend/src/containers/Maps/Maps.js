@@ -81,7 +81,7 @@ class Maps extends Component {
             console.log("ride data is ready");
         }
 
-        const { responseProgress, notifiedByRoutes, activeDirection } = this.props.bell;
+        const { responseProgress, activeDirection } = this.props.bell;
         const prevResponseProgress = prevProps.bell.responseProgress;
         if ((responseProgress !== prevResponseProgress) && responseProgress === 'REQUEST_IS_SHOWING') {
             this.setState({

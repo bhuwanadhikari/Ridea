@@ -61,8 +61,12 @@ li {
 .chat .chat-history {
 	padding: 0 20px;
 	border-bottom: 2px solid white;
-	height: calc(100vh - 129px);
+	height: calc(100vh - 112px);
 	overflow-y: scroll;
+}
+
+.chat .chat-history ul {
+	padding: 0;
 }
 .chat .chat-history .message-data {
 	margin-bottom: 15px;
@@ -114,17 +118,18 @@ li {
 	width: 100%;
 }
 
-.chat .chat-message textarea {
+.chat .chat-message .message-to-send {
 	width: 80%;
+	height: 42px;
 	border: none;
 	padding: 10px 20px;
 	font: 14px/22px "Lato", Arial, sans-serif;
 	resize: none;
 }
 
-.chat .chat-message button {
+.chat .chat-message .sendButton {
 	width: 20%;
-	height: 59px;
+	height: 42px;
 	float: right;
 	font-size: 16px;
 	text-transform: uppercase;
@@ -134,7 +139,7 @@ li {
 	background: var(--medium-dark);
 	color: white;
 }
-.chat .chat-message button:hover {
+.chat .chat-message sendButton:hover {
 	color: #5e9cd6;
 }
 

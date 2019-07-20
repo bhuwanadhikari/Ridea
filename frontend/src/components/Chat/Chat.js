@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import ChatBody from './ChatBody/ChatBody';
 import './Chat.css';
 import ChatToolBar from './ChatToolBar';
-import ChatThumbnail from './ChatThumbnail';
 
 class Chat extends Component {
     constructor(props) {

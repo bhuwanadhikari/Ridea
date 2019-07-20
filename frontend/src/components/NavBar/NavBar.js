@@ -11,7 +11,6 @@ import message from '../../img/navImg/message.svg';
 class NavBar extends Component {
 
     onChatIconClickHandler = () => {
-        console.log("Button has been clicked");
         store.dispatch({
             type: 'SET_CHAT',
             payload: true
@@ -21,7 +20,6 @@ class NavBar extends Component {
 
 
     render() {
-        console.log("show chat is ", this.props.nav.showChat);
 
         return (
             <header className='Toolbar'>

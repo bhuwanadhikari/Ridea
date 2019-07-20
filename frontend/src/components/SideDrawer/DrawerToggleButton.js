@@ -1,7 +1,6 @@
 import React from 'react'
  
 import {connect} from 'react-redux';
-import store from '../../redux/store/store';
 import './DrawerToggleButton.css';
 const DrawerToggleButton = (props) => {
 

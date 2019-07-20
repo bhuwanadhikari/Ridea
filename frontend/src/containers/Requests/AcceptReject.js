@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import Auxi from '../../hoc/Auxi';
 import store from '../../redux/store/store';
 
@@ -9,7 +8,7 @@ class AcceptReject extends Component {
     onAcceptHandler = () => {
         var { respondedRoutes, activeDirection, requestedByPopulated } = this.props.bell;
         respondedRoutes = respondedRoutes.filter(aRoute => aRoute.owner !== activeDirection.owner);
-        respondedRoutes = respondedRoutes.filter(aRoute => aRoute.responseStatus != 'Accepted');
+        respondedRoutes = respondedRoutes.filter(aRoute => aRoute.responseStatus !== 'Accepted');
 
         var tempArray = requestedByPopulated.filter(route => route.owner !== activeDirection.owner);
         tempArray.forEach(el => {

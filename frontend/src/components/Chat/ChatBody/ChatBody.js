@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import avatar from '../../../img/avatar.png';
 import './ChatBody.css';
 
@@ -15,41 +16,107 @@ class ChatBody extends Component {
         super(props)
 
         this.state = {
-            socket: null,
-            me: null,
-            u: null,
+            socket: io(socketUrl),
+            canSend: false,
+            palName: '',
             message: {
-                from: 'me',
-                to: 'him',
-                body: 'Hello! how are ou',
-                createdAt: 'today'
-            }
+                ownerName: '',
+                from: '',
+                to: '',
+                body: '',
+            },
 
-
+            messages: []
         }
     }
 
-    componentWillMount() {
-        this.initSocket();
-    }
 
     componentDidMount() {
+
+
+        //Update the message state
+
+
         const { socket } = this.state;
         socket.on('GET_MESSAGE', (message) => {
-            console.log('Message received', message);
+            console.log("message received", message);
+            const { messages } = this.state;
+            messages.push(message);
+            this.setState({ messages })
         });
 
         const myId = this.props.auth.user.id;
+        
         socket.emit('VERIFY_USER', myId, this.setUser);
+        socket.on('REMOVED', (riders) => {
+            console.log('Riders after the disconnection', riders);
+        })
 
     }
+
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { acceptedBy, acceptedTo } = nextProps.bell;
+        const { name } = nextProps.auth.user;
+        if (acceptedBy && (prevState.message.to !== acceptedBy)) {
+
+
+
+            return {
+                message: {
+                    ...prevState.message,
+                    ownerName: name,
+                    from: nextProps.auth.user.id,
+                    to: acceptedBy
+                }
+            };
+        }
+        else if (acceptedTo && (prevState.message.to !== acceptedBy)) {
+            return {
+                message: {
+                    ...prevState.message,
+                    ownerName: name,
+                    from: nextProps.auth.user.id,
+                    to: acceptedTo
+                }
+            };
+        }
+
+        return {}
+    }
+
+
 
     componentWillUnmount() {
         const { socket } = this.state;
         console.log("Unmounting");
-        socket.emit('disconnect');
+        // socket.emit('disconnect');
         socket.disconnect();
+        const userId = this.props.auth.user.id;
+        socket.emit('REMOVAL', userId);
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        this.scrollDown();
+        if (this.messageInput) {
+            this.messageInput.focus();
+        }
+
+        const { acceptedTo, acceptedBy } = this.props.bell;
+        if (!acceptedTo && acceptedBy) {
+            if (prevProps.bell.acceptedBy !== acceptedBy) {
+                this.getPalName(acceptedBy);
+            }
+        }
+        if (acceptedTo && !acceptedBy) {
+            if (prevProps.bell.acceptedTo !== acceptedTo) {
+                this.getPalName(acceptedTo);
+            }
+        }
+
+    }
+
+
 
 
 
@@ -61,128 +128,159 @@ class ChatBody extends Component {
         this.setState({ socket });
     }
 
+    getPalName = (palId) => {
+        axios
+            .get(`/api/users/get-user/${palId}`)
+            .then((result) => {
+                this.setState({
+                    palName: result.data.name
+                })
+
+            }).catch((err) => {
+                console.log('Error in api call for palId', err);
+            });
+    }
+
+
     setUser = (data) => {
         if (data) {
             console.log("New user will be added");
             const { socket } = this.state;
             const userId = this.props.auth.user.id;
-            socket.emit('ADD_USER', userId);
+            socket.emit('ADD_USER', userId, (messages) => {
+                this.setState({ messages });
+            });
 
         } else {
             console.log("You have opened your id in another devices");
         }
     }
 
-
-
-
-
-
-
-
-
-
-
     handleSend = (e) => {
         e.preventDefault();
-
         console.log("handle send has bee clicked");
         const { socket, message } = this.state;
-        socket.emit('SEND_MESSAGE', message);
+        if (message.body.length > 0) {
+            socket.emit('SEND_MESSAGE', message);
+            console.log("PRINTED", message);
+        } else {
+            console.log("Message not sent");
+        }
+        this.setState({
+            message: {
+                ...this.state.message,
+                body: ''
+            }
+        });
+    }
+
+    handleOnChange = (e) => {
+        this.setState({
+            message: {
+                ...this.state.message,
+                body: e.target.value
+            }
+        });
+    }
+
+    scrollDown = () => {
+        if (this.messageEnd) {
+            this.messageEnd.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 
 
-
     render() {
-
+        const { messages, palName } = this.state;
+        var myName = this.props.auth.user.name;
+        // console.log("message now is:", this.state.message);
         return (
             <div className="ChatContainer clearfix">
 
-                <div className="chat">
-                    <div className="chat-header clearfix">
-                        <div className="avatarWrapper">
-                            <img className="avatar" src={avatar} alt="avatar" />
-                        </div>
-                        <div className="chat-about">
-                            <div className="chat-with">Chat with Basudev Adhikari</div>
-                            <div className="chat-num-messages">Your Ride Partner</div>
-                        </div>
-                    </div>
+                {!this.state.message.to
+                    ? <div className="noChat"><b>No shared ride to discuss</b></div>
+                    : (
+                        <div className="chat">
 
 
-                    <div className="chat-history">
-                        <ul>
-                            <li className="clearfix">
-                                <div className="message-data align-right">
-                                    <span className="message-data-time" >10:10 AM, Today</span> &nbsp; &nbsp;
-                                    <span className="message-data-name" >You</span> <i className="fa fa-circle me"></i>
-
+                            <div className="chat-header clearfix">
+                                <div className="avatarWrapper">
+                                    <img className="avatar" src={avatar} alt="avatar" />
                                 </div>
-                                <div className="message other-message float-right">
-                                    Hi Vincent
+                                <div className="chat-about">
+                                <div className="chat-with">Chat with {palName}</div>
+                                    <div className="chat-num-messages">Your Ride Partner</div>
                                 </div>
-                            </li>
-                            <li className="clearfix">
-                                <div className="message-data align-right">
-                                    <span className="message-data-time" >10:10 AM, Today</span> &nbsp; &nbsp;
-                                    <span className="message-data-name" >You</span> <i className="fa fa-circle me"></i>
-
-                                </div>
-                                <div className="message other-message float-right">
-                                    Hi Vincent
-                                </div>
-                            </li>
+                            </div>
 
 
-                            <li>
-                                <div className="message-data align-left">
-                                    <span className="message-data-name"><i className="fa fa-circle online"></i> Vincent</span>
-                                    <span className="message-data-time">10:20 AM, Today</span>
-                                </div>
-                                <div className="message my-message">
-                                    Actually everything was fine.
-                                </div>
-                            </li>
+                            <div className="chat-history">
+                                <ul>
+                                    {messages.map((item, index) => {
 
-                            <li>
-                                <div className="message-data align-left">
-                                    <span className="message-data-name"><i className="fa fa-circle online"></i> Vincent</span>
-                                    <span className="message-data-time">10:20 AM, Today</span>
-                                </div>
-                                <div className="message my-message">
-                                    Actually everything was fine.
-                                </div>
-                            </li>
-
-
-                            <li>
-                                <div className="message-data align-left">
-                                    <span className="message-data-name"><i className="fa fa-circle online"></i> Vincent</span>
-                                    <span className="message-data-time">10:20 AM, Today</span>
-                                </div>
-                                <div className="message my-message">
-                                    Actually everything was fine.Actually everything was fine.Actually everything was fine.
-                                </div>
-                            </li>
-
-                            <li>
-                                <i className="fa fa-circle online"></i>
-                                <i className="fa fa-circle online" style={{ color: '#AED2A6' }}></i>
-                                <i className="fa fa-circle online" style={{ color: '#DAE9DA' }}></i>
-                            </li>
-
-                        </ul>
-
-                    </div>
+                                        if (myName === item.ownerName) {
+                                            return (
+                                                <li className="clearfix" key={index}>
+                                                    <div className="message-data align-right">
+                                                        <span className="message-data-time" >{item.createdAt}</span> &nbsp; &nbsp;
+                                                        <span className="message-data-name" >You</span> <i className="fa fa-circle me"></i>
+                                                    </div>
+                                                    <div className="message other-message float-right">
+                                                        {item.body}
+                                                    </div>
+                                                </li>
+                                            )
+                                        } else {
+                                            return (
+                                                <li key={index}>
+                                                    <div className="message-data align-left" key={index}>
+                                                        <span className="message-data-name"><i className="fa fa-circle online"></i> {item.ownerName}</span>
+                                                        <span className="message-data-time">{item.createdAt}</span>
+                                                    </div>
+                                                    <div className="message my-message">
+                                                        {item.body}
+                                                    </div>
+                                                </li>
+                                            )
+                                        }
+                                    })}
 
 
-                    <form className="chat-message clearfix" onSubmit={this.handleSend}>
-                        <input type="text" className="message-to-send" placeholder="Type your message"></input>
-                        <button type='submit' className="sendButton">Send</button>
-                    </form>
 
 
-                </div>
+                                    <div
+                                        ref={(el) => { this.messageEnd = el }}
+                                    >
+                                    </div>
+
+
+
+                                </ul>
+
+                            </div>
+
+
+                            <form className="chat-message clearfix" onSubmit={this.handleSend}>
+                                <input
+                                    type="text"
+                                    className="message-to-send"
+                                    placeholder="Type your message"
+                                    onChange={this.handleOnChange}
+                                    value={this.state.message.body}
+                                    autoFocus={true}
+                                    ref={(input) => { this.messageInput = input; }}
+                                />
+                                <button
+                                    type='submit'
+                                    className="sendButton"
+                                >
+                                    Send
+                                </button>
+                            </form>
+
+                        </div>)
+                }
+
 
             </div>
 
@@ -195,10 +293,19 @@ class ChatBody extends Component {
 
 ChatBody.propTypes = {
     auth: PropTypes.object.isRequired,
+    bell: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    bell: state.bell
 })
 
 export default connect(mapStateToProps)(ChatBody);
+
+
+// <li>
+//     <i className="fa fa-circle online"></i>
+//     <i className="fa fa-circle online" style={{ color: '#AED2A6' }}></i>
+//     <i className="fa fa-circle online" style={{ color: '#DAE9DA' }}></i>
+// </li>

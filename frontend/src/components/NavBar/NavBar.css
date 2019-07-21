@@ -35,10 +35,7 @@
     align-content: center;
     border-radius: 50px;
 }
-.ChatIconWrapper:active{
-    border:none;
-    style:none;
-}
+
 .Spacer{
     flex: 0.5  ;
 }
@@ -53,7 +50,7 @@
 }
 .ChatIconWrapper >.ImageEnclosure > .AuthMessageIcon{
     cursor: pointer;
-    height: 50px;
+    width: 100px;
     margin: auto;
     position: relative;
     left: -25px;

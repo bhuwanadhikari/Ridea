@@ -1,4 +1,5 @@
 const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const keys = require('./keys');
@@ -6,17 +7,17 @@ const keys = require('./keys');
 const User = require('../models/User');
 
 
-const opts = {
+const options = {
    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
    secretOrKey: keys.SECRET
 };
 
 module.exports = passport => {
    passport.use(
-      new JwtStrategy(opts , (jwt_payload, done) => {
+      new JwtStrategy(options, (jwt_payload, done) => {
          User.findById(jwt_payload.id)
             .then(user => {
-               if(user){
+               if (user) {
                   return done(null, user);
                }
                return done(null, false);
@@ -29,7 +30,6 @@ module.exports = passport => {
 
 
 
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.serializeUser((user, done) => {
    done(null, user.id);
@@ -50,7 +50,7 @@ passport.use(
    }, (accessToken, refreshToken, profile, done) => {
       // check if user already exists in our own db
 
-      console.log("token",accessToken);
+      console.log("token", accessToken);
       User.findOne({ googleId: profile.id })
          .then((currentUser) => {
             if (currentUser) {
@@ -70,6 +70,6 @@ passport.use(
                });
             }
          })
-         .catch(err => console.log("some wring happende", err));
+         .catch(err => console.log("Something wrong happened in passport-google-auth code block", err));
    })
 );

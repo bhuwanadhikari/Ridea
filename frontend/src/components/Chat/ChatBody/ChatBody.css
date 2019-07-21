@@ -82,7 +82,7 @@ li {
 	font-size: 16px;
 	border-radius: 7px;
 	margin-bottom: 30px;
-	width: 90%;
+	width: 85%;
 	position: relative;
 }
 .chat .chat-history .message:after {
@@ -181,6 +181,15 @@ li {
 	content: " ";
 	clear: both;
 	height: 0;
+}
+
+.noChat {
+	text-align: center;
+	vertical-align: center;
+	position: absolute;
+	top: 50%;
+	width: 210px;
+	left: calc(50vw - 110px);
 }
 
 @media only screen and (min-width: 700px) {

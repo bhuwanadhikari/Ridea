@@ -3,7 +3,7 @@ const passport = require('passport');
 const User = require('../models/User');
 const mongoose = require('mongoose');
 const Direction = require('../models/Direction');
-const { onAccept, onReject } = require('./helper');
+const { onAccept, onReject } = require('./booster');
 
 const ObjectId = mongoose.Types.ObjectId
 

@@ -114,11 +114,13 @@ class ChatBody extends Component {
 
     initConnection = () => {
         const { socket } = this.state;
-        socket.on('GET_MESSAGE', (message) => {
-            console.log("message received", message);
+        socket.on('GET_MESSAGE', (newMsg) => {
+            console.log("message received", newMsg);
+            newMsg.createdAt = this.manageTime(newMsg.createdAt);
+            
             const { messages } = this.state;
-            messages.push(message);
-            this.setState({ messages })
+            messages.push(newMsg);
+            this.setState({ messages });
         });
 
         const myId = this.props.auth.user.id;
@@ -155,6 +157,23 @@ class ChatBody extends Component {
         }
     }
 
+    manageTime = (plain) => {
+        console.log('Plain date is :', plain);
+        var thatTime = new Date(plain).getTime();
+        var currentTime = new Date().getTime();
+
+        const thatDay = new Date(thatTime).getDate();
+        const currentDay = new Date(currentTime).getDate();
+
+        let theTime =  new Date(plain).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+
+        if (thatDay !== currentDay) {
+            return `Yesterday ${theTime}`
+        } else {
+            return `Today ${theTime}`
+        }
+    }
+
     setUser = (data) => {
         if (data) {
             console.log("New user will be added");
@@ -162,6 +181,9 @@ class ChatBody extends Component {
             const userId = this.props.auth.user.id;
             const palId = this.getPalId();
             socket.emit('ADD_USER', userId, palId, (messages) => {
+                messages.forEach(message => {
+                    message.createdAt = this.manageTime(message.createdAt);
+                });
                 this.setState({ messages });
             });
 
@@ -170,13 +192,14 @@ class ChatBody extends Component {
         }
     }
 
+
+
     handleSend = (e) => {
         e.preventDefault();
         console.log("handle send has bee clicked");
         const { socket, message } = this.state;
         if (message.body.length > 0) {
             socket.emit('SEND_MESSAGE', message);
-            console.log("PRINTED", message);
         } else {
             console.log("Message not sent");
         }
@@ -231,6 +254,7 @@ class ChatBody extends Component {
                             <div className="chat-history">
                                 <ul>
                                     {messages.map((item, index) => {
+
 
                                         if (myName === item.ownerName) {
                                             return (

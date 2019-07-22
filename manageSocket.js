@@ -21,6 +21,7 @@ module.exports = function (socket) {
             .save()
             .then((savedMessage) => {
                 console.log("message is saved", savedMessage);
+                message.createdAt = savedMessage.createdAt;
                 riders[message.from].socket.emit('GET_MESSAGE', message);
                 if (riders[message.to]) {
                     riders[message.to].socket.emit('GET_MESSAGE', message);
@@ -59,7 +60,6 @@ module.exports = function (socket) {
             .catch(err => console.log('Error in fetching all maessages', err));
         console.log('Riders after addition now is', Object.keys(riders));
 
-        // var allSockets = io.sockets.clients();
 
     });
 

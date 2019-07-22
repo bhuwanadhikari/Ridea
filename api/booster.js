@@ -6,10 +6,39 @@ const onAccept = async (acceptedRoute, myId) => {
     const did = acceptedRoute.direction_id;
     var myRequestedBy;
 
+
+
+    //rejectedTo of mine
+    await User
+        .findOne({ _id: myId })
+        .then(async me => {
+            console.log('my requested by is', me.requestedBy);
+            
+            const newRejTo = me.requestedBy.filter(reqById => reqById !== hisId);
+
+            let buffer = me.requestedBy;
+            let ind = buffer.indexOf(hisId);
+
+            buffer = buffer.splice(ind, 1);
+
+            console.log("New rejected to array is :", buffer);
+            await User
+                .updateOne({ _id: myId }, { $set: { rejectedTo: buffer } })
+                .then((result) => { return })
+                .catch((err) => { console.log(err, "rejectedTo of mine") });
+
+        })
+        .catch((err) => { console.log(err, "rejectedTo of mine2") });
+
+
     //requestedBy ko requestedTo  of mine
     await User
         .findOne({ _id: myId })
         .then(async me => {
+
+            //set myRequestedBy
+            myRequestedBy = me.requestedBy;
+
             await (async () => {
                 for (var reqById of me.requestedBy) {
                     await User
@@ -23,11 +52,6 @@ const onAccept = async (acceptedRoute, myId) => {
         })
         .catch(err => { console.log(err, "in requestedBy ko requestedTo  of mine2"); })
 
-    //requestedBy of mine
-    await User
-        .updateOne({ _id: myId }, { $set: { requestedBy: [] } })
-        .then((result) => { return })
-        .catch((err) => { console.log(err, "requestedBy of mine") });
 
 
     //requestedTo ko requestedBy of mine
@@ -66,20 +90,6 @@ const onAccept = async (acceptedRoute, myId) => {
         })
         .catch((err) => { console.log(err, "rejectedTo ko rejectedBy of mine") });
 
-    //rejectedTo of mine
-    await User
-        .findOne({ _id: myId })
-        .then(async me => {
-            console.log('my RequestedBy Id', myRequestedBy);
-            const newRejTo = myRequestedBy.filter(reqById => reqById !== hisId);
-            console.log("New rejected to array is :", newRejTo);
-            await User
-                .updateOne({ _id: myId }, { $set: { rejectedTo: newRejTo } })
-                .then((result) => { return })
-                .catch((err) => { console.log(err, "rejectedTo of mine") });
-
-        })
-        .catch((err) => { console.log(err, "rejectedTo of mine2") });
     //---------------------
 
     //acceptedTo of mine
@@ -88,13 +98,20 @@ const onAccept = async (acceptedRoute, myId) => {
         .then((result) => { return })
         .catch((err) => { console.log(err, "acceptedTo of mine") });
 
+    //requestedBy of mine
+    await User
+        .updateOne({ _id: myId }, { $set: { requestedBy: [] } })
+        .then((result) => { return })
+        .catch((err) => { console.log(err, "requestedBy of mine") });
+
+
     //acceptedBy of acceptedTo of mine
     await User
         .updateOne({ _id: hisId }, { $set: { acceptedBy: myId } })
         .then((result) => { return })
         .catch((err) => { console.log(err, "acceptedBy of acceptedTo of mine") });
 
-
+    //------------------------------------------------------------
     //requestedBy ko requestedTo of his
     await User
         .findOne({ _id: hisId })

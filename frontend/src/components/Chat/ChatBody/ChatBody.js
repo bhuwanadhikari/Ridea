@@ -33,25 +33,6 @@ class ChatBody extends Component {
 
     componentDidMount() {
 
-
-        //Update the message state
-
-
-        const { socket } = this.state;
-        socket.on('GET_MESSAGE', (message) => {
-            console.log("message received", message);
-            const { messages } = this.state;
-            messages.push(message);
-            this.setState({ messages })
-        });
-
-        const myId = this.props.auth.user.id;
-        
-        socket.emit('VERIFY_USER', myId, this.setUser);
-        socket.on('REMOVED', (riders) => {
-            console.log('Riders after the disconnection', riders);
-        })
-
     }
 
 
@@ -102,14 +83,17 @@ class ChatBody extends Component {
             this.messageInput.focus();
         }
 
+        //For getting the name of pal and initiate the connection
         const { acceptedTo, acceptedBy } = this.props.bell;
         if (!acceptedTo && acceptedBy) {
             if (prevProps.bell.acceptedBy !== acceptedBy) {
+                this.initConnection();
                 this.getPalName(acceptedBy);
             }
         }
         if (acceptedTo && !acceptedBy) {
             if (prevProps.bell.acceptedTo !== acceptedTo) {
+                this.initConnection();
                 this.getPalName(acceptedTo);
             }
         }
@@ -128,6 +112,26 @@ class ChatBody extends Component {
         this.setState({ socket });
     }
 
+    initConnection = () => {
+        const { socket } = this.state;
+        socket.on('GET_MESSAGE', (message) => {
+            console.log("message received", message);
+            const { messages } = this.state;
+            messages.push(message);
+            this.setState({ messages })
+        });
+
+        const myId = this.props.auth.user.id;
+        console.log("Id of mine is", myId);
+        console.log("Id of the other pal is", this.props.bell.acceptedBy);
+        console.log("Id of the other pal is", this.props.bell.acceptedTo);
+
+        socket.emit('VERIFY_USER', myId, this.setUser);
+        socket.on('REMOVED', (riders) => {
+            console.log('Riders after the disconnection', riders);
+        })
+    }
+
     getPalName = (palId) => {
         axios
             .get(`/api/users/get-user/${palId}`)
@@ -141,13 +145,23 @@ class ChatBody extends Component {
             });
     }
 
+    getPalId = () => {
+        const { acceptedTo, acceptedBy } = this.props.bell;
+        if (!acceptedTo && acceptedBy) {
+            return acceptedBy;
+        }
+        if (acceptedTo && !acceptedBy) {
+            return acceptedTo;
+        }
+    }
 
     setUser = (data) => {
         if (data) {
             console.log("New user will be added");
             const { socket } = this.state;
             const userId = this.props.auth.user.id;
-            socket.emit('ADD_USER', userId, (messages) => {
+            const palId = this.getPalId();
+            socket.emit('ADD_USER', userId, palId, (messages) => {
                 this.setState({ messages });
             });
 
@@ -208,7 +222,7 @@ class ChatBody extends Component {
                                     <img className="avatar" src={avatar} alt="avatar" />
                                 </div>
                                 <div className="chat-about">
-                                <div className="chat-with">Chat with {palName}</div>
+                                    <div className="chat-with">Chat with {palName}</div>
                                     <div className="chat-num-messages">Your Ride Partner</div>
                                 </div>
                             </div>

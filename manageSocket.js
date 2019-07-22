@@ -43,7 +43,7 @@ module.exports = function (socket) {
         }
     });
 
-    socket.on('ADD_USER', (userId, callback) => {
+    socket.on('ADD_USER', (userId, palId, callback) => {
 
         socket.userId = userId;
         riders[userId] = {
@@ -52,7 +52,7 @@ module.exports = function (socket) {
         };
         // io.emit('RIDERS', riders);
         Message
-            .find()
+            .find({ $or: [{ from: userId }, { to: userId }, { from: palId }, { to: palId }] })
             .then(allMessages => {
                 callback(allMessages);
             })

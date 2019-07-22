@@ -1,28 +1,75 @@
-.SideDrawer{
-    height: 100%;
-    background: white;
-    box-shadow: 0 0 15px var(--medium-dark);
-    position: fixed;
-    top:0;
-    left:0;
-    max-width: 400px;
-    width: 70%;
-    z-index: 200;
-    transition: all 0.5s ease-in-out;
+.SideDrawer {
+	height: 100%;
+	background: white;
+	box-shadow: 0 0 15px var(--medium-dark);
+	position: fixed;
+	top: 0;
+	left: 0;
+	max-width: 400px;
+	width: 70vw;
+	z-index: 3500;
+	transition: all 0.75s ease-in-out;
+}
+.ProfileContainer {
+	width: 100%;
+	height: 200px;
+	box-shadow: 1px 1px 6px var(--lighter-theme);
 }
 
-.SideDrawer ul{
-    height: 100%;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.ListWrapper {
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid silver;
 }
-.SideDrawer li{
-    margin: 1rem ;
-    font-size: 1.2rem;
+
+.ListImg {
+    width: 20px;
+    float: left;
+    padding: 15px;
+
 }
-.SideDrawer li:hover,
-.SideDrawer li:active{
-    color: skyblue;
+
+.LabelWrapper{
+    position: absolute;
+    left: 50px;
+    height: 50px;
+    text-align: left;
+    font-weight: bolder;
+    line-height: 50px;
+}
+
+.SideDrawerSpan {
+    font-size: 0.8em;
+    font-weight: 100;
+    color: #123456
+}
+
+.RequestsBody {
+    border-bottom: 1px solid silver;
+    
+}
+
+.RequestTitle {
+    font-size: 0.75em;
+    left: 35px;
+    height: 35px;
+    text-align: left;
+    line-height: 35px;
+    padding-left: 60px;
+}
+
+.RequestTitle:hover {
+    color: blue;
+    cursor: pointer;
+}
+
+.ListWrapper:hover {
+    background-color: silver;
+    cursor: pointer;
+}
+
+
+.OneActivity {
+    height: 40px;
+    font-size: 0.9em;
 }

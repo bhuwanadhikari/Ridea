@@ -1,33 +1,53 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import jwt_decode from 'jwt-decode';
 
-import Home from './containers/Home/Home';
-import Landing from './containers/Landing/Landing';
-import Chat from './components/Chat/Chat';
+import setAuthToken from './utils/setAuthToken';
+
+import store from './redux/store/store';
+import BaseRoutes from './routes/baseRoutes';
+
+import './App.css';
 
 
+
+var Title = "Ridea";
+if (localStorage.jwtToken) {
+  //set auth token header to be sent in every request
+  setAuthToken(localStorage.jwtToken);
+  //decode stored token
+  const decoded = jwt_decode(localStorage.jwtToken);
+  Title = decoded.name;
+  //set user's statuses
+
+  window.document.title = Title;
+  store.dispatch({ type: 'SET_USER', payload: decoded });
+  /////////////////////////
+  ///expiration code///////
+  /////////////////////////
+}
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-
-    }
-  }
-
 
   render() {
+
+    window.document.title = Title;
+    console.log("The environment now is:", process.env.NODE_ENV);
     return (
-      <Router>
-        <Switch>
+      //Redux Provider
+      <Provider store={store}>
+
+        <Router>
           <div style={{ height: '100%' }} className="App">
-            <Route exact path = "/home" component = {Home} />
-            <Route exact path = "/" component = {Landing} />
-            <Route exact path = "/chat" component = {Chat} />
+            <Switch>
+              <BaseRoutes />
+            </Switch>
           </div>
-        </Switch>
-      </Router>
+        </Router>
+
+      </Provider>
+
     );
   }
 }

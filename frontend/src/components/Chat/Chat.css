@@ -1,8 +1,14 @@
-.ChatPageContainer{
+ .ChatPageContainer{
+    position: fixed;
+    top: 0;
+    left: 0;
     height: 100vh;
     width:100vw;
-
+    z-index: 1000;
+    transition: all 0.4s ease-in;
+    background-color: white;
 }
+/*
 .ChatToolBarContainer{
     position: fixed;
     top: 0;
@@ -10,10 +16,36 @@
     height:100px;
     width: 100%;
 }
-.ChatToolBarContainer{
-    height:auto;
+.ChatThumbnailsWrapper{
+    margin:12vh 5px 10px 5px; 
     width: 100%;
-    position: relative;
-    top: 0;
-    left: 0;
-}
+    height: 90vh;
+    box-sizing: border-box;
+    overflow-y: scroll;
+} */
+/* For DESKTOPS ONLY */
+/* @media only screen and (min-width: 800px) {    
+} */
+
+/*For TABS AND LAPTOPS*/
+/* @media only screen and (min-width: 600px)  {
+    .BodyWrapper{
+        width: 100%;
+    }
+    .ChatThumbnailsWrapper{
+        position: relative;
+        left:0;
+        width:300px;
+    }
+    .MessagesWrapper{
+        position: absolute;
+        left:300px;
+        top:12vh;
+        border-left: solid 1px black;
+        width:(98vw-300px);
+        height: 90vh;
+        margin: 0 5px;
+        box-sizing: border-box;
+    } 
+   
+}  */

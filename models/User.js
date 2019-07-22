@@ -6,24 +6,54 @@ const UserSchema = new Schema({
     name: {
         type: String,
         required: true,
-    },  
+    },
     email: {
-        type: String, 
+        type: String,
         required: true,
     },
     password: {
-        type: String, 
+        type: String,
     },
     username: {
-        type: String, 
+        type: String,
     },
     googleId: {
-        type: String, 
+        type: String,
     },
     thumbnail: {
-        type: String, 
+        type: String,
     },
 
-}, {timestamps: true});
+
+    requestedTo: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+    }],
+    requestedBy: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+    }],
+
+
+    acceptedTo: {
+        type: Schema.Types.ObjectId, ref: 'User'
+    },
+    acceptedBy: {
+        type: Schema.Types.ObjectId, ref: 'User'
+    },
+
+
+    rejectedTo: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+    }],
+    rejectedBy: [{
+        type: Schema.Types.ObjectId, ref: 'User'
+    }],
+
+    
+    status: {
+        type: Boolean,
+        default: false
+    },
+
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

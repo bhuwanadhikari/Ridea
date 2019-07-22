@@ -1,16 +1,18 @@
 import React from 'react'
-import BackButton from '../BackButton/BackButton';
+import BackButton from '../../containers/BackButton/BackButton';
 import './ChatToolBar.css';
 
 
-function ChatToolBar() {
+function ChatToolBar(props) {
     return (
-        <header className='Toolbar'>
-                <nav className='ToolbarNavigation'>
-                    <div className='BackButtonWrapper'> <BackButton/> </div>
-                    <div className='Header'>Chat</div>
-                    </nav>
-                </header>
+        <header className='ChatToolbar'>
+            <nav className='ToolbarNavigation'>
+                <div className='Header'></div>
+                <div className='BackButtonWrapper'>
+                    <BackButton />
+                </div>
+            </nav>
+        </header>
     )
 }
 

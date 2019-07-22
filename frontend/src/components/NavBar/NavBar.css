@@ -6,6 +6,7 @@
     top: 0;
     left: 0;
     display: flex;
+    z-index: 800;
 
 }
 .ToolbarNavigation{
@@ -21,8 +22,8 @@
     justify-content: space-around;
 }
 .SearchWrapper{
+    margin-left: 5px;
     flex:3;
-    margin: 0 auto;
 }
 .ChatIconWrapper{
     cursor: pointer;
@@ -34,10 +35,7 @@
     align-content: center;
     border-radius: 50px;
 }
-.ChatIconWrapper:active{
-    border:none;
-    style:none;
-}
+
 .Spacer{
     flex: 0.5  ;
 }
@@ -52,7 +50,7 @@
 }
 .ChatIconWrapper >.ImageEnclosure > .AuthMessageIcon{
     cursor: pointer;
-    height: 50px;
+    width: 100px;
     margin: auto;
     position: relative;
     left: -25px;

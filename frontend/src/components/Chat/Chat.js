@@ -1,18 +1,41 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import ChatBody from './ChatBody/ChatBody';
 import './Chat.css';
-// import {BrowserRouter as Router, Route,Switch} from 'react-router-dom';
 import ChatToolBar from './ChatToolBar';
-import ChatThumbnail from './ChatThumbnail';
+
 class Chat extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            routeBack: '/home'
+        }
+    }
     render() {
+        const show = this.props.nav.showChat;
         return (
-           
-            <div className="ChatPageContainer">
-             <div className="ChatToolbarContainer"> <ChatToolBar/></div>  
-             <div className="ChatThumbnailContainer"></div>  
+            <div
+                className="ChatPageContainer"
+                style={{
+                    transform: show ? 'translateX(0)' : 'translateX(100vw)'
+                }}
+            >
+                <ChatToolBar />
+                <ChatBody/>
+
             </div>
         )
     }
 }
 
-export default Chat
+Chat.propTypes = {
+    nav: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = state => ({
+    nav: state.nav,
+})
+
+export default connect(mapStateToProps)(Chat);

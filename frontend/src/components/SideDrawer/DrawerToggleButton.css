@@ -9,7 +9,16 @@
     cursor: pointer;
     padding: 0;
     box-sizing: border-box;
-    margin: auto;
+    margin-left: 5px;
+}
+
+.Notifier {
+    height: 17px;
+    width: 17px;
+    background-color: red;
+    border-radius: 7px;
+    position: relative;
+    z-index: inherit;
 }
 .ToggleButton :focus{
     border:none;

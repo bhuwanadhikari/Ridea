@@ -2,16 +2,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const passportSetup = require('./config/passport');
+const cors = require('cors');
 
+
+const auth = require('./api/auth');
+const directions = require('./api/directions');
+const push = require('./api/push');
+const users = require('./api/users');
+const notifications = require('./api/notifications');
 
 const app = express();
-
-//database
-const db = require('./config/keys').mongoURI;
-
+app.use(cors());
 
 //connection to database
+const db = require('./config/keys').MONGO_URI;
 mongoose
     .connect(db, { useNewUrlParser: true })
     .then(() => console.log("Connected to the mongoose"))
@@ -22,54 +26,33 @@ mongoose
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Passport config
+require('./config/passport')(passport);
+
 //Configuration for passport
-/* require('./config/passport')(passport); */
 
 //body parser middleware
-app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
+// //Setting up of routes
+app.use('/auth', auth);
+app.use('/api/directions', directions);
+app.use('/api/users', users);
+app.use('/api/push', push);
+app.use('/api/notifications', notifications);
 
-app.get('/', (req, res, next) => {
-    res.send('Hello World!');
-});
+if (process.env.NODE_ENV === 'production') {
+    //set static folder
+    app.use(express.static('frontend/build'));
 
-
-
-
-// auth with google+
-app.get('/auth/google', passport.authenticate('google', {
-    scope: ['profile', 'email']
-}));
-
-// callback route for google to redirect to
-// hand control to passport to use code to grab profile info
-app.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
-    // res.send(req.user);
-    res.redirect("http://localhost:3000/home");
-});
-
-// create home route
-app.get('/', (req, res) => {
-    res.send("hell oworld");
-});
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.listen(5000, () => {
-	console.log("App working in port 5000");
-});
+const port = process.env.PORT || 5000;
+app.listen(port, () => console.log(`Server running in port ${port}`));

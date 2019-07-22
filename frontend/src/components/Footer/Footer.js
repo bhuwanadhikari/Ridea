@@ -14,7 +14,7 @@ class NavBar extends Component {
                     </div>
                     <div className="Spacer"></div>
                     <div className='LocateButtonWrapper'>
-                        <div className="ButtonEnclosure">
+                        <div className="ButtonEnclosure" onClick = {this.props.locateClicked}>
                         <img className='LocateIcon'  alt='Locate icon of ridea' src={Locate}></img>
                         </div>
                     </div>

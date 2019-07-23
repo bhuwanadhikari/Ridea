@@ -79,6 +79,7 @@ router.get('/requested-by', passport.authenticate('jwt', { session: false }), (r
 router.post('/respond', passport.authenticate('jwt', { session: false }), (req, res) => {
 
     const { respondedRoutes } = req.body;
+    console.log("Requested Body data is", req.body);
     const updateFunc = async () => {
         await (async () => {
             for (var aRoute of respondedRoutes) {
@@ -88,12 +89,12 @@ router.post('/respond', passport.authenticate('jwt', { session: false }), (req, 
 
 
                 if (aRoute.responseStatus === "Accepted") {
-                    onAccept(aRoute, req.user.id);
+                    await onAccept(aRoute, req.user.id);
                 }
 
 
                 if (aRoute.responseStatus === "Rejected") {
-                    onReject(aRoute, req.user.id);
+                    await onReject(aRoute, req.user.id);
                 }
             }
         })();

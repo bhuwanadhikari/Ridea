@@ -15,7 +15,11 @@ class AcceptReject extends Component {
             el.responseStatus = "Rejected";
         });
         activeDirection.responseStatus = 'Accepted';
-        respondedRoutes.push(activeDirection);
+
+        const buffActiveDir = activeDirection;
+        delete buffActiveDir.directionData;
+
+        respondedRoutes.push(buffActiveDir);
         respondedRoutes = [...respondedRoutes, ...tempArray];
         respondedRoutes = respondedRoutes.filter((respondedRoute, index) => respondedRoutes.indexOf(respondedRoute) === index);
 

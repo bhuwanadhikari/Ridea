@@ -179,7 +179,7 @@ class SideDrawer extends React.Component {
                         </div>
 
 
-                        {
+                        {/*
                             this.state.showActivities &&
                             (
                                 <div className="RequestsBody">
@@ -197,7 +197,7 @@ class SideDrawer extends React.Component {
                                     </div>
                                 </div>
                             )
-                        }
+                            */}
 
                         <div className="ListWrapper">
                             <img className="ListImg" src={feedback} alt="Ridea Feedback" />

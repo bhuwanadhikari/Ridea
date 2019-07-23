@@ -10,7 +10,7 @@
     "server": "nodemon server.js --ignore frontend",
     "frontend": "npm start --prefix frontend",
     "rtserver": "nodemon rtserver.js --ignore frontend",
-    "dev": "concurrently \"npm run server \" \"npm run frontend \" \" npm run rtserver \"",
+    "ridea": "concurrently \"npm run server \" \"npm run frontend \" \" npm run rtserver \"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "repository": {

@@ -15,6 +15,10 @@ const DirectionSchema = new Schema({
     rideData: {
         type: Object,
         required: true,
+    },
+    isOpen: {
+        type: Boolean,
+        default: true,
     }
 },
     { timestamps: true }

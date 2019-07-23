@@ -13,7 +13,7 @@ router.post('/matched-routes', passport.authenticate('jwt', { session: 'false' }
     // Find all of the matching routes and algorithm for matching here
 
     Direction
-        .find({ owner: { $ne: req.user.id } })
+        .find({ $and: [{owner: { $ne: req.user.id }}, {isOpen: true} ]})
         .select('_id')
         .then((matchedRoutes) => {
             console.log(matchedRoutes, "is the matched routes");

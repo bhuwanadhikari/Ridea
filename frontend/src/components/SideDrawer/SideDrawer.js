@@ -6,7 +6,7 @@ import axios from 'axios';
 import Aux from '../../hoc/Auxi';
 import BackDrop from '../../ui/BackDrop/BackDrop';
 import Modal from '../../ui/Modal/Modal';
-import Notifications from '../../containers/Requests/Requests';
+import Requests from '../../containers/Requests/Requests';
 import store from '../../redux/store/store';
 import setAuthToken from '../../utils/setAuthToken';
 import home from '../../img/SidebarImg/home.svg';
@@ -16,6 +16,7 @@ import routeIcon from '../../img/SidebarImg/routeIcon.png';
 import requestsIcon from '../../img/SidebarImg/requestsIcon.png';
 import { poleData } from '../../redux/actions/action';
 import Activities from '../../containers/Activities/Activities';
+import Notifications from '../../containers/Notifications/Notifications';
 import './SideDrawer.css';
 
 class SideDrawer extends React.Component {
@@ -24,8 +25,9 @@ class SideDrawer extends React.Component {
         super(props)
 
         this.state = {
-            showNotificationsModal: false,
+            showRequestsModal: false,
             showActivities: false,
+            showNotifications: false,
             loading: false,
             activityArray: []
         }
@@ -47,8 +49,9 @@ class SideDrawer extends React.Component {
     }
 
 
-    onNotificationClickHandler = () => {
-        this.setState({ showNotificationsModal: true, loading: true });
+
+    onRequestsClickHandler = () => {
+        this.setState({ showRequestsModal: true, loading: true });
 
         axios
             .get('/api/notifications/requested-by')
@@ -77,24 +80,34 @@ class SideDrawer extends React.Component {
                 showActivities: true
             }
         });
-
         this.props.drawerClosed();
-
-
-
-
-
     };
 
-    onActivitiesCloseHandler = (e) => [
+
+    onNotiClickHandler = () => {
+
+        console.log('Notifications has been clicked');
+        this.setState((state, props) => {
+            return {
+                showNotifications: true
+            }
+        });
+        this.props.drawerClosed();
+    }
+
+
+    onActivitiesCloseHandler = (e) => {
         this.setState({ showActivities: false })
-    ]
+    }
+    onNotiCloseHandler = (e) => {
+        this.setState({showNotifications: false});
+    }
 
     onModalCloseHandler = () => {
-        if (!this.state.showNotificationsModal) {
+        if (!this.state.showRequestsModal) {
             return;
         }
-        this.setState({ showNotificationsModal: false });
+        this.setState({ showRequestsModal: false });
         store.dispatch({
             type: 'SET_RESPONSE_PROGRESS',
             payload: 'REQUESTEDBY_IS_FETCHED'
@@ -106,10 +119,10 @@ class SideDrawer extends React.Component {
         })
     }
 
-    setNotificationModal = (status) => {
+    setRequestsModal = (status) => {
         this.setState((state, props) => {
             return {
-                showNotificationsModal: status
+                showRequestsModal: status
             }
         })
 
@@ -119,9 +132,9 @@ class SideDrawer extends React.Component {
 
     render() {
 
-        // console.log("Activity array is ", this.state.activityArray);
+        console.log("Activity array is now ", this.state.activityArray);
 
-        var { requestedBy, requestedByPopulated, rejectedBy } = this.props.bell;
+        var { requestedBy, requestedByPopulated, rejectedBy, requestedTo, rejectedTo } = this.props.bell;
 
         if (requestedBy.length !== requestedByPopulated.length) {
             this.onModalCloseHandler();
@@ -171,7 +184,16 @@ class SideDrawer extends React.Component {
                         >
                             <img className="ListImg" src={requestsIcon} alt="Ridea Feedback" />
                             <div className="LabelWrapper">
-                                Activities <span className="SideDrawerSpan">({`${requestedBy.length},${rejectedBy.length}`})</span>
+                                Activities <span className="SideDrawerSpan">({`${requestedTo.length},${rejectedTo.length}`})</span>
+                            </div>
+                        </div>
+
+                        <div className="ListWrapper"
+                            onClick={this.onNotiClickHandler}
+                        >
+                            <img className="ListImg" src={requestsIcon} alt="Ridea Feedback" />
+                            <div className="LabelWrapper">
+                                Notifications <span className="SideDrawerSpan">({`${requestedBy.length},${rejectedBy.length}`})</span>
                             </div>
                         </div>
 
@@ -220,6 +242,7 @@ class SideDrawer extends React.Component {
                                 console.log('Logged oute');
                                 localStorage.removeItem('jwtToken');
                                 setAuthToken(false);
+                                //reset the whole store
                                 store.dispatch({
                                     type: 'SET_USER',
                                     payload: {}
@@ -236,7 +259,7 @@ class SideDrawer extends React.Component {
 
 
 
-                {/*----------- Notifications List Modal   --------------------------------------*/}
+                {/*----------- Requests List Modal   --------------------------------------*/}
 
                 <Modal
                     show={
@@ -245,10 +268,13 @@ class SideDrawer extends React.Component {
                     modalClosed={this.onModalCloseHandler}
                     fromTop='27%'
                 >
-                    <Notifications notificationData={requestedBy} setNotificationModal={this.setNotificationModal} />
+                    <Requests
+                        notificationData={requestedBy}
+                        setNotificationModal={this.setNotificationModal}
+                    />
                 </Modal>
 
-                {/*----------- Notifications List Modal   --------------------------------------*/}
+                {/*----------- Activities List Modal   --------------------------------------*/}
                 <Modal
                     show={
                         this.state.showActivities
@@ -260,6 +286,21 @@ class SideDrawer extends React.Component {
                         activityArray={this.props.bell.activityData}
                     />
                 </Modal>
+
+                {/*----------- Notifications List Modal   --------------------------------------*/}
+                <Modal
+                    show={
+                        this.state.showNotifications
+                    }
+                    modalClosed={this.onNotiCloseHandler}
+                    fromTop='27%'
+                >
+                    <Notifications
+                        notiArray={this.props.bell.activityData}
+                    />
+                </Modal>
+
+                
 
             </Aux>
         )

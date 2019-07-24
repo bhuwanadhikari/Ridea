@@ -508,7 +508,7 @@ class Maps extends Component {
                     }}
                     fromTop='27%'
                 >
-                    No any matching routes for the routes you entere
+                    Matching routes not found.
                     <button onClick={this.onDoneHandler}>Done</button>
                     <button onClick={this.onCancelAllHandler}>Cancel</button>
                 </Modal>

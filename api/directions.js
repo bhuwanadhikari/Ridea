@@ -13,7 +13,7 @@ router.post('/matched-routes', passport.authenticate('jwt', { session: 'false' }
     // Find all of the matching routes and algorithm for matching here
 
     Direction
-        .find({ $and: [{owner: { $ne: req.user.id }}, {isOpen: true} ]})
+        .find({ $and: [{ owner: { $ne: req.user.id } }, { isOpen: true }] })
         .select('_id')
         .then((matchedRoutes) => {
             console.log(matchedRoutes, "is the matched routes");
@@ -58,9 +58,9 @@ router.get('/get-by-owner', passport.authenticate('jwt', { session: 'false' }), 
     User
         .findOne({ _id: req.user.id })
         // .populate(['requestedBy', 'requestedTo', 'rejectedBy', 'rejectedTo'])
-        .then(me => {
+        .then(async me => {
             const concerned = ['requestedBy', 'requestedTo', 'rejectedBy', 'rejectedTo'];
-            (async () => {
+            await (async () => {
                 for (let aTopic of concerned) {
                     for (let owner of me[aTopic]) {
                         await Direction
@@ -78,8 +78,38 @@ router.get('/get-by-owner', passport.authenticate('jwt', { session: 'false' }), 
                             .catch(err => console.log(err, 'err in getting direction by owner'))
                     }
                 }
-                res.status(200).json(activityArr)
             })();
+
+            if (me.acceptedBy) {
+                await Direction
+                    .findOne({ owner: me.acceptedBy })
+                    .populate('owner')
+                    .then(direction => {
+                        activityObj = {
+                            name: direction.owner.name,
+                            did: direction.id,
+                            owner: direction.owner._id,
+                            label: 'acceptedBy'
+                        }
+                        activityArr.push(activityObj);
+                    })
+            }
+            if (me.acceptedTo) {
+                await Direction
+                    .findOne({ owner: me.acceptedTo })
+                    .populate('owner')
+                    .then(direction => {
+                        activityObj = {
+                            name: direction.owner.name,
+                            did: direction.id,
+                            owner: direction.owner._id,
+                            label: 'acceptedTo'
+                        }
+                        activityArr.push(activityObj);
+                    })
+            }
+            res.status(200).json(activityArr)
+
 
         })
         .catch(err => {

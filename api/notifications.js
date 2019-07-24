@@ -62,16 +62,15 @@ router.get('/requested-by', passport.authenticate('jwt', { session: false }), (r
 
                             })
                             .catch((err) => {
-                                console.log(err);
+                                console.log(err, 'in the requested-by api');
                             });
                     }
                 })();
-                console.log(1);
             } else {
                 res.status(200).json([]);
             }
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err, 'in the requested-by api call2'))
 });
 
 

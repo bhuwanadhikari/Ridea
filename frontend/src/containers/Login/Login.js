@@ -96,7 +96,7 @@ class Login extends Component {
             <Button cls="Success" clicked={this.onLoginHandler} >Log In</Button>
 
             <div className="InfoBar">
-               <a href='/'>Sign Up! If ure new to Ridea</a>
+               <a href='/'>Sign Up! If you are new to Ridea.</a>
             </div>
          </div>
       )

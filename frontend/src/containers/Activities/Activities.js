@@ -9,29 +9,42 @@ class Requests extends Component {
     }
 
     render() {
-        const { activityArray } = this.props;
+        var { activityArray } = this.props;
+
+        if (activityArray.length > 0) {
+            activityArray = activityArray.filter((el, ix) => {
+                return (el.label === 'acceptedTo') || (el.label === 'rejectedTo') || (el.label === 'requestedTo');
+            });
+        }
+
+
+
+        const ifNull = (<div className="OneActivity">
+            No recent Activities
+            </div>)
+
+        if (activityArray.length === 0) {
+            return ifNull;
+        }
+
         return (
             <Auxi>
                 {activityArray.map((item, index) => {
                     switch (item.label) {
+                        case 'acceptedTo':
+                            return (<div key={index} className="OneActivity">
+                                You accepted {item.name}
+                            </div>)
                         case 'rejectedTo':
-                            return (<div key = {index} className="OneActivity">
+                            return (<div key={index} className="OneActivity">
                                 You rejected to {item.name}
                             </div>)
-                        case 'rejectedBy':
-                            return (<div key = {index} className="OneActivity">
-                                You are rejected by {item.name}
-                            </div>)
                         case 'requestedTo':
-                            return (<div key = {index} className="OneActivity">
+                            return (<div key={index} className="OneActivity">
                                 You requested to {item.name}
                             </div>)
-                        case 'requestedBy':
-                            return (<div key = {index} className="OneActivity">
-                                You are requested by {item.name}
-                            </div>)
                         default:
-                            return (<div key = {index} className="OneActivity">
+                            return (<div key={index} className="OneActivity">
                                 No recent activities.
                             </div>)
                     }

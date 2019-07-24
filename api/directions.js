@@ -146,11 +146,6 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
         }).catch((err) => {
             console.log(err, 'in the last of addtion api call');
         });
-
-
-
-
-
 });
 
 

@@ -118,7 +118,7 @@ class SignUp extends Component {
 
                <Button cls="Success" clicked={this.onClickHandler} >Sign Up</Button>
                <div className="InfoBar">
-                  <div onClick={this.onLoginClickHandler} className="Info" >Already regesitered? signi In</div>
+                  <div onClick={this.onLoginClickHandler} className="Info" >Already registered? Login here!</div>
                </div>
 
             </div>

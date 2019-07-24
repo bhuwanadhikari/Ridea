@@ -61,10 +61,7 @@ class SideDrawer extends React.Component {
                     store.dispatch({ type: 'SET_RESPONSE_PROGRESS', payload: 'REQUEST_HANGING' });
                 } else {
                     alert("No requests found");
-
                 }
-
-
 
             }).catch((err) => {
                 console.log(err.response.data, 'in the /requested-by wala');
@@ -259,7 +256,9 @@ class SideDrawer extends React.Component {
                     modalClosed={this.onActivitiesCloseHandler}
                     fromTop='27%'
                 >
-                    <Activities activityArray={this.props.bell.activityData} />
+                    <Activities
+                        activityArray={this.props.bell.activityData}
+                    />
                 </Modal>
 
             </Aux>

@@ -13,11 +13,6 @@ import AcceptReject from '../Requests/AcceptReject';
 import './Maps.css';
 import axios from 'axios';
 
-
-
-
-
-
 const {
     withScriptjs,
     withGoogleMap,
@@ -26,9 +21,7 @@ const {
     Marker,
 } = require('react-google-maps');
 
-
 class Maps extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -57,7 +50,6 @@ class Maps extends Component {
                 selected: [],
                 counter: 1
             }
-
         }
     }
 
@@ -68,7 +60,6 @@ class Maps extends Component {
             return { dynamicCenter: { ...state.dynamicCenter } };
         } else return null;
     }
-
 
 
     //All the Update things
@@ -92,9 +83,6 @@ class Maps extends Component {
                 directionsOnShow: null
             })
         }
-
-
-
     }
 
 
@@ -103,7 +91,6 @@ class Maps extends Component {
         let latitude = center.lat();
         let longitude = center.lng();
         this.setState({ dynamicCenter: { lat: latitude, lng: longitude } });
-        // console.log("Update center", this.state.dynamicCenter.lat, this.state.dynamicCenter.lng, "testCenter", this.state.testCenter);
     }
 
 
@@ -164,7 +151,6 @@ class Maps extends Component {
                         .post('/api/directions/matched-routes', {
                             directionData: result,
                             rideData: this.state.rideData,
-                            // selectedRoutes: this.state.matchedRoutes.selected,
                         })
                         .then(matchedRoutes => {
                             console.log("Matching routes has been being fetched");
@@ -181,6 +167,7 @@ class Maps extends Component {
 
             } else {
                 console.error(`error fetching directions ${result}`);
+                this.resetState();
             }
         });
     }
@@ -205,7 +192,7 @@ class Maps extends Component {
                                     loading: false
                                 });
                             } else {
-                                alert("Not direction data is found for the")
+                                alert("Something went wrong");
                             }
                         }).catch((err) => {
                             console.log(err.response.data);
@@ -214,13 +201,7 @@ class Maps extends Component {
             });
         } else {
             this.setState({ progress: 'noContinuing' });
-            //nos show modal: register as independent route?
-
         }
-
-        //loop dialogBottom as the number of elements
-
-
     }
 
 
@@ -556,7 +537,7 @@ class Maps extends Component {
                             || this.state.progress === 'continuing')}
                 >
                     {this.state.progress === 'directionIsFetched'
-                        ? "YOur routee has been fethetched"
+                        ? "Your route has been fetched."
                         : dialogMessage
                     }
                     {this.state.progress === 'directionIsFetched'

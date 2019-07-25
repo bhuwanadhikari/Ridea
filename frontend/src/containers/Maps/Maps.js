@@ -138,6 +138,14 @@ class Maps extends Component {
             origin: new window.google.maps.LatLng(pickupPoint.lat, pickupPoint.lng),
             destination: new window.google.maps.LatLng(dropPoint.lat, dropPoint.lng),
             travelMode: window.google.maps.TravelMode.DRIVING,
+        //     waypoints: [
+        //         {
+        //            location: new window.google.maps.LatLng(28.2183958, 83.98375250000004)
+        //         },
+        //         {
+        //            location: new window.google.maps.LatLng(28.2083132,83.99896179999996)
+        //         }
+        //    ]
         }, (result, status) => {
             console.log("Money has been consumed------------------------------------------------------------------");
             if (status === window.google.maps.DirectionsStatus.OK) {

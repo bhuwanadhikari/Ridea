@@ -6,14 +6,59 @@
 	top: 0;
 	left: 0;
 	max-width: 400px;
-	width: 70vw;
+	width: 60vw;
 	z-index: 3500;
 	transition: all 0.75s ease-in-out;
 }
-.ProfileContainer {
+
+.ProfileContainer1 {
 	width: 100%;
-	height: 200px;
-	box-shadow: 1px 1px 6px var(--lighter-theme);
+	height: 150px;
+}
+.SideDrawerHeader1 {
+    position: absolute;
+    display: block;
+    width: 100%;
+    z-index: 3600;
+}
+
+.LeftArrow1 {
+    height: 24px;
+    float: left;
+    padding: 10px;
+    cursor: pointer;
+}
+
+
+.MainProfile1{
+    display: block;
+    position: relative;
+    top: 20px;
+}
+
+.MoreIcon1 {
+    height: 22px;
+    padding: 12px 14px;
+    float: right;
+    cursor: pointer;
+}
+.UserIcon1 {
+    width: 90px;
+    
+  
+}
+
+
+.ProfileName1 {
+    position: relative;
+    top: 20px;
+    font-weight: bold;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid silver;
+    color: #123456
+
 }
 
 .ListWrapper {

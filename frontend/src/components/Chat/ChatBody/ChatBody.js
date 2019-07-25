@@ -305,8 +305,6 @@ class ChatBody extends Component {
                                     placeholder="Type your message"
                                     onChange={this.handleOnChange}
                                     value={this.state.message.body}
-                                    autoFocus={true}
-                                    ref={(input) => { this.messageInput = input; }}
                                 />
                                 <button
                                     type='submit'

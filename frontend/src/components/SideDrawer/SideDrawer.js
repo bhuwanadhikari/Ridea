@@ -12,11 +12,16 @@ import setAuthToken from '../../utils/setAuthToken';
 import home from '../../img/SidebarImg/home.svg';
 import notification from '../../img/SidebarImg/notification.svg';
 import feedback from '../../img/SidebarImg/feedback.svg';
+import timeline from '../../img/SidebarImg/timeline.svg';
 import routeIcon from '../../img/SidebarImg/routeIcon.png';
+import leftArrow from '../../img/left-arrow.svg'
+import user from '../../img/user.svg'
+import more from '../../img/more.svg'
 import requestsIcon from '../../img/SidebarImg/requestsIcon.png';
 import { poleData } from '../../redux/actions/action';
 import Activities from '../../containers/Activities/Activities';
 import Notifications from '../../containers/Notifications/Notifications';
+import EditProfile from './EditProfile';
 import './SideDrawer.css';
 
 class SideDrawer extends React.Component {
@@ -28,20 +33,32 @@ class SideDrawer extends React.Component {
             showRequestsModal: false,
             showActivities: false,
             showNotifications: false,
+            showEditProfile: false,
             loading: false,
-            activityArray: []
+            activityArray: [],
+            myName: ''
         }
     }
 
 
     componentDidMount() {
-        const { name } = this.props.auth.user;
-        window.document.title = name;
+
+        axios
+            .get('/api/users/my-data')
+            .then((result) => {
+                this.setState({ myName: result.data.name });
+                window.document.title = result.data.name;
+
+            }).catch((err) => {
+                console.log('error in getting my data in sidedrwawred', err)
+            });
+
+
         this.props.poleData();
 
         this.timer = setInterval(() => {
             this.props.poleData();
-        }, 5000);
+        }, 15000);
     }
 
     componentWillUnmount() {
@@ -95,12 +112,26 @@ class SideDrawer extends React.Component {
         this.props.drawerClosed();
     }
 
+    onEditHandler = () => {
+
+        console.log('edit profile has been clicked');
+        this.setState((state, props) => {
+            return {
+                showEditProfile: true
+            }
+        });
+        this.props.drawerClosed();
+    }
+
 
     onActivitiesCloseHandler = (e) => {
         this.setState({ showActivities: false })
     }
     onNotiCloseHandler = (e) => {
-        this.setState({showNotifications: false});
+        this.setState({ showNotifications: false });
+    }
+    onEditCloseHandler = (e) => {
+        this.setState({ showEditProfile: false });
     }
 
     onModalCloseHandler = () => {
@@ -128,6 +159,11 @@ class SideDrawer extends React.Component {
 
     }
 
+    updateName = (newName) => {
+        this.setState({ myName: newName });
+        window.document.title = newName;
+    }
+
 
 
     render() {
@@ -143,6 +179,8 @@ class SideDrawer extends React.Component {
 
 
         let { show } = this.props;
+        const { name } = this.props.auth.user;
+
 
         return (
             <Aux>
@@ -153,47 +191,59 @@ class SideDrawer extends React.Component {
                         transform: show ? 'translateX(0)' : 'translateX(-100vw)'
                     }}
                 >
-                    <div className="ProfileContainer"></div>
+                    <div className="ProfileContainer1">
+                        <div className="SideDrawerHeader1">
+                            <img
+                                src={leftArrow}
+                                className='LeftArrow1'
+                                alt=""
+                                onClick={this.props.drawerClosed}
+                            />
+                            <img
+                                src={more}
+                                className="MoreIcon1"
+                                alt="More icon for Ridea"
+                                onClick={this.onEditHandler}
+                            />
+                        </div>
+                        <div className="MainProfile1">
+                            <img src={user} className="UserIcon1" alt="User icon for Ridea" />
+                        </div>
+                        <div className="ProfileName1">{this.state.myName}</div>
+                    </div>
                     <div className="OptionsWrapper">
-
-                        <div className="ListWrapper">
-                            <img className="ListImg" src={home} alt="Ridea Home" />
-                            <div className="LabelWrapper">
-                                Home
-                            </div>
-                        </div>
-
-                        <div className="ListWrapper"
-                            onClick={this.onNotificationClickHandler}
-                        >
-                            <img className="ListImg" src={notification} alt="Ridea Notification" />
-                            <div className="LabelWrapper">
-                                Requests{requestedBy && `(${requestedBy.length})`}
-                            </div>
-                        </div>
 
                         <div className="ListWrapper">
                             <img className="ListImg" src={routeIcon} alt="Ridea Feedback" />
                             <div className="LabelWrapper">
                                 My Route
-                            </div>
+                        </div>
                         </div>
 
                         <div className="ListWrapper"
-                            onClick={this.onActivitiesClickHandler}
+                            onClick={this.onRequestsClickHandler}
                         >
-                            <img className="ListImg" src={requestsIcon} alt="Ridea Feedback" />
+                            <img className="ListImg" src={requestsIcon} alt="Ridea Notification" />
                             <div className="LabelWrapper">
-                                Activities <span className="SideDrawerSpan">({`${requestedTo.length},${rejectedTo.length}`})</span>
+                                Requests{requestedBy && `(${requestedBy.length})`}
                             </div>
                         </div>
 
                         <div className="ListWrapper"
                             onClick={this.onNotiClickHandler}
                         >
-                            <img className="ListImg" src={requestsIcon} alt="Ridea Feedback" />
+                            <img className="ListImg" src={notification} alt="Ridea Feedback" />
                             <div className="LabelWrapper">
-                                Notifications <span className="SideDrawerSpan">({`${requestedBy.length},${rejectedBy.length}`})</span>
+                                Notifications {/* <span className="SideDrawerSpan">({`${requestedBy.length},${rejectedBy.length}`})</span> */}
+                            </div>
+                        </div>
+
+                        <div className="ListWrapper"
+                            onClick={this.onActivitiesClickHandler}
+                        >
+                            <img className="ListImg" src={timeline} alt="Ridea Feedback" />
+                            <div className="LabelWrapper">
+                                Activities {/* <span className="SideDrawerSpan">({`${requestedTo.length},${rejectedTo.length}`})</span> */}
                             </div>
                         </div>
 
@@ -300,7 +350,18 @@ class SideDrawer extends React.Component {
                     />
                 </Modal>
 
-                
+                {/*----------- Update Name List Modal   --------------------------------------*/}
+                <Modal
+                    show={
+                        this.state.showEditProfile
+                    }
+                    modalClosed={this.onEditCloseHandler}
+                    fromTop='27%'
+                >
+                    <EditProfile onEditCloseHandler={this.onEditCloseHandler} updateName={this.updateName} />
+                </Modal>
+
+
 
             </Aux>
         )

@@ -1,6 +1,7 @@
 
 const initialState = {
     showChat: false,
+    realLocation: {}
 };
 
 export default function (state = initialState, action) {
@@ -9,6 +10,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 showChat: action.payload
+            }
+        case 'SET_LOCATION':
+            return {
+                ...state,
+                realLocation: action.payload
             }
         default:
             return state;

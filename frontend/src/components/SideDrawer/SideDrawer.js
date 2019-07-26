@@ -43,6 +43,7 @@ class SideDrawer extends React.Component {
 
     componentDidMount() {
 
+
         axios
             .get('/api/users/my-data')
             .then((result) => {
@@ -55,10 +56,12 @@ class SideDrawer extends React.Component {
 
 
         this.props.poleData();
+        this.locateMe();
 
         this.timer = setInterval(() => {
             this.props.poleData();
-        }, 15000);
+            this.locateMe();
+        }, 5000);
     }
 
     componentWillUnmount() {
@@ -164,11 +167,30 @@ class SideDrawer extends React.Component {
         window.document.title = newName;
     }
 
+    locateMe = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const newLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    }
+                    store.dispatch({
+                        type: 'SET_LOCATION',
+                        payload: newLocation
+                    })
+                }
+            );
+        } else {
+            console.log("Location cannot be updated");
+        }
+    }
+
 
 
     render() {
 
-        console.log("Activity array is now ", this.state.activityArray);
+        // console.log("Activity array is now ", this.state.activityArray);
 
         var { requestedBy, requestedByPopulated, rejectedBy, requestedTo, rejectedTo } = this.props.bell;
 

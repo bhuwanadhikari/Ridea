@@ -32,7 +32,10 @@ class ChatBody extends Component {
 
 
     componentDidMount() {
-
+        const { socket } = this.state;
+        socket.on('GET_HIS_LOCATION', hisLocation => {
+            // console.log('His Location is', hisLocation);
+        })
     }
 
 
@@ -79,9 +82,19 @@ class ChatBody extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         this.scrollDown();
-        if (this.messageInput) {
-            this.messageInput.focus();
+
+
+        const trasferLocation = (to) => {
+            //transfer your location
+            const { realLocation } = this.props.nav;
+            const { socket } = this.state;
+            if (prevProps.nav.realLocation !== realLocation) {
+                // console.log('New location is', realLocation);
+                socket.emit('LOCATE', { realLocation: realLocation, to: to })
+            }
+
         }
+
 
         //For getting the name of pal and initiate the connection
         const { acceptedTo, acceptedBy } = this.props.bell;
@@ -90,43 +103,39 @@ class ChatBody extends Component {
                 this.initConnection();
                 this.getPalName(acceptedBy);
             }
+
+            trasferLocation(acceptedBy)
         }
         if (acceptedTo && !acceptedBy) {
             if (prevProps.bell.acceptedTo !== acceptedTo) {
                 this.initConnection();
                 this.getPalName(acceptedTo);
             }
+
+            trasferLocation(acceptedTo)
         }
 
+
     }
 
 
 
 
 
-    initSocket = () => {
-        const socket = io(socketUrl);
-        socket.on('connect', () => {
-            console.log('Connected');
-        })
-        this.setState({ socket });
-    }
+
 
     initConnection = () => {
         const { socket } = this.state;
         socket.on('GET_MESSAGE', (newMsg) => {
             console.log("message received", newMsg);
             newMsg.createdAt = this.manageTime(newMsg.createdAt);
-            
+
             const { messages } = this.state;
             messages.push(newMsg);
             this.setState({ messages });
         });
 
         const myId = this.props.auth.user.id;
-        console.log("Id of mine is", myId);
-        console.log("Id of the other pal is", this.props.bell.acceptedBy);
-        console.log("Id of the other pal is", this.props.bell.acceptedTo);
 
         socket.emit('VERIFY_USER', myId, this.setUser);
         socket.on('REMOVED', (riders) => {
@@ -158,14 +167,14 @@ class ChatBody extends Component {
     }
 
     manageTime = (plain) => {
-        console.log('Plain date is :', plain);
+        // console.log('Plain date is :', plain);
         var thatTime = new Date(plain).getTime();
         var currentTime = new Date().getTime();
 
         const thatDay = new Date(thatTime).getDate();
         const currentDay = new Date(currentTime).getDate();
 
-        let theTime =  new Date(plain).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        let theTime = new Date(plain).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 
         if (thatDay !== currentDay) {
             return `Yesterday ${theTime}`
@@ -176,7 +185,6 @@ class ChatBody extends Component {
 
     setUser = (data) => {
         if (data) {
-            console.log("New user will be added");
             const { socket } = this.state;
             const userId = this.props.auth.user.id;
             const palId = this.getPalId();
@@ -330,11 +338,14 @@ class ChatBody extends Component {
 ChatBody.propTypes = {
     auth: PropTypes.object.isRequired,
     bell: PropTypes.object.isRequired,
+    nav: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
     auth: state.auth,
-    bell: state.bell
+    nav: state.nav,
+    bell: state.bell,
+
 })
 
 export default connect(mapStateToProps)(ChatBody);

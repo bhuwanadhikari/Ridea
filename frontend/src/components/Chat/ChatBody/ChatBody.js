@@ -7,7 +7,7 @@ import './ChatBody.css';
 
 import io from 'socket.io-client';
 
-const socketUrl = 'http://localhost:3231';
+const socketUrl = 'https://ridea-chat.herokuapp.com';
 
 
 class ChatBody extends Component {
@@ -34,7 +34,7 @@ class ChatBody extends Component {
     componentDidMount() {
         const { socket } = this.state;
         socket.on('GET_HIS_LOCATION', hisLocation => {
-            // console.log('His Location is', hisLocation);
+            console.log('His Location is', hisLocation);
         })
     }
 
@@ -89,7 +89,7 @@ class ChatBody extends Component {
             const { realLocation } = this.props.nav;
             const { socket } = this.state;
             if (prevProps.nav.realLocation !== realLocation) {
-                // console.log('New location is', realLocation);
+                console.log('New location is', realLocation);
                 socket.emit('LOCATE', { realLocation: realLocation, to: to })
             }
 

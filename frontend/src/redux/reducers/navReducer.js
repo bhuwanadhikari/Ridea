@@ -1,7 +1,8 @@
 
 const initialState = {
     showChat: false,
-    realLocation: {}
+    realLocation: {},
+    showPalLocation: false,
 };
 
 export default function (state = initialState, action) {
@@ -15,6 +16,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 realLocation: action.payload
+            }
+        case 'SET_SHOW_PAL':
+            return {
+                ...state,
+                showPalLocation: action.payload
             }
         default:
             return state;

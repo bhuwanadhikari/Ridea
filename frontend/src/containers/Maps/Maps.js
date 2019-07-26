@@ -138,14 +138,14 @@ class Maps extends Component {
             origin: new window.google.maps.LatLng(pickupPoint.lat, pickupPoint.lng),
             destination: new window.google.maps.LatLng(dropPoint.lat, dropPoint.lng),
             travelMode: window.google.maps.TravelMode.DRIVING,
-        //     waypoints: [
-        //         {
-        //            location: new window.google.maps.LatLng(28.2183958, 83.98375250000004)
-        //         },
-        //         {
-        //            location: new window.google.maps.LatLng(28.2083132,83.99896179999996)
-        //         }
-        //    ]
+            //     waypoints: [
+            //         {
+            //            location: new window.google.maps.LatLng(28.2183958, 83.98375250000004)
+            //         },
+            //         {
+            //            location: new window.google.maps.LatLng(28.2083132,83.99896179999996)
+            //         }
+            //    ]
         }, (result, status) => {
             console.log("Money has been consumed------------------------------------------------------------------");
             if (status === window.google.maps.DirectionsStatus.OK) {
@@ -455,6 +455,9 @@ class Maps extends Component {
         }
 
 
+
+        const { showPalLocation } = this.props.nav;
+
         return (
             <Auxi>
                 <GoogleMap
@@ -478,6 +481,7 @@ class Maps extends Component {
                             </div>)
                             : null}
 
+                    {/*----------- PickUp point ko marker -----------*/}
 
                     {this.state.progress === 'pickupPointIsSet'
                         ? (<Marker
@@ -487,6 +491,8 @@ class Maps extends Component {
                         >
                         </Marker>)
                         : null}
+                    {/*----------- Drop point ko marker -----------*/}
+
                     {this.state.progress === 'pickupPointIsSet' || this.state.progress === 'dropPointIsSet'
                         ? (<Marker
                             icon={iconMarker}
@@ -495,6 +501,18 @@ class Maps extends Component {
                         >
                         </Marker>)
                         : null}
+
+                    {/*----------- Partner's location ko marker -----------*/}
+
+                    {showPalLocation
+                        ? (<Marker
+                            icon={iconMarker}
+                            position={{ lat: this.state.dropPoint.lat, lng: this.state.dropPoint.lng }}
+                        >
+                        </Marker>)
+                        : null}
+
+
 
                 </GoogleMap >
 
@@ -577,10 +595,12 @@ class Maps extends Component {
 
 Maps.propTypes = {
     bell: PropTypes.object.isRequired,
+    nav: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-    bell: state.bell
+    bell: state.bell,
+    nav: state.nav
 })
 
 

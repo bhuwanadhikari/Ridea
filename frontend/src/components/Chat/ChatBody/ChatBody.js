@@ -3,11 +3,15 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import avatar from '../../../img/avatar.png';
+import more from '../../../img/more.svg'
+import BackButton from '../BackButton/BackButton';
 import './ChatBody.css';
 
-import io from 'socket.io-client';
 
-const socketUrl = 'https://ridea-chat.herokuapp.com';
+import io from 'socket.io-client';
+import store from '../../../redux/store/store';
+
+const socketUrl = 'http://localhost:3231';
 
 
 class ChatBody extends Component {
@@ -18,7 +22,7 @@ class ChatBody extends Component {
         this.state = {
             socket: io(socketUrl),
             canSend: false,
-            palName: '',
+            hisName: '',
             message: {
                 ownerName: '',
                 from: '',
@@ -26,7 +30,8 @@ class ChatBody extends Component {
                 body: '',
             },
 
-            messages: []
+            messages: [],
+            hisStatus: 'Offline'
         }
     }
 
@@ -35,6 +40,27 @@ class ChatBody extends Component {
         const { socket } = this.state;
         socket.on('GET_HIS_LOCATION', hisLocation => {
             console.log('His Location is', hisLocation);
+            if (hisLocation) {
+                this.setState({ hisStatus: 'Online' });
+                store.dispatch({
+                    type: 'SET_HIS_LOCATION',
+                    payload: hisLocation
+                })
+                store.dispatch({
+                    type: 'SET_HIS_STATUS',
+                    payload: 'Online'
+                })
+            } else {
+            }
+        })
+
+        socket.on('HIS_STATUS', status => {
+            this.setState({ hisStatus: status });
+            store.dispatch({
+                type: 'SET_HIS_STATUS',
+                payload: status
+            });
+
         })
     }
 
@@ -78,6 +104,12 @@ class ChatBody extends Component {
         socket.disconnect();
         const userId = this.props.auth.user.id;
         socket.emit('REMOVAL', userId);
+
+        const { acceptedTo, acceptedBy } = this.props.bell;
+        const hisId = acceptedBy || acceptedTo;
+        if (hisId) {
+            socket.emit('GO_OFFLINE', { me: userId, him: hisId })
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -89,7 +121,7 @@ class ChatBody extends Component {
             const { realLocation } = this.props.nav;
             const { socket } = this.state;
             if (prevProps.nav.realLocation !== realLocation) {
-                console.log('New location is', realLocation);
+                // console.log('New location is', realLocation);
                 socket.emit('LOCATE', { realLocation: realLocation, to: to })
             }
 
@@ -101,7 +133,7 @@ class ChatBody extends Component {
         if (!acceptedTo && acceptedBy) {
             if (prevProps.bell.acceptedBy !== acceptedBy) {
                 this.initConnection();
-                this.getPalName(acceptedBy);
+                this.gethisName(acceptedBy);
             }
 
             trasferLocation(acceptedBy)
@@ -109,13 +141,10 @@ class ChatBody extends Component {
         if (acceptedTo && !acceptedBy) {
             if (prevProps.bell.acceptedTo !== acceptedTo) {
                 this.initConnection();
-                this.getPalName(acceptedTo);
+                this.gethisName(acceptedTo);
             }
-
             trasferLocation(acceptedTo)
         }
-
-
     }
 
 
@@ -143,12 +172,12 @@ class ChatBody extends Component {
         })
     }
 
-    getPalName = (palId) => {
+    gethisName = (palId) => {
         axios
             .get(`/api/users/get-user/${palId}`)
             .then((result) => {
                 this.setState({
-                    palName: result.data.name
+                    hisName: result.data.name
                 })
 
             }).catch((err) => {
@@ -228,6 +257,24 @@ class ChatBody extends Component {
         });
     }
 
+    handleShowHim = () => {
+        const { showHisLocation, hisLocation } = this.props.nav;
+        if (this.state.hisStatus === 'Online') {
+            //do job here
+            console.log("parner is online")
+            store.dispatch({
+                type: 'SET_SHOW_HIM',
+                payload: true
+            })
+            store.dispatch({
+                type: 'SET_CHAT',
+                payload: false
+            })
+        } else {
+            alert('Partner is offline');
+        }
+    }
+
     scrollDown = () => {
         if (this.messageEnd) {
             this.messageEnd.scrollIntoView({ behavior: 'smooth' });
@@ -236,11 +283,18 @@ class ChatBody extends Component {
 
 
     render() {
-        const { messages, palName } = this.state;
+
+        const { acceptedBy, acceptedTo } = this.props.bell;
+
+        console.log("His state is", this.state.hisStatus);
+        console.log("AcceptedBy or accpted to is", acceptedBy || acceptedTo);
+        const { messages, hisName } = this.state;
         var myName = this.props.auth.user.name;
         // console.log("message now is:", this.state.message);
         return (
             <div className="ChatContainer clearfix">
+            
+            <BackButton />
 
                 {!this.state.message.to
                     ? <div className="noChat"><b>No shared ride to discuss</b></div>
@@ -253,9 +307,17 @@ class ChatBody extends Component {
                                     <img className="avatar" src={avatar} alt="avatar" />
                                 </div>
                                 <div className="chat-about">
-                                    <div className="chat-with">Chat with {palName}</div>
-                                    <div className="chat-num-messages">Your Ride Partner</div>
+                                    <div className="chat-with">Chat with {hisName}</div>
+
+                                    <div className="chat-num-messages">Ride Partner ({this.state.hisStatus})</div>
                                 </div>
+
+                                <div
+                                    className="SeePartner"
+                                    onClick={this.handleShowHim}
+                                >
+                                    Partner's location</div>
+
                             </div>
 
 
@@ -269,7 +331,7 @@ class ChatBody extends Component {
                                                 <li className="clearfix" key={index}>
                                                     <div className="message-data align-right">
                                                         <span className="message-data-time" >{item.createdAt}</span> &nbsp; &nbsp;
-                                                        <span className="message-data-name" >You</span> <i className="fa fa-circle me"></i>
+                                                        <span className="message-data-name" >You</span>
                                                     </div>
                                                     <div className="message other-message float-right">
                                                         {item.body}
@@ -280,7 +342,7 @@ class ChatBody extends Component {
                                             return (
                                                 <li key={index}>
                                                     <div className="message-data align-left" key={index}>
-                                                        <span className="message-data-name"><i className="fa fa-circle online"></i> {item.ownerName}</span>
+                                                        <span className="message-data-name">{item.ownerName}</span>
                                                         <span className="message-data-time">{item.createdAt}</span>
                                                     </div>
                                                     <div className="message my-message">

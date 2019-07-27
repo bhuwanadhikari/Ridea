@@ -2,7 +2,10 @@
 const initialState = {
     showChat: false,
     realLocation: {},
-    showPalLocation: false,
+
+    showHisLocation: false,
+    hisStatus: 'Offline',
+    hisLocation: {}
 };
 
 export default function (state = initialState, action) {
@@ -17,11 +20,27 @@ export default function (state = initialState, action) {
                 ...state,
                 realLocation: action.payload
             }
-        case 'SET_SHOW_PAL':
+        case 'SET_SHOW_HIM':
             return {
                 ...state,
-                showPalLocation: action.payload
+                showHisLocation: action.payload
             }
+
+        case 'SET_HIS_LOCATION':
+            return {
+                ...state,
+                hisLocation: action.payload
+            }
+
+        case 'SET_HIS_STATUS':
+            return {
+                ...state,
+                hisStatus: action.payload
+            }
+
+
+        case 'RESET_NAV':
+            return initialState
         default:
             return state;
     }

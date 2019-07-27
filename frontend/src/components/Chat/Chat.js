@@ -3,14 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ChatBody from './ChatBody/ChatBody';
 import './Chat.css';
-import ChatToolBar from './ChatToolBar';
 
 class Chat extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            routeBack: '/home'
         }
     }
     render() {
@@ -22,7 +20,6 @@ class Chat extends Component {
                     transform: show ? 'translateX(0)' : 'translateX(100vw)'
                 }}
             >
-                <ChatToolBar />
                 <ChatBody/>
 
             </div>

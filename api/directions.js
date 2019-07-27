@@ -180,6 +180,20 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
 
 
 
+router.get('/have-i', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Direction
+        .findOne({ $and: [{ owner: req.user.id }, { isOpen: true }]})
+        .then((direction) => {
+            if(direction){
+                res.status(200).json({haveI: true});
+            } else {
+                res.status(200).json({haveI: false});
+            }
+        }).catch((err) => {
+            res.status(400).json(err);
+        });
+});
+
 
 
 

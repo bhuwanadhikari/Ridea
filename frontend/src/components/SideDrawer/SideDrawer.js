@@ -22,6 +22,7 @@ import { poleData } from '../../redux/actions/action';
 import Activities from '../../containers/Activities/Activities';
 import Notifications from '../../containers/Notifications/Notifications';
 import EditProfile from './EditProfile';
+import { logout } from '../../redux/actions/action';
 import './SideDrawer.css';
 
 class SideDrawer extends React.Component {
@@ -52,6 +53,15 @@ class SideDrawer extends React.Component {
 
             }).catch((err) => {
                 console.log('error in getting my data in sidedrwawred', err)
+            });
+
+        axios
+            .get('/api/directions/have-i')
+            .then((result) => {
+                console.log("Do I have registered any routes", result.data);
+                store.dispatch({type:'SET_HAVEI_REGISTERED', payload: result.data.haveI})
+            }).catch((err) => {
+                console.log('Error in have-i', err.response.data)
             });
 
 
@@ -312,13 +322,7 @@ class SideDrawer extends React.Component {
                         <div className="ListWrapper"
                             onClick={() => {
                                 console.log('Logged oute');
-                                localStorage.removeItem('jwtToken');
-                                setAuthToken(false);
-                                //reset the whole store
-                                store.dispatch({
-                                    type: 'SET_USER',
-                                    payload: {}
-                                });
+                                this.props.logout();
                             }}
                         >
                             <div className="LabelWrapper">
@@ -342,7 +346,7 @@ class SideDrawer extends React.Component {
                 >
                     <Requests
                         notificationData={requestedBy}
-                        setNotificationModal={this.setNotificationModal}
+                        setRequestsModal={this.setRequestsModal}
                     />
                 </Modal>
 
@@ -395,6 +399,7 @@ SideDrawer.propTypes = {
     bell: PropTypes.object,
     auth: PropTypes.object.isRequired,
     poleData: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -403,4 +408,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { poleData })(SideDrawer);
+export default connect(mapStateToProps, { poleData, logout })(SideDrawer);

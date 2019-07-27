@@ -1,9 +1,10 @@
 import axios from 'axios';
+import setAuthToken from '../../utils/setAuthToken';
 
 
 
 
-export const poleData = () =>  async dispatch => {
+export const poleData = () => async dispatch => {
     await axios
         .get('/api/users/my-data')
         .then((result) => {
@@ -47,4 +48,14 @@ export const poleData = () =>  async dispatch => {
         }).catch((err) => {
             console.log(err.response.data, 'in the requested-by wala');
         });
+}
+export const logout = () => async dispatch => {
+    console.log('Logged oute');
+    localStorage.removeItem('jwtToken');
+    setAuthToken(false);
+    //reset the whole store
+    dispatch({type: 'SET_USER',payload: {}});
+    dispatch({type: 'RESET_NAV'});
+    dispatch({type: 'RESET_BELL'});
+    window.document.title = "Ridea";
 }

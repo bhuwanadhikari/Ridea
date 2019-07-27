@@ -17,7 +17,12 @@ module.exports = function (socket) {
             riders[realLocation.to].socket.emit('GET_HIS_LOCATION', {lat: realLocation.realLocation.lat, lng: realLocation.realLocation.lng});
         } else {
             console.log("The partner is offline");
+            socket.emit('HIS_STATUS', 'Offline');
         }
+    })
+
+    socket.on('GO_OFFLINE', ({me, him}) => {
+        console.log("Me is:", me, 'him is ', him);
     })
 
     socket.on('SEND_MESSAGE', (message) => {

@@ -8,10 +8,13 @@ import Modal from '../../ui/Modal/Modal';
 import DialogBottom from '../../ui/DialogBottom/DialogBottom';
 import Spinner from '../../ui/Spinnner/Spinner';
 import AcceptReject from '../Requests/AcceptReject';
+import HisLocation from './HisLocation';
+import store from '../../redux/store/store';
 
 // import Pindrop from './Pindrop/Pindrop';
 import './Maps.css';
 import axios from 'axios';
+const partner = require('../../img/mapImg/pickuppoint.png');
 
 const {
     withScriptjs,
@@ -384,6 +387,7 @@ class Maps extends Component {
             })
             .then(addedRoute => {
                 console.log("Added route:", addedRoute.data);
+                store.dispatch({type:'SET_HAVEI_REGISTERED', payload: true})
                 this.resetState();
             })
             .catch(err => {
@@ -422,7 +426,12 @@ class Maps extends Component {
         this.resetState();
     }
 
-
+    handleDoneLocation = () => {
+        store.dispatch({
+            type: 'SET_SHOW_HIM',
+            payload: false
+        })
+    }
 
 
     render() {
@@ -440,13 +449,22 @@ class Maps extends Component {
             );
         }
 
-        let iconMarker = new window.google.maps.MarkerImage(
-            require('../../img/mapImg/point.png'),
+        var hisMarker = new window.google.maps.MarkerImage(
+            "https://pbs.twimg.com/media/EAfYZi9VUAAqWKF?format=png",
             null, /* size is determined at runtime */
-            (20, 20), /* origin is 0,0 */
+            null, /* origin is 0,0 */
             null, /* anchor is bottom center of the scaled image */
-            new window.google.maps.Size(42, 42)
-        );
+            new window.google.maps.Size(145, 84)
+        )
+
+        var myMarker = new window.google.maps.MarkerImage(
+            "https://i.ibb.co/R44LD9K/my-Location-1.png",
+            null, /* size is determined at runtime */
+            null, /* origin is 0,0 */
+            null, /* anchor is bottom center of the scaled image */
+            new window.google.maps.Size(88, 88)
+        )
+
 
 
 
@@ -456,7 +474,10 @@ class Maps extends Component {
 
 
 
-        const { showPalLocation } = this.props.nav;
+        const { hisLocation, showHisLocation, hisStatus } = this.props.nav;
+        const { acceptedTo, acceptedBy, haveIRegistered } = this.props.bell;
+        const isShared = acceptedBy || acceptedTo;
+        console.log('We got the output like this', hisLocation, showHisLocation, hisStatus);
 
         return (
             <Auxi>
@@ -469,33 +490,52 @@ class Maps extends Component {
                 >
                     {this.state.directionsOnShow && (<DirectionsRenderer directions={this.state.directionsOnShow} />)}
 
+
+
+                    {/*----------- Green Pickup point -----------*/}
                     {
-                        (this.state.progress === null && !this.props.bell.responseProgress) || (this.state.progress === 'pickupPointIsSet')
+                        (this.state.progress === null && !this.props.bell.responseProgress)
+                         && !showHisLocation && !isShared && !haveIRegistered
                             ? (<div className="MapMarker">
                                 <img
                                     onClick={this.onMarkerClickHandler}
                                     className="MapMarkerImage"
-                                    src={require('../../img/mapImg/pindrop.png')}
-                                    alt="Map marker of Ridea app, taxi and ride sharing app Nepal and Pokhara"
+                                    src={require('../../img/mapImg/pick.svg')}
+                                    alt=""
                                 />
                             </div>)
                             : null}
 
-                    {/*----------- PickUp point ko marker -----------*/}
+                    {/*----------- Pink Drop point -----------*/}
 
+                    {
+                        (this.state.progress === 'pickupPointIsSet')
+                         && !showHisLocation && !isShared && !haveIRegistered
+                            ? (<div className="MapMarker">
+                                <img
+                                    onClick={this.onMarkerClickHandler}
+                                    className="MapMarkerImage"
+                                    src={require('../../img/mapImg/drop.svg')}
+                                    alt=""
+                                />
+                            </div>)
+                            : null}
+
+
+
+                    {/*----------- PickUp point ko marker -----------*/}
                     {this.state.progress === 'pickupPointIsSet'
                         ? (<Marker
-                            icon={iconMarker}
                             onClick={this.onPickupPointClickHandler}
                             position={{ lat: this.state.pickupPoint.lat, lng: this.state.pickupPoint.lng }}
                         >
                         </Marker>)
                         : null}
-                    {/*----------- Drop point ko marker -----------*/}
 
+                    {/*----------- Drop point ko marker -----------*/}
                     {this.state.progress === 'pickupPointIsSet' || this.state.progress === 'dropPointIsSet'
                         ? (<Marker
-                            icon={iconMarker}
+
                             onClick={this.onPickupPointClickHandler}
                             position={{ lat: this.state.dropPoint.lat, lng: this.state.dropPoint.lng }}
                         >
@@ -503,14 +543,25 @@ class Maps extends Component {
                         : null}
 
                     {/*----------- Partner's location ko marker -----------*/}
-
-                    {showPalLocation
+                    {showHisLocation
                         ? (<Marker
-                            icon={iconMarker}
-                            position={{ lat: this.state.dropPoint.lat, lng: this.state.dropPoint.lng }}
+                            icon={hisMarker}
+                            position={hisLocation}
                         >
                         </Marker>)
                         : null}
+
+                    {/*----------- My location golo point -----------*/}
+
+                    {
+                        isShared || haveIRegistered
+                            ? (<Marker
+                                icon={myMarker}
+                                position={this.props.nav.realLocation}
+                            >
+                            </Marker>)
+                            : null}
+
 
 
 
@@ -585,6 +636,15 @@ class Maps extends Component {
                     }
                 >
                     <AcceptReject />
+                </DialogBottom>
+
+                {/*----------- Partner's Location Bottom Dialog -----------*/}
+                <DialogBottom
+                    show={
+                        this.props.nav.showHisLocation
+                    }
+                >
+                    <HisLocation onLocate={this.props.onLocateClick} onDone = {this.handleDoneLocation} />
                 </DialogBottom>
 
 

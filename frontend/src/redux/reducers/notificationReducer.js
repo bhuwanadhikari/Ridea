@@ -17,6 +17,8 @@ const initialState = {
     activeDirection: null,
     respondedRoutes: [],
 
+    haveIRegistered: false,
+
     shared: {
         status: false,
         with: null
@@ -62,6 +64,10 @@ export default function (state = initialState, action) {
             return { ...state, activeDirection: action.payload }
         case 'SET_RESPONDED_ROUTES':
             return { ...state, respondedRoutes: action.payload }
+
+        case 'SET_HAVEI_REGISTERED':
+            return {...state, haveIRegistered: action.payload}
+
         case 'SET_SHARED':
             return {
                 ...state,
@@ -71,6 +77,10 @@ export default function (state = initialState, action) {
                     with: action.payload.with
                 }
             }
+
+
+        case 'RESET_BELL':
+            return initialState
         default:
             return state;
     }

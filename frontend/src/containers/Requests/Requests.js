@@ -31,7 +31,7 @@ class Requests extends Component {
       payload: this.props.bell.requestedByPopulated[index]
     })
 
-    this.props.setNotificationModal(false);
+    this.props.setRequestsModal(false);
 
   }
 

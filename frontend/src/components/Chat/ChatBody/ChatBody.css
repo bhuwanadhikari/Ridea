@@ -7,7 +7,19 @@ li {
 	list-style-type: none;
 }
 .avatar {
-	height: 50px;
+	height: 40px;
+	margin-top: 5px;
+}
+
+
+
+.SeePartner {
+	position: relative;
+	margin-top: 14px;
+	margin-right: 35px;
+	float: right;
+	width: 200px;
+	cursor: pointer;
 }
 
 .chat {
@@ -31,19 +43,20 @@ li {
 	background: #f2f5f8;
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
-    color: #434651;
+	color: #434651;
 }
 .chat .chat-header {
 	padding: 9px;
-	border-bottom: 2px solid white;
+	border-bottom: 2px solid #c9c9c9;
 }
 .chat .chat-header img {
 	float: left;
 }
 .chat .chat-header .chat-about {
 	float: left;
-	padding-left: 10px;
+	padding-left: 5px;
 	margin-top: 6px;
+	font-size: 0.75em;
 }
 .chat .chat-header .chat-with {
 	font-weight: bold;
@@ -51,6 +64,7 @@ li {
 }
 .chat .chat-header .chat-num-messages {
 	color: #92959e;
+	font-size: 1.2em;
 }
 .chat .chat-header .fa-star {
 	float: right;
@@ -61,7 +75,7 @@ li {
 .chat .chat-history {
 	padding: 0 20px;
 	border-bottom: 2px solid white;
-	height: calc(100vh - 112px);
+	height: calc(100vh - 108px);
 	overflow-y: scroll;
 }
 
@@ -94,18 +108,22 @@ li {
 	width: 0;
 	position: absolute;
 	pointer-events: none;
-	border-bottom-color: #60a542;
+	border-bottom-color: rgb(212, 209, 209);
 	border-width: 10px;
 	margin-left: -10px;
 }
 .chat .chat-history .my-message {
-	background: #60a542;
+	background: rgb(212, 209, 209);
+	color: black;
+	font-family: Muli, Arial;
 }
 .chat .chat-history .other-message {
-	background: #5e9cd6;
+	background: #4189d6;
+	font-family: Muli, Arial;
+
 }
 .chat .chat-history .other-message:after {
-	border-bottom-color: #5e9cd6;
+	border-bottom-color: #4189d6;
 	left: 93%;
 }
 .message-to-send {
@@ -192,12 +210,20 @@ li {
 	left: calc(50vw - 110px);
 }
 
+/*For DESKTOPS ONLY*/
 @media only screen and (min-width: 700px) {
 	.chat {
-        width: 700px;
-        margin-left: calc(50% - 350px)
+		width: 700px;
+		margin-left: calc(50% - 350px);
 	}
 	.chat-message {
 		width: 700px;
 	}
+	.MoreLocate {
+		right: calc(50% - 350px + 25px + 40px);
+	}
+}
+
+/*For TABS ONLY*/
+@media only screen and (min-width: 450px) {
 }

@@ -11,7 +11,7 @@ import './ChatBody.css';
 import io from 'socket.io-client';
 import store from '../../../redux/store/store';
 
-const socketUrl = 'http://localhost:3231';
+const socketUrl = 'https://ridea-chat.herokuapp.com/';
 
 
 class ChatBody extends Component {

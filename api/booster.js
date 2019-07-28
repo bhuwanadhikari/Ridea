@@ -8,7 +8,16 @@ const onAccept = async (acceptedRoute, myId) => {
 
 
     await Direction
-        .updateOne({_id: did}, {$set: {isOpen: false}})
+        .updateOne({owner: myId}, {$set: {isOpen: false}})
+        .then((result) => {
+            console.log("Directions is closed");    
+        }).catch((err) => {
+            console.log('Error in updating the isOpen of direction', err);
+        });
+
+
+    await Direction
+        .updateOne({owner: hisId}, {$set: {isOpen: false}})
         .then((result) => {
             console.log("Directions is closed");    
         }).catch((err) => {

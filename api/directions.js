@@ -5,12 +5,17 @@ const User = require('../models/User');
 const Direction = require('../models/Direction');
 router = express();
 
+const {getMatchedRoute} = require('./routeMatchAlgorithm');
+
+
+
 
 
 
 //Pre-addtion of the direction to find the matching route
 router.post('/matched-routes', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
     // Find all of the matching routes and algorithm for matching here
+    console.log("Requested Body is given as", req.body);
 
     Direction
         .find({ $and: [{ owner: { $ne: req.user.id } }, { isOpen: true }] })
@@ -28,6 +33,8 @@ router.post('/matched-routes', passport.authenticate('jwt', { session: 'false' }
         }).catch((err) => {
             console.log(err, 'in matched routes of the app');
         });
+
+        getMatchedRoute(req.body, req.user.id)
 
 
 });

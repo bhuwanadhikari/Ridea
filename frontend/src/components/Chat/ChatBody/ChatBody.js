@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import avatar from '../../../img/avatar.png';
-import more from '../../../img/more.svg'
 import BackButton from '../BackButton/BackButton';
 import './ChatBody.css';
 
@@ -11,7 +10,7 @@ import './ChatBody.css';
 import io from 'socket.io-client';
 import store from '../../../redux/store/store';
 
-const socketUrl = 'https://ridea-chat.herokuapp.com/';
+const socketUrl = 'http://localhost:3231';
 
 
 class ChatBody extends Component {
@@ -286,8 +285,8 @@ class ChatBody extends Component {
 
         const { acceptedBy, acceptedTo } = this.props.bell;
 
-        console.log("His state is", this.state.hisStatus);
-        console.log("AcceptedBy or accpted to is", acceptedBy || acceptedTo);
+        // console.log("His state is", this.state.hisStatus);
+        // console.log("AcceptedBy or accpted to is", acceptedBy || acceptedTo);
         const { messages, hisName } = this.state;
         var myName = this.props.auth.user.name;
         // console.log("message now is:", this.state.message);

@@ -59,9 +59,25 @@ class SideDrawer extends React.Component {
             .get('/api/directions/have-i')
             .then((result) => {
                 console.log("Do I have registered any routes", result.data);
-                store.dispatch({type:'SET_HAVEI_REGISTERED', payload: result.data.haveI})
+                store.dispatch({ type: 'SET_HAVEI_REGISTERED', payload: result.data.haveI })
             }).catch((err) => {
                 console.log('Error in have-i', err.response.data)
+            });
+
+
+
+        axios.get('/api/directions/route/5d3d7d9c2d636a112c571b9b')
+            .then((result) => {
+                const direction = result.data.directionData;
+                const test = direction.routes[0].overview_path;
+                console.log("Length:", test.length);
+                for (let place of test) {
+                    console.log(`${place.lat},${place.lng}`);
+                }
+
+
+            }).catch((err) => {
+                console.log("Error found in getting route by Id", err)
             });
 
 
@@ -71,7 +87,7 @@ class SideDrawer extends React.Component {
         this.timer = setInterval(() => {
             this.props.poleData();
             this.locateMe();
-        }, 5000);
+        }, 15000);
     }
 
     componentWillUnmount() {

@@ -477,7 +477,7 @@ class Maps extends Component {
         const { hisLocation, showHisLocation, hisStatus } = this.props.nav;
         const { acceptedTo, acceptedBy, haveIRegistered } = this.props.bell;
         const isShared = acceptedBy || acceptedTo;
-        console.log('We got the output like this', hisLocation, showHisLocation, hisStatus);
+        // console.log('We got the output like this', hisLocation, showHisLocation, hisStatus);
 
         return (
             <Auxi>

@@ -46,7 +46,7 @@ export const poleData = () => async dispatch => {
                 payload: res.data
             })
         }).catch((err) => {
-            console.log(err.response.data, 'in the requested-by wala');
+            console.log(err, 'in the requested-by wala');
         });
 }
 export const logout = () => async dispatch => {

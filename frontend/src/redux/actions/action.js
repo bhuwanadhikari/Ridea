@@ -33,7 +33,7 @@ export const poleData = () => async dispatch => {
             }
 
         }).catch((err) => {
-            console.log("Error Poling", err.response.data);
+            console.log("Error Poling", err);
         });
 
 

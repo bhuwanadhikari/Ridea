@@ -62,6 +62,8 @@ class Maps extends Component {
         } else if (nextProps.isCurrentLocationSet) {
             return { dynamicCenter: { ...state.dynamicCenter } };
         } else return null;
+
+
     }
 
 
@@ -85,6 +87,33 @@ class Maps extends Component {
             this.setState({
                 directionsOnShow: null
             })
+        }
+
+
+        //showing of my direction
+        const { showMyDirection, myDirection } = this.props.nav
+        // console.log("New Direction Data is:", showMyDirection, myDirection.directionData);
+        // console.log("Direction on  Show is:", this.state.directionsOnShow);
+
+        if (
+            showMyDirection !== prevProps.nav.showMyDirection
+            && showMyDirection
+        ) {
+            console.log("My direction vitra xu hai ma");
+            console.log("New Direction in side the div Data is:", showMyDirection, myDirection.directionData);
+            this.resetState();
+            this.setState({
+                directionsOnShow: myDirection.directionData
+            });
+        }
+
+        if (
+            showMyDirection !== prevProps.nav.showMyDirection
+            && !showMyDirection
+        ) {
+            console.log("My direction vitra xu hai ma");
+            console.log("New Direction in side the div Data is:", showMyDirection, myDirection.directionData);
+            this.resetState();
         }
     }
 
@@ -387,8 +416,10 @@ class Maps extends Component {
             })
             .then(addedRoute => {
                 console.log("Added route:", addedRoute.data);
-                store.dispatch({type:'SET_HAVEI_REGISTERED', payload: true})
+                store.dispatch({ type: 'SET_HAVEI_REGISTERED', payload: true })
                 this.resetState();
+
+
             })
             .catch(err => {
                 console.log(err.response.data, 'addition has been failed');
@@ -434,9 +465,10 @@ class Maps extends Component {
     }
 
 
+
     render() {
         // console.log("State of the app: ", this.state);
-
+        // console.log("Steate of show my direction:", this.props.nav.showMyDirection)
 
         let dialogMessage, content;
         if (this.state.progress === 'continuing') {
@@ -444,7 +476,7 @@ class Maps extends Component {
             content = (
                 <Auxi>
                     <button onClick={this.onYesHandler}>Yes</button>
-                    <button onClick={this.onNoHandler}>No</button>
+                    <button onClick={this.onoHandler}>No</button>
                 </Auxi>
             );
         }
@@ -456,7 +488,6 @@ class Maps extends Component {
             null, /* anchor is bottom center of the scaled image */
             new window.google.maps.Size(145, 84)
         )
-
         var myMarker = new window.google.maps.MarkerImage(
             "https://i.ibb.co/R44LD9K/my-Location-1.png",
             null, /* size is determined at runtime */
@@ -467,18 +498,15 @@ class Maps extends Component {
 
 
 
-
-        if (this.state.loading) {
-            return <Spinner />
-        }
-
-
-
         const { hisLocation, showHisLocation, hisStatus } = this.props.nav;
         const { acceptedTo, acceptedBy, haveIRegistered } = this.props.bell;
         const isShared = acceptedBy || acceptedTo;
         // console.log('We got the output like this', hisLocation, showHisLocation, hisStatus);
 
+        if (this.state.loading) {
+            return <Spinner />
+        }
+        
         return (
             <Auxi>
                 <GoogleMap
@@ -488,14 +516,23 @@ class Maps extends Component {
                     center={{ lat: this.state.dynamicCenter.lat, lng: this.state.dynamicCenter.lng }}
                     onCenterChanged={this.onCenterChangedHandler}
                 >
-                    {this.state.directionsOnShow && (<DirectionsRenderer directions={this.state.directionsOnShow} />)}
+                    {this.state.directionsOnShow && (
+                        <div>
+                            <DirectionsRenderer
+                                options={{ strokeColor: 'red', strokeOpacity: 0.1 }}
+                                directions={this.state.directionsOnShow}
+                            />
+
+
+                        </div>
+                    )}
 
 
 
                     {/*----------- Green Pickup point -----------*/}
                     {
                         (this.state.progress === null && !this.props.bell.responseProgress)
-                         && !showHisLocation && !isShared && !haveIRegistered
+                            && !showHisLocation && !isShared && !haveIRegistered
                             ? (<div className="MapMarker">
                                 <img
                                     onClick={this.onMarkerClickHandler}
@@ -510,7 +547,7 @@ class Maps extends Component {
 
                     {
                         (this.state.progress === 'pickupPointIsSet')
-                         && !showHisLocation && !isShared && !haveIRegistered
+                            && !showHisLocation && !isShared && !haveIRegistered
                             ? (<div className="MapMarker">
                                 <img
                                     onClick={this.onMarkerClickHandler}
@@ -644,8 +681,10 @@ class Maps extends Component {
                         this.props.nav.showHisLocation
                     }
                 >
-                    <HisLocation onLocate={this.props.onLocateClick} onDone = {this.handleDoneLocation} />
+                    <HisLocation onLocate={this.props.onLocateClick} onDone={this.handleDoneLocation} />
                 </DialogBottom>
+
+
 
 
             </Auxi >

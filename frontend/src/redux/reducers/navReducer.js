@@ -3,6 +3,9 @@ const initialState = {
     showChat: false,
     realLocation: {},
 
+    showMyDirection: false,
+    myDirection: {},
+
     showHisLocation: false,
     hisStatus: 'Offline',
     hisLocation: {}
@@ -36,6 +39,17 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 hisStatus: action.payload
+            }
+
+        case 'SET_SHOW_MY_DIRECTION':
+            return {
+                ...state,
+                showMyDirection: action.payload
+            }
+        case 'SET_MY_DIRECTION':
+            return {
+                ...state,
+                myDirection: action.payload
             }
 
 

@@ -23,6 +23,7 @@ import Activities from '../../containers/Activities/Activities';
 import Notifications from '../../containers/Notifications/Notifications';
 import EditProfile from './EditProfile';
 import { logout } from '../../redux/actions/action';
+import DialogBottom from '../../ui/DialogBottom/DialogBottom';
 import './SideDrawer.css';
 
 class SideDrawer extends React.Component {
@@ -66,19 +67,24 @@ class SideDrawer extends React.Component {
 
 
 
-        axios.get('/api/directions/route/5d3d7d9c2d636a112c571b9b')
-            .then((result) => {
-                const direction = result.data.directionData;
-                const test = direction.routes[0].overview_path;
-                console.log("Length:", test.length);
-                for (let place of test) {
-                    console.log(`${place.lat},${place.lng}`);
-                }
+        // axios.get('/api/directions/route/5d3c98f45473682720aa139d')
+        //     .then((result) => {
+        //         const direction = result.data.directionData;
+        //         const test = direction.routes[0].overview_path;
+        //         // console.log("Length:", test.length);
+
+        //         const dist = direction.routes;
+        //         console.log("Route details is :", dist[0].legs[0].distance.value, 'meters');
 
 
-            }).catch((err) => {
-                console.log("Error found in getting route by Id", err)
-            });
+        //         // for (let place of test) {
+        //         //     console.log(`${place.lat},${place.lng}`);
+        //         // }
+
+
+        //     }).catch((err) => {
+        //         console.log("Error found in getting route by Id", err)
+        //     });
 
 
         this.props.poleData();
@@ -92,6 +98,30 @@ class SideDrawer extends React.Component {
 
     componentWillUnmount() {
         this.timer = null;
+    }
+
+
+    handleMyRouteClick = () => {
+        var cond = false;
+        console.log("my route has been clicked");
+
+        //get my own route
+        axios
+            .get('/api/directions/get-direction-by-owner')
+            .then((result) => {
+                console.log('Direction of mine is', result.data);
+                store.dispatch({ type: 'SET_MY_DIRECTION', payload: result.data })
+                store.dispatch({ type: 'SET_SHOW_MY_DIRECTION', payload: true });
+            }).catch((err) => {
+                console.log("Error occured:", err);
+            });
+        this.props.drawerClosed();
+    }
+
+    handleCloseMyDirectionClick = () => {
+        console.log('Done has been clicke');
+        store.dispatch({ type: 'SET_SHOW_MY_DIRECTION', payload: false });
+        store.dispatch({ type: 'SET_MY_DIRECTION', payload: {} })
     }
 
 
@@ -179,6 +209,7 @@ class SideDrawer extends React.Component {
         })
     }
 
+
     setRequestsModal = (status) => {
         this.setState((state, props) => {
             return {
@@ -261,7 +292,9 @@ class SideDrawer extends React.Component {
                     </div>
                     <div className="OptionsWrapper">
 
-                        <div className="ListWrapper">
+                        <div className="ListWrapper"
+                            onClick={this.handleMyRouteClick}
+                        >
                             <img className="ListImg" src={routeIcon} alt="Ridea Feedback" />
                             <div className="LabelWrapper">
                                 My Route
@@ -403,6 +436,21 @@ class SideDrawer extends React.Component {
                     <EditProfile onEditCloseHandler={this.onEditCloseHandler} updateName={this.updateName} />
                 </Modal>
 
+                {/*----------- My direction on show -----------*/}
+                <DialogBottom
+                    show={
+                        this.props.nav.showMyDirection
+                    }
+                >{this.props.bell.acceptedBy || this.props.bell.acceptedTo
+                    ? 'This is your combined route.'
+                    : 'You have not shared your route yet.'
+                    }
+                    <button onClick={this.handleCloseMyDirectionClick} >
+
+                        Done
+                    </button>
+                </DialogBottom>
+
 
 
             </Aux>
@@ -413,6 +461,7 @@ class SideDrawer extends React.Component {
 
 SideDrawer.propTypes = {
     bell: PropTypes.object,
+    nav: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     poleData: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
@@ -420,7 +469,8 @@ SideDrawer.propTypes = {
 
 const mapStateToProps = state => ({
     bell: state.bell,
-    auth: state.auth
+    auth: state.auth,
+    nav: state.nav
 });
 
 

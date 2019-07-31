@@ -5,7 +5,7 @@ const User = require('../models/User');
 const Direction = require('../models/Direction');
 router = express();
 
-const {getMatchedRoute} = require('./routeMatchAlgorithm');
+const { getMatchedRoute } = require('./routeMatchAlgorithm');
 
 
 
@@ -15,26 +15,9 @@ const {getMatchedRoute} = require('./routeMatchAlgorithm');
 //Pre-addtion of the direction to find the matching route
 router.post('/matched-routes', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
     // Find all of the matching routes and algorithm for matching here
-    console.log("Requested Body is given as", req.body);
 
-    Direction
-        .find({ $and: [{ owner: { $ne: req.user.id } }, { isOpen: true }] })
-        .select('_id')
-        .then((matchedRoutes) => {
-            console.log(matchedRoutes, "is the matched routes");
 
-            let cleanArray = [];
-            if (matchedRoutes.length > 0) {
-                matchedRoutes.forEach((routeObject) => {
-                    cleanArray.push(routeObject._id);
-                })
-            }
-            res.status(200).json(cleanArray);
-        }).catch((err) => {
-            console.log(err, 'in matched routes of the app');
-        });
-
-        getMatchedRoute(req.body, req.user.id)
+    getMatchedRoute(req, res)
 
 
 });
@@ -123,6 +106,25 @@ router.get('/get-by-owner', passport.authenticate('jwt', { session: 'false' }), 
             console.log(err, "in get by owner: last");
             res.status(400).json({ errors: 'Something unexpected' });
         })
+});
+
+//get direction by owner's id
+router.get('/get-direction-by-owner', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+    console.log("Get direction by ower");
+
+    Direction
+        .findOne({ $and: [{ owner: req.user.id }, { isOpen: true }] })
+        .then((direction) => {
+            if (!direction) {
+                res.status(400).json({ msg: 'You have not registered your route' })
+            } else {
+                res.status(200).json(direction)
+            }
+        })
+        .catch(err => {
+            console.log("Error in get-direction-by-owner");
+        })
 })
 
 //Addition of new route
@@ -189,12 +191,12 @@ router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (re
 
 router.get('/have-i', passport.authenticate('jwt', { session: false }), (req, res) => {
     Direction
-        .findOne({ $and: [{ owner: req.user.id }, { isOpen: true }]})
+        .findOne({ $and: [{ owner: req.user.id }, { isOpen: true }] })
         .then((direction) => {
-            if(direction){
-                res.status(200).json({haveI: true});
+            if (direction) {
+                res.status(200).json({ haveI: true });
             } else {
-                res.status(200).json({haveI: false});
+                res.status(200).json({ haveI: false });
             }
         }).catch((err) => {
             res.status(400).json(err);

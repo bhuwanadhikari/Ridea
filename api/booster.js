@@ -8,18 +8,18 @@ const onAccept = async (acceptedRoute, myId) => {
 
 
     await Direction
-        .updateOne({owner: myId}, {$set: {isOpen: false}})
+        .updateOne({ owner: myId }, { $set: { isOpen: false } })
         .then((result) => {
-            console.log("Directions is closed");    
+            console.log("Directions is closed");
         }).catch((err) => {
             console.log('Error in updating the isOpen of direction', err);
         });
 
 
     await Direction
-        .updateOne({owner: hisId}, {$set: {isOpen: false}})
+        .updateOne({ owner: hisId }, { $set: { isOpen: false } })
         .then((result) => {
-            console.log("Directions is closed");    
+            console.log("Directions is closed");
         }).catch((err) => {
             console.log('Error in updating the isOpen of direction', err);
         });
@@ -172,6 +172,13 @@ const onAccept = async (acceptedRoute, myId) => {
         })
         .catch((err) => { console.log(err, "in requestedBy of his") });
 
+
+
+
+    //Make combinedDirection
+    //find AB AD CB CD
+    make
+
 }
 
 
@@ -228,18 +235,7 @@ const onReject = async (rejectedRoute, myId) => {
 
 
 
-
-const getNotifiedByUsersId = (masterId) => {
-    User
-        .findOne({ _id: masterId })
-        .then((result) => {
-            console.log(result.notifiedBy);
-        }).catch((err) => {
-            console.log(err);
-        });
-}
-
 module.exports = {
     onAccept,
-    onReject
+    onReject,
 }

@@ -45,7 +45,7 @@ class Maps extends Component {
                 lng: 0
             },
 
-            rideData: {},
+            rideData: {}, 
             directions: null,
             directionsOnShow: null,
             matchedRoutes: {
@@ -506,7 +506,7 @@ class Maps extends Component {
         if (this.state.loading) {
             return <Spinner />
         }
-        
+
         return (
             <Auxi>
                 <GoogleMap
@@ -519,9 +519,33 @@ class Maps extends Component {
                     {this.state.directionsOnShow && (
                         <div>
                             <DirectionsRenderer
-                                options={{ strokeColor: 'red', strokeOpacity: 0.1 }}
+                                options={{
+                                    polylineOptions: {
+                                        strokeOpacity: 1,
+                                        strokeColor: 'orangered',
+                                        strokeWeight: 5, 
+                                    },
+                                    
+                                }}
                                 directions={this.state.directionsOnShow}
                             />
+                            {Object.keys(this.props.nav.hisDirection).length > 0
+                                ? <DirectionsRenderer
+                                
+                                    options={{
+                                        polylineOptions: {
+                                            strokeOpacity: 0.7,
+                                            strokeColor: '#53d018',
+                                            strokeWeight: 8, 
+                                        },
+                                        markerOptions: {
+                                            opacity: 0.6
+                                        }
+
+                                    }}
+                                    directions={this.props.nav.hisDirection.directionData}
+                                />
+                                : null}
 
 
                         </div>

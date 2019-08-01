@@ -38,9 +38,30 @@ router.get('/route/:routeId', passport.authenticate('jwt', { session: 'false' })
             errors.noRoute = "There is no route for this id";
             return res.status(400).json(errors);
         });
-
-
 });
+
+
+//get direction by owner's id
+router.get('/get-direction-by-owner/:ownerId', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+    console.log("Get direction by ower");
+
+    Direction
+        .findOne({ owner: req.params.ownerId })
+        .then((direction) => {
+            if (!direction) {
+                res.status(400).json({ msg: 'You have not registered your route' })
+            } else {
+                res.status(200).json(direction)
+            }
+        })
+        .catch(err => {
+            console.log("Error in get-direction-by-ownerid");
+        })
+})
+
+
+
 
 //get direction owner name, owner and direction id
 router.get('/get-by-owner', passport.authenticate('jwt', { session: 'false' }), (req, res) => {
@@ -107,25 +128,6 @@ router.get('/get-by-owner', passport.authenticate('jwt', { session: 'false' }), 
             res.status(400).json({ errors: 'Something unexpected' });
         })
 });
-
-//get direction by owner's id
-router.get('/get-direction-by-owner', passport.authenticate('jwt', { session: false }), (req, res) => {
-
-    console.log("Get direction by ower");
-
-    Direction
-        .findOne({ $and: [{ owner: req.user.id }, { isOpen: true }] })
-        .then((direction) => {
-            if (!direction) {
-                res.status(400).json({ msg: 'You have not registered your route' })
-            } else {
-                res.status(200).json(direction)
-            }
-        })
-        .catch(err => {
-            console.log("Error in get-direction-by-owner");
-        })
-})
 
 //Addition of new route
 router.post('/addition', passport.authenticate('jwt', { session: 'false' }), (req, res) => {

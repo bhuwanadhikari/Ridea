@@ -70,22 +70,22 @@
 
 
 .Warning {
-    color:var(--warning);
+    color:var(--warningBg);
     background:var(--btnBg);
-    border: 2px solid var(--warning);
+    border: 2px solid var(--warningBg);
 
 }
 
 .Warning:before, .Warning:after {
-    border-color:var(--warning);
+    border-color:var(--warningBg);
 }
 .Warning:hover:before, .Warning:hover:after {
-    border-color: var(--warning);
+    border-color: var(--warningBg);
 }
 .Warning:hover {
     color:white;
-    background-color:var(--warning);
-    border-color:var(--warning);
+    background-color:var(--warningBg);
+    border-color:var(--warningBg);
 }
 
 

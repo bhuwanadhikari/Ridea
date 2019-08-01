@@ -28,7 +28,7 @@ class NavBar extends Component {
                         <DrawerToggleButton clicked={this.props.clicked} />
                     </div>
                     <div className='SearchWrapper'>
-                        <Search />
+                        
                     </div>
                     <div className='Spacer'></div>
                     <div className='ChatIconWrapper' onClick={this.onChatIconClickHandler}>

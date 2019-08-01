@@ -24,6 +24,7 @@ import Notifications from '../../containers/Notifications/Notifications';
 import EditProfile from './EditProfile';
 import { logout } from '../../redux/actions/action';
 import DialogBottom from '../../ui/DialogBottom/DialogBottom';
+import Calc from './Calc';
 import './SideDrawer.css';
 
 class SideDrawer extends React.Component {
@@ -38,13 +39,14 @@ class SideDrawer extends React.Component {
             showEditProfile: false,
             loading: false,
             activityArray: [],
-            myName: ''
+            myName: '',
+            showCalcLabel: false,
+            showCalc: false,
         }
     }
 
 
     componentDidMount() {
-
 
         axios
             .get('/api/users/my-data')
@@ -65,28 +67,6 @@ class SideDrawer extends React.Component {
                 console.log('Error in have-i', err.response.data)
             });
 
-
-
-        // axios.get('/api/directions/route/5d3c98f45473682720aa139d')
-        //     .then((result) => {
-        //         const direction = result.data.directionData;
-        //         const test = direction.routes[0].overview_path;
-        //         // console.log("Length:", test.length);
-
-        //         const dist = direction.routes;
-        //         console.log("Route details is :", dist[0].legs[0].distance.value, 'meters');
-
-
-        //         // for (let place of test) {
-        //         //     console.log(`${place.lat},${place.lng}`);
-        //         // }
-
-
-        //     }).catch((err) => {
-        //         console.log("Error found in getting route by Id", err)
-        //     });
-
-
         this.props.poleData();
         this.locateMe();
 
@@ -100,22 +80,51 @@ class SideDrawer extends React.Component {
         this.timer = null;
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        const { acceptedBy, acceptedTo } = this.props.bell;
+        const thisSt = acceptedBy || acceptedTo;
+        const at = prevProps.bell.acceptedTo;
+        const ab = prevProps.bell.acceptedBy;
+        const prevSt = at || ab
+        if (thisSt && prevSt !== thisSt) {
+            console.log("I have to  show the calc label");
+            this.setState({ showCalcLabel: true });
+        }
+    }
 
-    handleMyRouteClick = () => {
+
+
+    handleMyRouteClick = async () => {
         var cond = false;
-        console.log("my route has been clicked");
+        const { acceptedBy, acceptedTo } = this.props.bell;
+        console.log('Accepted By and to are', acceptedBy, acceptedTo);
+        if (acceptedBy || acceptedTo) {
+            console.log("Getting his direction data");
+            //get both of the routes
+            const hisId = acceptedBy || acceptedTo;
+            await axios.get(`/api/directions/get-direction-by-owner/${hisId}`)
+                .then((result) => {
+                    console.log("Getting his direction data inside the then block");
 
+                    store.dispatch({ type: 'SET_HIS_DIRECTION', payload: result.data });
+                }).catch((err) => {
+                    console.log("Error found in getting route by hisId", err)
+                });
+        }
         //get my own route
-        axios
-            .get('/api/directions/get-direction-by-owner')
+        const myId = this.props.auth.user.id;
+        await axios
+            .get(`/api/directions/get-direction-by-owner/${myId}`)
             .then((result) => {
                 console.log('Direction of mine is', result.data);
                 store.dispatch({ type: 'SET_MY_DIRECTION', payload: result.data })
                 store.dispatch({ type: 'SET_SHOW_MY_DIRECTION', payload: true });
             }).catch((err) => {
-                console.log("Error occured:", err);
+                console.log("Error occured in getting direction by owner myId:", err);
             });
+
         this.props.drawerClosed();
+
     }
 
     handleCloseMyDirectionClick = () => {
@@ -124,6 +133,15 @@ class SideDrawer extends React.Component {
         store.dispatch({ type: 'SET_MY_DIRECTION', payload: {} })
     }
 
+
+    handleCalcClick = () => {
+        this.setState({ showCalc: true });
+        this.props.drawerClosed();
+    }
+
+    handleCalcClose = () => {
+        this.setState({ showCalc: false });
+    }
 
 
     onRequestsClickHandler = () => {
@@ -298,8 +316,19 @@ class SideDrawer extends React.Component {
                             <img className="ListImg" src={routeIcon} alt="Ridea Feedback" />
                             <div className="LabelWrapper">
                                 My Route
+                            </div>
                         </div>
-                        </div>
+
+                        {this.state.showCalcLabel
+                            ? (<div className="ListWrapper"
+                                onClick={this.handleCalcClick}
+                            >
+                                <img className="ListImg" src={routeIcon} alt="Ridea Feedback" />
+                                <div className="LabelWrapper">
+                                    Calculate Taxi Fare
+                                </div>
+                            </div>)
+                            : null}
 
                         <div className="ListWrapper"
                             onClick={this.onRequestsClickHandler}
@@ -384,6 +413,17 @@ class SideDrawer extends React.Component {
 
 
 
+                {/*----------- Calculator modal   --------------------------------------*/}
+
+                <Modal
+                    show={this.state.showCalc}
+                    modalClosed={this.handleCalcClose}
+                    fromTop='27%'
+                >
+                    <Calc calcClosed={this.handleCalcClose} him={this.props.bell.acceptedBy || this.props.bell.acceptedTo} />
+                </Modal>
+
+
                 {/*----------- Requests List Modal   --------------------------------------*/}
 
                 <Modal
@@ -442,7 +482,7 @@ class SideDrawer extends React.Component {
                         this.props.nav.showMyDirection
                     }
                 >{this.props.bell.acceptedBy || this.props.bell.acceptedTo
-                    ? 'This is your combined route.'
+                    ? 'Red: Your Route.. '
                     : 'You have not shared your route yet.'
                     }
                     <button onClick={this.handleCloseMyDirectionClick} >

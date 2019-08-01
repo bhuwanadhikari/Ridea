@@ -5,6 +5,7 @@ const initialState = {
 
     showMyDirection: false,
     myDirection: {},
+    hisDirection: {},
 
     showHisLocation: false,
     hisStatus: 'Offline',
@@ -50,6 +51,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 myDirection: action.payload
+            }
+
+        case 'SET_HIS_DIRECTION':
+            return {
+                ...state,
+                hisDirection: action.payload
             }
 
 

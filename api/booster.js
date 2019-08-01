@@ -177,7 +177,7 @@ const onAccept = async (acceptedRoute, myId) => {
 
     //Make combinedDirection
     //find AB AD CB CD
-    make
+   
 
 }
 

@@ -7,9 +7,9 @@ const cors = require('cors');
 
 const auth = require('./api/auth');
 const directions = require('./api/directions');
-const push = require('./api/push');
 const users = require('./api/users');
 const notifications = require('./api/notifications');
+const fare = require('./api/fare');
 
 const app = express();
 app.use(cors());
@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use('/auth', auth);
 app.use('/api/directions', directions);
 app.use('/api/users', users);
-app.use('/api/push', push);
+app.use('/api/fare', fare);
 app.use('/api/notifications', notifications);
 
 if (process.env.NODE_ENV === 'production') {

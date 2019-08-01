@@ -5,6 +5,9 @@ import SignUp from '../SignUp/SignUp';
 import setAuthToken from '../../utils/setAuthToken';
 import store from '../../redux/store/store';
 
+import logo from '../../img/rideallot.png'
+
+
 import './Landing.css';
 
 class Landing extends Component {
@@ -25,8 +28,10 @@ class Landing extends Component {
   render() {
     return (
       <div className="LandingContainer">
+        <div className="Logo">
+          <img className="HomeLogo" src={logo} alt="Logo For Ridea" />
+        </div>
         <div>
-
           <a href='http://localhost:5000/auth/google' className="button">
             <div>
               <span className="svgIcon t-popup-svg">

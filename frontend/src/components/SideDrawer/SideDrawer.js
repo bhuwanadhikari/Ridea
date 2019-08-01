@@ -14,6 +14,7 @@ import notification from '../../img/SidebarImg/notification.svg';
 import feedback from '../../img/SidebarImg/feedback.svg';
 import timeline from '../../img/SidebarImg/timeline.svg';
 import routeIcon from '../../img/SidebarImg/routeIcon.png';
+import moneyIcon from '../../img/SidebarImg/money.svg';
 import leftArrow from '../../img/left-arrow.svg'
 import user from '../../img/user.svg'
 import more from '../../img/more.svg'
@@ -323,7 +324,7 @@ class SideDrawer extends React.Component {
                             ? (<div className="ListWrapper"
                                 onClick={this.handleCalcClick}
                             >
-                                <img className="ListImg" src={routeIcon} alt="Ridea Feedback" />
+                                <img className="ListImg" src={moneyIcon} alt="Ridea Feedback" />
                                 <div className="LabelWrapper">
                                     Calculate Taxi Fare
                                 </div>
@@ -379,7 +380,6 @@ class SideDrawer extends React.Component {
                             */}
 
                         <div className="ListWrapper">
-                            <img className="ListImg" src={feedback} alt="Ridea Feedback" />
                             <div className="LabelWrapper">
                                 Feedback
                             </div>

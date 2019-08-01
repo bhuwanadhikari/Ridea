@@ -7,15 +7,11 @@ class NavBar extends Component {
         return (
             <footer className='Footer'>
                 <nav className='FooterNavigation'>
-                    <div className='AddRouteButtonWrapper'>
-                    <div className="ButtonEnclosure">
-                    <img className='AddRouteIcon'  alt='AddRoute icon of ridea' src={AddRoute} ></img>
-                    </div>
-                    </div>
+                    
                     <div className="Spacer"></div>
                     <div className='LocateButtonWrapper'>
-                        <div className="ButtonEnclosure" onClick = {this.props.locateClicked}>
-                        <img className='LocateIcon'  alt='Locate icon of ridea' src={Locate}></img>
+                        <div className="ButtonEnclosure" onClick={this.props.locateClicked}>
+                            <img className='LocateIcon' alt='Locate icon of ridea' src={Locate}></img>
                         </div>
                     </div>
                 </nav>

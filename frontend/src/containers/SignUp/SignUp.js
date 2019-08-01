@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-import {withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 
 import Button from '../../ui/Button/Button';
@@ -12,6 +12,7 @@ import setAuthToken from '../../utils/setAuthToken';
 import store from '../../redux/store/store';
 import './SignUp.css';
 import Login from '../Login/Login';
+
 
 class SignUp extends Component {
    constructor() {
@@ -53,7 +54,7 @@ class SignUp extends Component {
             setAuthToken(res.data.token);
             const decoded = jwtDecode(res.data.token);
             store.dispatch({ type: 'SET_USER', payload: decoded });
-            if(store.getState().auth.isAuthenticated){
+            if (store.getState().auth.isAuthenticated) {
                this.props.history.push('/home');
             }
          })
@@ -76,6 +77,7 @@ class SignUp extends Component {
       return (
          <Auxi>
             <div className="FormBox" id="signUpForm">
+               
                <form className="Form" noValidate>
 
                   <InputField
@@ -126,7 +128,7 @@ class SignUp extends Component {
                show={this.state.showModal} modalClosed={() => {
                   this.setState({ showModal: false });
                }}
-               fromTop='27%'
+               fromTop='15%'
             >
                <Login showModal={this.state.showModal} />
             </Modal>

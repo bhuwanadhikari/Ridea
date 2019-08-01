@@ -6,7 +6,9 @@ import Modal from '../../ui/Modal/Modal';
 import InputField from '../../ui/InputField/InputField';
 import setAuthToken from '../../utils/setAuthToken';
 import store from '../../redux/store/store';
-import {withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+
+import logo from '../../img/rideallot.png'
 
 import './Login.css';
 
@@ -42,7 +44,7 @@ class Login extends Component {
             setAuthToken(res.data.token);
             const decoded = jwtDecode(res.data.token);
             store.dispatch({ type: 'SET_USER', payload: decoded });
-            if(store.getState().auth.isAuthenticated){
+            if (store.getState().auth.isAuthenticated) {
                this.props.history.push('/home');
             }
          })
@@ -70,6 +72,10 @@ class Login extends Component {
       return (
          <div className="FormBox">
             <Modal />
+
+            <div className="Logo">
+               <img className="HomeLogo" src={logo} alt="Logo For Ridea" />
+            </div>
 
             <form className="Form" noValidate>
 

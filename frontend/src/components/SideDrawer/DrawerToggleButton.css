@@ -25,10 +25,11 @@
 }
 .ToggleButtonLine{
     width: 25px;
-    height: 3px;
+    height: 4px;
     background-color: var(--medium-dark);
     margin: 2px;
     border-radius: 5px;
+    border: 1px solid white;
 }
 /*For DESKTOPS ONLY*/
 @media only screen and (min-width: 800px) {

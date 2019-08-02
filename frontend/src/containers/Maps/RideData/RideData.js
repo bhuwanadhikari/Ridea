@@ -91,7 +91,7 @@ class RideData extends Component {
         }
 
         let waitForOptions = []
-        for (let i = 0; i <= 18; i++) {
+        for (let i = 1; i <= 8; i++) {
             waitForOptions.push(<option key={i} value={i * 5}>{i * 5}</option>);
         }
 

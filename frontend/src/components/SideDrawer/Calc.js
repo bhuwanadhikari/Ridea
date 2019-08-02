@@ -78,7 +78,7 @@ class Calc extends Component {
                         >
                             {!this.state.loading
                                 ? 'Calculate'
-                                : 'Loading....'}
+                                : 'Calculating....'}
                         </Button>
 
                         <Button

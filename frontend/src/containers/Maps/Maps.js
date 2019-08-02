@@ -10,6 +10,7 @@ import Spinner from '../../ui/Spinnner/Spinner';
 import AcceptReject from '../Requests/AcceptReject';
 import HisLocation from './HisLocation';
 import store from '../../redux/store/store';
+import Button from '../../ui/Button/Button';
 
 // import Pindrop from './Pindrop/Pindrop';
 import './Maps.css';
@@ -646,9 +647,9 @@ class Maps extends Component {
                     }}
                     fromTop='27%'
                 >
-                    Matching routes not found.
-                    <button onClick={this.onDoneHandler}>Done</button>
-                    <button onClick={this.onCancelAllHandler}>Cancel</button>
+                    Matching routes not found <br/> <br/>
+                    <Button cls="Success InlineBtn" clicked={this.onDoneHandler}>Done</Button>
+                    <Button  cls="Warning InlineBtn" clicked={this.onCancelAllHandler}>Cancel</Button>
                 </Modal>
 
 
@@ -660,9 +661,11 @@ class Maps extends Component {
                     }}
                     fromTop='27%'
                 >
-                    <button onClick={this.onChooseAgainHandler}>Choose routes again</button>
-                    <button onClick={this.onDoneHandler}>Done</button>
-                    <button onClick={this.onCancelAllHandler}>Cancel</button>
+                You are about to be done. <br/> <br/>
+                    <Button cls="Success InlineBtn"  clicked={this.onChooseAgainHandler}>Choose routes again</Button>
+                    <br/><br/>
+                    <Button cls="Success InlineBtn"  clicked={this.onDoneHandler}>Done</Button>
+                    <Button cls="Warning InlineBtn"  clicked={this.onCancelAllHandler}>Cancel</Button>
                 </Modal>
 
 

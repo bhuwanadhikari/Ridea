@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cors = require('cors');
+const { synchronize } = require('./synchronize');
+
 
 
 const auth = require('./api/auth');
@@ -33,8 +35,8 @@ require('./config/passport')(passport);
 
 //body parser middleware
 app.use(bodyParser.json());
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 
 // //Setting up of routes
@@ -44,8 +46,11 @@ app.use('/api/users', users);
 app.use('/api/fare', fare);
 app.use('/api/notifications', notifications);
 
+synchronize();
+
+
 if (process.env.NODE_ENV === 'production') {
-    //set static folder
+    //set static folder for the deployment
     app.use(express.static('frontend/build'));
 
     app.get('*', (req, res) => {

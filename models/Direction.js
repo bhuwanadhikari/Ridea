@@ -19,6 +19,10 @@ const DirectionSchema = new Schema({
     isOpen: {
         type: Boolean,
         default: true,
+    },
+    isAlive: {
+        type: Boolean,
+        default: true,
     }
 },
     { timestamps: true }

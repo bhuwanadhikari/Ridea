@@ -3,12 +3,23 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import store from '../../redux/store/store';
 import { poleData } from '../../redux/actions/action';
+import Button from '../../ui/Button/Button';
 import './Requests.css';
 import { connect } from 'react-redux';
 import { ToastsContainer, ToastsStore } from 'react-toasts';
 
 
 class Requests extends Component {
+
+
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      submitLoading: false
+    }
+  }
 
 
 
@@ -61,6 +72,7 @@ class Requests extends Component {
     }
 
     if (respondedRoutes.length > 0) {
+      this.setState({ submitLoading: true });
       await axios
         .post('/api/notifications/respond', { respondedRoutes })
         .then((result) => {
@@ -83,6 +95,7 @@ class Requests extends Component {
 
 
       if (respondedRoutes.find(el => el.responseStatus === 'Accepted')) {
+        this.setState({ submitLoading: false });
         ToastsStore.success("Visit chat page to chat with Ride Partner")
       }
 
@@ -139,11 +152,16 @@ class Requests extends Component {
         }
 
         <div className="BellFooter">
-          <button onClick={this.onSubmitHandler}>Submit </button>
+          <Button
+            clicked={this.onSubmitHandler}
+            cls="Success InlineBtn"
+          >
+          {!this.state.submitLoading ? 'Submit' : 'Loading...'} 
+          </Button>
           <ToastsContainer store={ToastsStore} lightBackground />
 
 
-          <button onClick={this.onCancelHandler}>Cancel </button>
+          <Button cls="Warning InlineBtn" clicked={this.onCancelHandler}>Cancel </Button>
         </div>
       </div>
 

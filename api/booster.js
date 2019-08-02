@@ -6,7 +6,7 @@ const onAccept = async (acceptedRoute, myId) => {
     const did = acceptedRoute.direction_id;
     var myRequestedBy;
 
-
+    //set isOpen of myDirection  False
     await Direction
         .updateOne({ owner: myId }, { $set: { isOpen: false } })
         .then((result) => {
@@ -15,7 +15,7 @@ const onAccept = async (acceptedRoute, myId) => {
             console.log('Error in updating the isOpen of direction', err);
         });
 
-
+    //set  is Open of hisDirection false
     await Direction
         .updateOne({ owner: hisId }, { $set: { isOpen: false } })
         .then((result) => {

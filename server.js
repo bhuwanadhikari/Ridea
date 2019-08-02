@@ -46,7 +46,7 @@ app.use('/api/users', users);
 app.use('/api/fare', fare);
 app.use('/api/notifications', notifications);
 
-synchronize();
+// synchronize();
 
 
 if (process.env.NODE_ENV === 'production') {

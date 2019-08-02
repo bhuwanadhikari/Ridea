@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import InputField from '../../ui/InputField/InputField';
 import Button from '../../ui/Button/Button';
-import { ETIME } from 'constants';
 
 class Calc extends Component {
     constructor(props) {
@@ -14,16 +13,19 @@ class Calc extends Component {
             myFare: '',
             hisFare: '',
             showSummary: false,
+            loading: false,
         }
     }
 
     handleCalcSubmit = (e) => {
         e.preventDefault();
+
         if (this.state.fare % 10 !== 0) {
             console.log("inside errors");
             this.setState({ errors: { fare: 'Enter the taxi fare in the multiple of 10' } });
             return;
         }
+        this.setState({ loading: true });
         const payload = {
             totalFare: this.state.fare,
             him: this.props.him
@@ -35,7 +37,8 @@ class Calc extends Component {
                 this.setState({
                     myFare: res.data.myFare,
                     hisFare: res.data.hisFare,
-                    showSummary: true
+                    showSummary: true,
+                    loading: false,
                 });
             })
     }
@@ -44,6 +47,15 @@ class Calc extends Component {
         console.log('changin');
         this.setState({ fare: e.target.value, errors: {} });
     }
+
+    handleExit = (e) => {
+        this.props.calcClosed();
+        this.setState({
+            showSummary: false,
+            fare: ''
+        });
+    }
+
 
 
     render() {
@@ -64,11 +76,13 @@ class Calc extends Component {
                             clicked={this.handleCalcSubmit}
                             cls="Success InlineBtn"
                         >
-                            Calculate
-                    </Button>
+                            {!this.state.loading
+                                ? 'Calculate'
+                                : 'Loading....'}
+                        </Button>
 
                         <Button
-                            clicked={this.props.calcClosed}
+                            clicked={this.handleExit}
                             cls="Warning InlineBtn"
                         >
                             Cancel
@@ -81,7 +95,7 @@ class Calc extends Component {
                         <h3>Your Partner's Fare: Rs.{this.state.hisFare}</h3>
 
                         <Button
-                            clicked={this.props.calcClosed}
+                            clicked={this.handleExit}
                             cls="Warning InlineBtn"
                         >
                             Okay

@@ -23,17 +23,18 @@ const getMatchedRoute = async (req, res) => {
     const data = req.body, me = req.user.id;
 
     const myPath = data.directionData.routes[0].overview_path;
-    console.log("My route path length is:", myPath.length);
+    const mySeats = data.rideData.seatsCount;
+    const iwait4 = data.rideData.waitFor * 1000 * 60;
+    const myPickupTime = data.rideData.pickupTime;
+    const myPickupLimit = iwait4 + myPickupTime;
+
+    // console.log("My route path length is:", myPath.length);
     // console.log("Requested Body is given as", myRoute);
-
-
-
     await Direction
         .find({
             $and: [
                 { owner: { $ne: me } },
-                { isOpen: true }
-            ]
+                { isOpen: true }]
         })
         // .select('_id')
         .then(async (candidateRoutes) => {
@@ -41,9 +42,30 @@ const getMatchedRoute = async (req, res) => {
 
             let cleanArray = [];
 
+            var bySeatsArr = [], byTimeArr = [], pureArr = [];
+
             for (let candidate of candidateRoutes) {
+                //Filter by seat counts
+                const hisSeats = candidate.rideData.seatsCount;
+                if (mySeats + hisSeats <= 3) {
+                    bySeatsArr.push(candidate._id);
+                }
+
+
+                //Find the match according to the  time limit:
+                const heWait4 = candidate.rideData.waitFor * 60 * 1000;
+                const hisPickupTime = candidate.rideData.pickupTime;
+                const hisPickupLimit = heWait4 + hisPickupTime;
+
+                if (myPickupTime < hisPickupLimit && hisPickupTime < myPickupLimit) {
+                    byTimeArr.push(candidate._id);
+                }
+
+
+
+                // Find out the match according to the overlapping
                 const hisPath = candidate.directionData.routes[0].overview_path;
-                console.log("His route length is", hisPath.length);
+                // console.log("His route length is", hisPath.length);
 
                 var distanceList = [];
 
@@ -69,14 +91,28 @@ const getMatchedRoute = async (req, res) => {
 
                     }
                 }
-                console.log("Count is", count);
+
+
+
                 distanceList = distanceList.filter(el => el < 100);
                 if (distanceList.length > 1) {
-                    console.log(distanceList);
+                    // console.log(distanceList);
                     cleanArray.push(candidate._id);
                 }
             }
-            res.status(200).json(cleanArray);
+
+            pureArr = bySeatsArr.filter(candi => {
+                return byTimeArr.includes(candi);
+            });
+
+            pureArr = pureArr.filter(candi => {
+                return cleanArray.includes(candi);
+            })
+
+            console.log('By Time is', byTimeArr);
+            console.log('By route is', cleanArray);
+            console.log('By seats is', bySeatsArr);
+            res.status(200).json(pureArr);
         }).catch((err) => {
             console.log(err, 'in matched routes of the app');
         });

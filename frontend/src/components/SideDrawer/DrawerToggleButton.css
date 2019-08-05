@@ -13,10 +13,10 @@
 }
 
 .Notifier {
-    height: 17px;
-    width: 17px;
-    background-color: red;
-    border-radius: 7px;
+    height: 10px;
+    width: 10px;
+    background-color: orangered;
+    border-radius: 10px;
     position: relative;
     z-index: inherit;
 }

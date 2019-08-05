@@ -5,7 +5,8 @@ import SignUp from '../SignUp/SignUp';
 import setAuthToken from '../../utils/setAuthToken';
 import store from '../../redux/store/store';
 
-import logo from '../../img/rideallot.png'
+import { withRouter } from 'react-router-dom'
+import logo from '../../img/rideallot.svg'
 
 
 import './Landing.css';
@@ -16,12 +17,16 @@ class Landing extends Component {
     const search = this.props.location.search;
     const params = new URLSearchParams(search);
     const token = params.get('token');
+    console.log("token we got is ", token);
     if (token) {
       localStorage.setItem('jwtToken', token);
       setAuthToken(token);
       const decoded = jwtDecode(token);
       console.log("Decoded output of the data", decoded);
       store.dispatch({ type: 'SET_USER', payload: decoded });
+      if (store.getState().auth.isAuthenticated) {
+        this.props.history.push('/home');
+      }
     }
   }
 
@@ -70,4 +75,4 @@ class Landing extends Component {
   }
 }
 
-export default Landing
+export default withRouter(Landing)

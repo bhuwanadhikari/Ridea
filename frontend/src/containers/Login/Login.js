@@ -8,7 +8,7 @@ import setAuthToken from '../../utils/setAuthToken';
 import store from '../../redux/store/store';
 import { withRouter } from 'react-router-dom'
 
-import logo from '../../img/rideallot.png'
+import logo from '../../img/rideallot.svg'
 
 import './Login.css';
 

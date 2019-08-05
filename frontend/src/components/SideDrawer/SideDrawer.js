@@ -74,7 +74,7 @@ class SideDrawer extends React.Component {
         this.timer = setInterval(() => {
             this.props.poleData();
             this.locateMe();
-        }, 15000);
+        }, 6000);
     }
 
     componentWillUnmount() {

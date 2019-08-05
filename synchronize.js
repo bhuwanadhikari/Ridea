@@ -4,7 +4,7 @@ const Direction = require('./models/Direction');
 
 const synchronize = () => {
     setInterval(async () => {
-        console.log("This is working now");
+        console.log("Synchronising");
 
         await Direction
             .find()
@@ -20,7 +20,7 @@ const synchronize = () => {
                     }
                     console.log("Pickup time is ", expiryTime);
 
-                    if (new Date().getTime() > expiryTime - 60000) {
+                    if (new Date().getTime() > expiryTime - 1000*60*60) {
 
                         await User
                             .findOne({ _id: owner })

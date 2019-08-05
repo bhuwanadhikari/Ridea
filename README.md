@@ -1,6 +1,6 @@
 # Ridea
 
-Ridea is a mobile friendly web application for finding partners to share rides among the people travelling in taxi along similar routes. Have a sneak peek here in this link: https://ridewithridea.herokuapp.com/home
+Ridea is a mobile friendly web application for finding partners to share rides among the people travelling in taxi along similar routes. Have a sneak peek here in this link: https://ridewithridea.herokuapp.com
 
 ## Usage
 
